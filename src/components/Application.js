@@ -1,6 +1,10 @@
 import React from "react";
-
+import axios from "axios";
 import "components/Application.scss";
+
+let cells = axios.get("/cells");
+
+console.log(cells);
 
 export default function Application(props) {
   return (
