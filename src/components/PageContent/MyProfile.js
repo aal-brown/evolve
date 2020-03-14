@@ -15,7 +15,7 @@ const lorem = new LoremIpsum({
 export default function MyProfile() {
   return (
     <section>
-      <p><h1>MY PROFILE</h1></p>
+      <h1>MY PROFILE</h1>
     </section>
   );
 }

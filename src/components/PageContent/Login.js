@@ -15,7 +15,7 @@ const lorem = new LoremIpsum({
 export default function Login() {
   return (
     <section>
-      <p><h1>LOGIN</h1></p>
+      <h1>LOGIN</h1>
     </section>
   );
 }

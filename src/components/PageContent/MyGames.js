@@ -1,5 +1,5 @@
 import React from "react";
-import MyGamesItem from "MyGamesItem"
+import MyGamesItem from "./MyGamesItem"
 /* import { LoremIpsum } from "lorem-ipsum";
 
 const lorem = new LoremIpsum({
