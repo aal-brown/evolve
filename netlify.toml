@@ -9,5 +9,5 @@
   # Default build command.
   command = "npm run build"
 [build.environment]
-  #REACT_APP_API_BASE_URL = "https://agile-scrubland-73485.herokuapp.com/"
+  REACT_APP_API_BASE_URL = "https://agile-scrubland-73485.herokuapp.com/"
   #REACT_APP_WEBSOCKET_URL = "wss://scheduler-lhl.herokuapp.com/"
