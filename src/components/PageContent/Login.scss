@@ -1,5 +1,10 @@
 .login {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-content: center;
+}
+
+.login-form {
+  display:flex;
+  flex-direction: column;
 }
