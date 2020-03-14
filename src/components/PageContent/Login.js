@@ -1,5 +1,4 @@
 import React from "react";
-import { LoremIpsum } from "lorem-ipsum";
 
 const lorem = new LoremIpsum({
   sentencesPerParagraph: {
