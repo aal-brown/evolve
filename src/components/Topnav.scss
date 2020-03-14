@@ -4,7 +4,6 @@
 
 .topnav {
   display: flex;
-  flex-direction: column;
   background-color: $header-background;
   display: flex;
   flex-direction: column;
@@ -13,4 +12,8 @@
   color: white;
   text-align: center;
   font-size: 2em;
+}
+
+.nav-views {
+  display: flex;
 }

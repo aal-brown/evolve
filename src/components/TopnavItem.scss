@@ -1,0 +1,27 @@
+@import "styles/mixins.scss";
+@import "styles/variables.scss";
+
+.topnav-list{
+  &__item {
+    @include fade;
+    color: #8395a7;
+    height: 5rem;
+    padding-left: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    &:hover {
+      background-color: #ee5253;
+      cursor: pointer;
+      color: $weeks-colors;
+    }
+    &--selected {
+      background-color: darken($white, 5%);
+      color: $weeks-colors;
+      &:hover {
+        background-color: darken($white, 5%);
+      }
+    }
+
+  }
+}
