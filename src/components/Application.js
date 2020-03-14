@@ -2,7 +2,9 @@ import React from "react";
 import axios from "axios";
 import "components/Application.scss";
 
-axios.get("/cells").then((res) => console.log(res));
+axios.get("/cells").then((res) => console.log(res))
+.catch((err) => console.log(err.message));
+
 
 export default function Application(props) {
   return (
