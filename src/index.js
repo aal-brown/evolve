@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 // import axios from "axios";
+import "index.scss";
 
 const axios = require("axios").default
 
-import "index.scss";
+
 
 import Application from "components/Application";
 
