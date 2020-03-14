@@ -2,6 +2,7 @@
   "name": "scheduler",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://agile-scrubland-73485.herokuapp.com",
   "dependencies": {
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
