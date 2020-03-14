@@ -11,3 +11,8 @@
 [build.environment]
   REACT_APP_API_BASE_URL = "https://agile-scrubland-73485.herokuapp.com/"
   #REACT_APP_WEBSOCKET_URL = "wss://scheduler-lhl.herokuapp.com/"
+[[headers]]
+  # Define which paths this specific [[headers]] block will cover.
+  for = "/*"
+    [headers.values]
+    Access-Control-Allow-Origin = "*"
