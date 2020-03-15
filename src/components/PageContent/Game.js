@@ -47,14 +47,4 @@ class Game extends Component {
   }
 }
 
-<<<<<<< HEAD
-export default function Game() {
-  return (
-    <section>
-      <h1>GAME</h1>
-    </section>
-  );
-}
-=======
 export default Game;
->>>>>>> feature/games
