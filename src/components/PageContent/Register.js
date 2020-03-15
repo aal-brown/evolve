@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "components/PageContent/Login.scss";
-import Button from "../Button"
+import Button from "../Button";
+import axios from "axios";
 
 export default function Login() {
   const [name, setName] = useState("");
@@ -10,7 +11,14 @@ export default function Login() {
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
   function register() {
-    console.log("AGAHAGAHGA: ", name, email, username, password, passwordConfirm)
+    axios.post("https://agile-scrubland-73485.herokuapp.com/users", {
+      name: name,
+      email: email,
+      username: username,
+      password: password,
+      password_confirmation: passwordConfirm
+    }).then((res) => console.log(res))
+      .catch((err) => console.log(err.message));
   }
   return (
     <section className="login">
