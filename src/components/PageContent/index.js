@@ -6,7 +6,7 @@ import Guide from "./Guide";
 import Game from "./Game";
 import Login from "./Login";
 import Register from "./Register";
-/* import "components/PageContent.scss"; */
+import "./PageContent.scss"; 
 
 
 export default function PageContent(props) {
@@ -19,6 +19,7 @@ export default function PageContent(props) {
       )}
       { props.view === 2 && (
         <MyGames
+          games={props.games} //Will be an array of game objects
         />
       )}
       { props.view === 3 && (
@@ -30,8 +31,7 @@ export default function PageContent(props) {
         />
       )}
       { props.view === 5 && (
-        <Game
-        />
+        <Game/>
       )}
       { props.view === 6 && (
         <Login
