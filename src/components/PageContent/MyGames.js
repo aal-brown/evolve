@@ -1,5 +1,6 @@
 import React from "react";
 import MyGamesItem from "./MyGamesItem"
+import "./MyGames.scss"
 /* import { LoremIpsum } from "lorem-ipsum";
 
 const lorem = new LoremIpsum({
@@ -16,6 +17,7 @@ const lorem = new LoremIpsum({
 // Games will be received from the database, sorted by user id.
 
 export default function MyGames(props) {
+
   let games = props.games.map((game) => {
     return (
       <MyGamesItem
@@ -33,5 +35,7 @@ export default function MyGames(props) {
         />
     );
   });
-  return games;
+  return <div className="MyGames">
+          {games}
+         </div>;
 }

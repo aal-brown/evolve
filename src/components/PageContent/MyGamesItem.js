@@ -3,14 +3,14 @@ import classnames from "classnames";
 // import "./TopnavItem.scss"
 
 export default function MyGamesItem(props) {
-  const myGamesClass = classnames("myGames-list__item",{
-    "myGames-list__item--selected": props.selected,
+  const myGamesItem = classnames("myGamesItem-list__item",{
+    "myGamesItem-list__item--selected": props.selected,
   });
 
   // Remember to implement the scss
 
   return (
-    <li className={myGamesClass}>
+    <li className={myGamesItem}>
       <div onClick={props.load}>
         <p>{props.img}</p>
       </div>
