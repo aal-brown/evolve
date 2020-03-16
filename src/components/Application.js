@@ -56,6 +56,7 @@ export default function Application(props) {
         <PageContent
         games={gameData}
         view={view}
+        setView={setView}
         />
       </main>
     </Fragment>

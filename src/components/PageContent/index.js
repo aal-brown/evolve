@@ -7,6 +7,7 @@ import Game from "./Game";
 import Login from "./Login";
 import Register from "./Register";
 import "./PageContent.scss"; 
+import { tsPropertySignature } from "@babel/types";
 
 
 export default function PageContent(props) {
@@ -39,6 +40,7 @@ export default function PageContent(props) {
       )}
       { props.view === 7 && (
         <Register
+        setView = {props.setView}
         />
       )}
     </section>

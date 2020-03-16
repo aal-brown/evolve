@@ -3,13 +3,15 @@ import "components/PageContent/Login.scss";
 import Button from "../Button";
 import axios from "axios";
 
-export default function Register() {
+export default function Register(props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+
 const url = "https://agile-scrubland-73485.herokuapp.com/users";
+
 let userData = {
   name: name,
   email: email,
@@ -17,6 +19,7 @@ let userData = {
   password: password,
   password_confirmation: passwordConfirm
 }
+
   function createUser() {
     axios({
       method: 'POST',
@@ -31,7 +34,7 @@ let userData = {
       }
     })
     .then(resp => {
-        console.log('Submission response', resp);
+        props.setView(4);
     })
     .catch(err => console.error(err.message));
   }
