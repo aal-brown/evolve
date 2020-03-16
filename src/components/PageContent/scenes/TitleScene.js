@@ -130,18 +130,18 @@ class TitleScene extends Phaser.Scene {
     if (!(iterations % delay)) { //This is used to "slow down" the animation
       //The clearing has to be done BEFORE the item generation, otherwise it won't work
       /* generateItems(items); */
-      r1.x = r1.x + Phaser.Math.Between(-5, 5)
-      r1.y = r1.y + Phaser.Math.Between(-5, 5)
-      r2.x = r2.x + Phaser.Math.Between(-5, 5)
-      r2.y = r2.y + Phaser.Math.Between(-5, 5)
-      r3.x = r3.x + Phaser.Math.Between(-5, 5)
-      r3.y = r3.y + Phaser.Math.Between(-5, 5)
-      r4.x = r4.x + Phaser.Math.Between(-5, 5)
-      r4.y = r4.y + Phaser.Math.Between(-5, 5)
-      r5.x = r5.x + Phaser.Math.Between(-5, 5)
-      r5.y = r5.y + Phaser.Math.Between(-5, 5)
-      r6.x = r6.x + Phaser.Math.Between(-5, 5)
-      r6.y = r6.y + Phaser.Math.Between(-5, 5)
+      r1.x = r1.x + Phaser.Math.Between(-5, 10)
+      r1.y = r1.y + Phaser.Math.Between(-5, 10)
+      r2.x = r2.x + Phaser.Math.Between(-5, 10)
+      r2.y = r2.y + Phaser.Math.Between(-5, 10)
+      r3.x = r3.x + Phaser.Math.Between(-5, 10)
+      r3.y = r3.y + Phaser.Math.Between(-5, 10)
+      r4.x = r4.x + Phaser.Math.Between(-5, 10)
+      r4.y = r4.y + Phaser.Math.Between(-5, 10)
+      r5.x = r5.x + Phaser.Math.Between(-5, 10)
+      r5.y = r5.y + Phaser.Math.Between(-5, 10)
+      r6.x = r6.x + Phaser.Math.Between(-5, 10)
+      r6.y = r6.y + Phaser.Math.Between(-5, 10)
       //allCells = [ ...arr, ...arr2]
       //console.log(context.getImageData(101, 201, 2, 2).data[0])
     }

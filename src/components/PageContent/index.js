@@ -16,10 +16,12 @@ export default function PageContent(props) {
     <section>
       { props.view === 1 && (
         <MyProfile
+        user={props.user}
         />
       )}
       { props.view === 2 && (
         <MyGames
+          user={props.user}
           games={props.games} //Will be an array of game objects
         />
       )}
@@ -32,15 +34,20 @@ export default function PageContent(props) {
         />
       )}
       { props.view === 5 && (
-        <Game/>
+        <Game
+        user={props.user}
+        />
       )}
       { props.view === 6 && (
         <Login
+        setUser={props.setUser}
+        setView={props.setView}
         />
       )}
       { props.view === 7 && (
         <Register
         setView = {props.setView}
+        setUser={props.setUser}
         />
       )}
     </section>

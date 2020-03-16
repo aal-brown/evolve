@@ -45,18 +45,23 @@ const gameData = [
 
 export default function Application(props) {
   const [view, setView] = useState(6)
+  const [user, setUser] = useState(null)
   return (
     <Fragment>
       <Topnav
         topNavItems={topNavItems}
         view={view}
         setView={setView}
+        user={user}
+        setUser={setUser}
       />
       <main className="layout">
         <PageContent
         games={gameData}
         view={view}
         setView={setView}
+        user={user}
+        setUser={setUser}
         />
       </main>
     </Fragment>
