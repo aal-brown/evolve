@@ -18,7 +18,9 @@ class Game extends Component {
       physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 200 }
+            gravity: { y: 5,
+              enableBody: true
+             }
         }
     },
     scale: {
