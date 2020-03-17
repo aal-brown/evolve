@@ -36,21 +36,37 @@ import "components/Application.scss";
 export default function Application(props) {
   const [view, setView] = useState(6)
   const [cookies, setCookie, removeCookie] = useCookies(['user_id']);
-
-  const topNavItems = [
-    { name: "My Profile", id: 1 },
-    { name: "My Games", id: 2 },
-    { name: "About", id: 3 },
-    { name: "Guide", id: 4 },
-    { name: "Game", id: 5 }, 
-    { name: "Login", id: 6 },
-    { name: "Register", id: 7 }
-  ];
+  const [topNav, setTopNav] = useState([]);
+  
+useEffect(() => {
+  if(cookies.user_id){
+    setTopNav([
+      { name: "My Profile", id: 1 },
+      { name: "My Games", id: 2 },
+      { name: "About", id: 3 },
+      { name: "Guide", id: 4 },
+      { name: "Game", id: 5 },
+      { name: "Logout", id: 8 }
+    ])
+  } else {
+    setTopNav([
+      { name: "My Profile", id: 1 },
+      { name: "My Games", id: 2 },
+      { name: "About", id: 3 },
+      { name: "Guide", id: 4 },
+      { name: "Game", id: 5 }, 
+      { name: "Login", id: 6 },
+      { name: "Register", id: 7 }
+    ])
+  }
+}, [cookies.user_id])
+  
   
   return (
     <Fragment>
       <Topnav
-        topNavItems={topNavItems}
+        topNav={topNav}
+        setTopNav={setTopNav}
         view={view}
         setView={setView}
         cookies={cookies}
@@ -63,6 +79,7 @@ export default function Application(props) {
         cookies={cookies}
         setCookie={setCookie}
         removeCookie={removeCookie}
+        setTopNav={setTopNav}
         />
       </main>
     </Fragment>
