@@ -27,9 +27,15 @@ export default function Topnav(props) {
       key = {item.id}
       name={item.name}
       selected = {item.id === props.view}
-      setView={(event) => {props.setView(item.id)}}
+      setView={() => {
+        if(item.id === 8) {
+          props.removeCookie("user_id")
+          setUser("")
+        }
+        props.setView(item.id)}
+      }
     />
-  }); 
+  });
   return ( 
     <header className="topnav">
     <h2 className="header-text">Evolve</h2>

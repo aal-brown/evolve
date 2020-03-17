@@ -48,6 +48,12 @@ export default function PageContent(props) {
         setCookie={props.setCookie}
         />
       )}
+      { props.view === 8 && (
+        <Login
+        setView = {props.setView}
+        setCookie={props.setCookie}
+        />
+      )}
     </section>
   );
 }

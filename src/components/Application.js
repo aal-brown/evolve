@@ -4,10 +4,6 @@ import PageContent from "./PageContent/index"
 import { useCookies } from "react-cookie"
 import "components/Application.scss";
 
-
-
-
-
 // const gameData = [
 //   {id: 1,
 //   img: "NO IMAGE YET",
@@ -50,8 +46,6 @@ useEffect(() => {
     ])
   } else {
     setTopNav([
-      { name: "My Profile", id: 1 },
-      { name: "My Games", id: 2 },
       { name: "About", id: 3 },
       { name: "Guide", id: 4 },
       { name: "Game", id: 5 }, 
@@ -70,6 +64,7 @@ useEffect(() => {
         view={view}
         setView={setView}
         cookies={cookies}
+        removeCookie={removeCookie}
       />
       <main className="layout">
         <PageContent

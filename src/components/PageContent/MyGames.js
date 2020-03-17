@@ -46,15 +46,14 @@ const [games, setGames] = useState([])
     console.log("Delete");
   }
   
-  getData();
-  //let thing = getData()
+  
+  useEffect(() => {
+    if(props.cookies.user_id){
+      getData()
+    }
+  }, [props.cookies.user_id]);
 
-  // useEffect(() => {
-
-  //   return () => {
-  //     cleanup
-  //   }
-  // }, [])
+  
 
   let myGames = games.map((game) => {
     
