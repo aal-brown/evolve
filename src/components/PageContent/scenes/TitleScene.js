@@ -1,9 +1,6 @@
 import Phaser from "phaser";
 let platforms;
-let player;
-let star;
-let bomb;
-let cursors;
+
 var r1;
 var r2;
 var r3;

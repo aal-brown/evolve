@@ -1,12 +1,9 @@
 import React, { useState, Fragment } from "react";
-import axios from "axios";
 import Topnav from "./Topnav"
 import PageContent from "./PageContent/index"
 import { useCookies } from "react-cookie"
 import "components/Application.scss";
 
-axios.get("https://agile-scrubland-73485.herokuapp.com/cells").then((res) => console.log(res))
-  .catch((err) => console.log(err.message));
 
 
 const topNavItems = [

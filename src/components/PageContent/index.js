@@ -7,7 +7,7 @@ import Game from "./Game";
 import Login from "./Login";
 import Register from "./Register";
 import "./PageContent.scss"; 
-import { tsPropertySignature } from "@babel/types";
+
 
 
 export default function PageContent(props) {
