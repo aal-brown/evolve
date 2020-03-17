@@ -6,11 +6,13 @@
   "dependencies": {
     "@ion-phaser/react": "^1.2.1",
     "axios": "^0.19.2",
+    "bootstrap": "^4.4.1",
     "classnames": "^2.2.6",
     "lorem-ipsum": "^2.0.3",
     "normalize.css": "^8.0.1",
     "phaser": "^3.22.0",
     "react": "^16.9.0",
+    "react-bootstrap": "^1.0.0-beta.17",
     "react-cookie": "^4.0.3",
     "react-dom": "^16.9.0",
     "react-scripts": "3.0.0",

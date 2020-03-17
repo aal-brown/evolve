@@ -1,5 +1,6 @@
 import React from "react";
 import classnames from "classnames";
+import Button from "../Button"
 // import "./TopnavItem.scss"
 
 export default function MyGamesItem(props) {
@@ -37,7 +38,7 @@ export default function MyGamesItem(props) {
         </tbody>
       </table>
       <div>
-        <button onClick={props.delete}>DELETE</button>
+        <Button onClick={props.delete}>Delete</Button>
       </div>
     </li>
   );

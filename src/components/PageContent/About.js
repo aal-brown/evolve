@@ -14,7 +14,7 @@ const lorem = new LoremIpsum({
 
 export default function About() {
   return (
-    <section>
+    <section className="pagetext">
       <p>{lorem.generateParagraphs(2)}</p>
     </section>
   );

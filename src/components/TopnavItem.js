@@ -9,7 +9,7 @@ export default function TopnavItem(props) {
 
   return (
     <li className={topnavClass} onClick={props.setView}>
-      <h4 className="text--light">{props.name} {props.selected}</h4>
+      <h2 className="text--light">{props.name} {props.selected}</h2>
     </li>
   );
 }

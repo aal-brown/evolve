@@ -4,16 +4,25 @@
 
 .topnav {
   display: flex;
-  background-color: $header-background;
+  background-color: #3cb371;
+background-image: url("https://www.transparenttextures.com/patterns/dark-leather.png");
+/* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
   display: flex;
   flex-direction: column;
   min-width: 4rem;
   padding: $spacing 0;
   color: white;
   text-align: center;
-  font-size: 2em;
+  font-size: 3em;
+  font-family: 'Monoton', cursive;
 }
 
 .nav-views {
   display: flex;
+  justify-content: space-between;
+  font-family: 'Boogaloo', cursive;
+}
+
+.header-text {
+  font-size: 1.5em;
 }

@@ -43,36 +43,44 @@ let userData = {
   return (
     <section className="login">
       <h1>Register</h1>
-      <form className="login-form" onSubmit={(event) => {event.preventDefault()}}>
-        Name: <input
+      <form className="login-form form-group" onSubmit={(event) => {event.preventDefault()}}>
+        Name: <input className="form-control form-field"
           onChange={(event) => {
             setName(event.target.value)}}
           value={name}
           type="text"
+          placeholder="Enter Name"
         />
-        Email: <input
+        Email: <input className="form-control form-field"
           onChange={(event) => {
             setEmail(event.target.value)}}
           value={email}
           type="email"
+          placeholder="Enter Email"
         />
-        Username: <input
+        Username: <input className="form-control form-field"
           onChange={(event) => {
             setUsername(event.target.value)}}
           value={username}
           type="text"
+          placeholder="Enter Username"
+
         />
-        Password: <input
+        Password: <input className="form-control form-field"
           onChange={(event) => {
             setPassword(event.target.value)}}
           value={password}
           type="password"
+          placeholder="Enter Password"
+
         />
-        Confirm Password: <input
+        Confirm Password: <input className="form-control form-field"
           onChange={(event) => {
             setPasswordConfirm(event.target.value)}}
           value={passwordConfirm}
           type="password"
+          placeholder="Confirm Password"
+
         />
       </form>
       <Button className="button--confirm" onClick={createUser}>Register</Button>

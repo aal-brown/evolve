@@ -11,16 +11,16 @@
   width: 8rem;
   border-width: 2px;
   border-style: solid;
-  border-color: $white;
+  border-color: $green;
   color: $white;
-  background-color: transparent;
+  background-color: $green;
 }
 
 .button:hover {
   @include button-active;
 
-  color: $black;
-  background-color: $white;
+  color: $white;
+  background-color: $green2;
   border: 2px solid transparent;
 }
 

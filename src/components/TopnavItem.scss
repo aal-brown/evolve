@@ -4,20 +4,20 @@
 .topnav-list{
   &__item {
     @include fade;
-    color: #8395a7;
-    height: 5rem;
-    padding-left: 2rem;
+    color: $navtext2;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    align-items: center;
+    padding: 0.5em;
+    border-radius: 30px;
+    text-align: left;
     &:hover {
-      background-color: #ee5253;
+      background-color: $green2;
       cursor: pointer;
-      color: $weeks-colors;
+      color: $navtext3;
     }
     &--selected {
       background-color: darken($white, 5%);
-      color: $weeks-colors;
+      color: $navtext3;
       &:hover {
         background-color: darken($white, 5%);
       }

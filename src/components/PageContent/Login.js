@@ -38,20 +38,21 @@ export default function Login(props) {
   return (
     <section className="login">
       <h1>Login</h1>
-      <form className="login-form" onSubmit={(event) => {event.preventDefault()}}>
-        Email: <input
+      <form className="login-form form-group" onSubmit={(event) => {event.preventDefault()}}>
+        Email: <input className="form-control form-field"
           onChange={(event) => {
             setEmail(event.target.value)}}
           value={email}
           type="email"
           placeholder="Enter Email"
         />
-        Password: <input
+        Password: <input className="form-control form-field"
           onChange={(event) => {
             setPassword(event.target.value)}}
           value={password}
           label="Password: "
           type="password"
+          placeholder="Enter Password"
         />
       </form>
       <Button className="button--confirm" onClick={login}>Login</Button>

@@ -21,7 +21,7 @@ export default function Guide(props) {
   .then((res) => console.log(res.data)
   );
   return (
-    <section>
+    <section className="pagetext">
       <p>{lorem.generateParagraphs(2)}</p>
     </section>
   );
