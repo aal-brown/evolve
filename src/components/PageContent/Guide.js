@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import { LoremIpsum } from "lorem-ipsum";
 
 const lorem = new LoremIpsum({
@@ -12,7 +13,13 @@ const lorem = new LoremIpsum({
   }
 });
 
-export default function Guide() {
+export default function Guide(props) {
+  let user_id = props.cookies.user_id
+  axios.get("http://localhost:3000/getuser", {
+    headers: { "ID": user_id }
+  })
+  .then((res) => console.log(res.data)
+  );
   return (
     <section>
       <p>{lorem.generateParagraphs(2)}</p>

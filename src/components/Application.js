@@ -2,6 +2,7 @@ import React, { useState, Fragment } from "react";
 import axios from "axios";
 import Topnav from "./Topnav"
 import PageContent from "./PageContent/index"
+import { useCookies } from "react-cookie"
 import "components/Application.scss";
 
 axios.get("https://agile-scrubland-73485.herokuapp.com/cells").then((res) => console.log(res))
@@ -45,23 +46,23 @@ const gameData = [
 
 export default function Application(props) {
   const [view, setView] = useState(6)
-  const [user, setUser] = useState(null)
+  const [cookies, setCookie, removeCookie] = useCookies(['user_id']);
   return (
     <Fragment>
       <Topnav
         topNavItems={topNavItems}
         view={view}
         setView={setView}
-        user={user}
-        setUser={setUser}
+        cookies={cookies}
       />
       <main className="layout">
         <PageContent
         games={gameData}
         view={view}
         setView={setView}
-        user={user}
-        setUser={setUser}
+        cookies={cookies}
+        setCookie={setCookie}
+        removeCookie={removeCookie}
         />
       </main>
     </Fragment>

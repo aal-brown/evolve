@@ -11,6 +11,7 @@
     "normalize.css": "^8.0.1",
     "phaser": "^3.22.0",
     "react": "^16.9.0",
+    "react-cookie": "^4.0.3",
     "react-dom": "^16.9.0",
     "react-scripts": "3.0.0",
     "true-case-path": "^2.2.1"

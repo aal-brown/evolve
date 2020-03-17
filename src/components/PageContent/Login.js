@@ -28,8 +28,8 @@ export default function Login(props) {
       }
     })
     .then(resp => {
-      console.log(resp.data)
-      props.setUser(resp.data.id)
+      console.log(resp);
+      props.setCookie("user_id",resp.data)
       props.setView(4);
     })
     .catch(err => console.error(err.message));
