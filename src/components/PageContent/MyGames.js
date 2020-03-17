@@ -1,5 +1,6 @@
-import React from "react";
-import MyGamesItem from "./MyGamesItem"
+import React, { useState, useEffect } from "react";
+import MyGamesItem from "./MyGamesItem";
+import axios from "axios";
 import "./MyGames.scss"
 /* import { LoremIpsum } from "lorem-ipsum";
 
@@ -17,8 +18,46 @@ const lorem = new LoremIpsum({
 // Games will be received from the database, sorted by user id.
 
 export default function MyGames(props) {
+const [games, setGames] = useState([])
+  let user_id = props.cookies.user_id
+  console.log(user_id)
+  let gamesData;
 
-  let games = props.games.map((game) => {
+  function getData() {
+    
+      axios.get("http://localhost:3000/getuser", {
+        headers: { "ID": user_id }
+      })
+      .then((res) => {
+        axios.get("http://localhost:3000/gamedata", {
+          headers: { "ID": res.data.id }
+        })
+        .then((res) => setGames(res.data));
+      })
+   
+  }
+
+
+  function load() {
+    console.log("Load");
+  }
+
+  function deleteGame() {
+    console.log("Delete");
+  }
+  
+  getData();
+  //let thing = getData()
+
+  // useEffect(() => {
+
+  //   return () => {
+  //     cleanup
+  //   }
+  // }, [])
+
+  let myGames = games.map((game) => {
+    
     return (
       <MyGamesItem
         key={game.id}
@@ -30,12 +69,12 @@ export default function MyGames(props) {
         orgs={game.orgs}
         high_score={game.high_score}
         // selected={game.name === props.game} hover will be used instead
-        load={game.load} //This is a function to start the game
-        delete={game.delete} //This will prompt for whether the user wants to delete that game
+        load={load} //This is a function to start the game
+        delete={deleteGame} //This will prompt for whether the user wants to delete that game
         />
     );
   });
   return <div className="MyGames">
-          {games}
+          {myGames}
          </div>;
 }
