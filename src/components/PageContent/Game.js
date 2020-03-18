@@ -7,6 +7,9 @@ import {
 } from '@ion-phaser/react'
 import Preload from "./scenes/preload";
 import TitleScene from './scenes/TitleScene';
+import LeftSideBar from './LeftSideBar.js'
+
+
 class Game extends Component {
   state = {
     initialize: true,
@@ -29,8 +32,20 @@ class Game extends Component {
     scene: [Preload, TitleScene]
     }
   }
+    
+
 
   render() {
+     const addOrg = function() { 
+      console.log("Add Organism") };
+    const addFood = function() { 
+      console.log("Add Food") };
+    const changeTemp = function() { 
+      console.log("Change Temp") };
+    const save = function() { 
+      console.log("Save") };
+    const getSeed = function() { 
+      console.log("Get Seed") };
     const {
       initialize,
       game
@@ -44,6 +59,13 @@ class Game extends Component {
         initialize
       }
       />
+      < LeftSideBar
+       addOrg = {addOrg}
+       addFood = {addFood}
+       changeTemp = {changeTemp}
+       save = {save}
+       getSeed = {getSeed}
+        />
       </div>
     )
   }
