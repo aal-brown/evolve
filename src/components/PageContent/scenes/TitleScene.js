@@ -1,17 +1,11 @@
 import Phaser from "phaser";
-let platforms;
+import Org from "./Org";
+//import Org from "./Org"
 
-var r1;
-var r2;
-var r3;
-var r4;
-var r5;
-var r6;
 const delay = 5
 let iterations = 0;
 
 class TitleScene extends Phaser.Scene {
-
 
   constructor() {
     super('TitleScene')
@@ -21,109 +15,61 @@ class TitleScene extends Phaser.Scene {
 
     this.add.image(400, 300, 'sky');
     
-    this.blobs = this.add.sprite( 300, 300, "blobs")
-    this.blobs.play("blobs_anim");
-
+  
+    this.orgs = this.physics.add.group();
+    this.orgs.setCollideWorldBounds(true);
+    
 
     // platforms = this.physics.add.staticGroup();
 
     // platforms.create(400, 568, 'ground').setScale(2).refreshBody();
 
-    r4 = this.physics.add.sprite(200, 200, 'blobs');
-    r5 = this.physics.add.sprite(400, 200, 'blobs');
-    r6 = this.physics.add.sprite(600, 200, 'blobs');
-    r1 = this.physics.add.sprite(200, 400, 'blobs');
-    r2 = this.physics.add.sprite(400, 400, 'blobs');
-    r3 = this.physics.add.sprite(600, 400, 'blobs');
+    this.r4 = new Org(this, 200, 400, iterations)
+    this.r5 = new Org(this, 400, 400, iterations)
+    this.r6 = new Org(this, 600, 400, iterations)
+    this.r1 = new Org(this, 400, 200, iterations)
+    this.r2 = new Org(this, 400, 400, iterations)
+    this.r3 = new Org(this, 400, 600, iterations)
 
+   
+    // this.r1.setScale(2)
+    // this.r2.setScale(2)
+    // this.r3.setScale(2)
+    // this.r4.setScale(2)
+    // this.r5.setScale(2)
+    // this.r6.setScale(2)
+    // this.orgs.add(this.r1)
+    // this.orgs.add(this.r2)
+    // this.orgs.add(this.r3)
+    // this.orgs.add(this.r4)
+    // this.orgs.add(this.r5)
+    // this.orgs.add(this.r6)
 
-    r1.setScale(2)
-    r2.setScale(2)
-    r3.setScale(2)
-    r4.setScale(2)
-    r5.setScale(2)
-    r6.setScale(2)
- 
-this.blobs.setScale(2)
-    r1.setCollideWorldBounds(true)
-    r2.setCollideWorldBounds(true)
-    r3.setCollideWorldBounds(true)
-    r4.setCollideWorldBounds(true)
-    r5.setCollideWorldBounds(true)
-    r6.setCollideWorldBounds(true)
-    r1.play("blobs_anim");
-    r2.play("blobs_anim");
-    r3.play("blobs_anim");
-    r4.play("blobs_anim");
-    r5.play("blobs_anim");
-    r6.play("blobs_anim");
+    // this.r1.setCollideWorldBounds(true)
+    // this.r2.setCollideWorldBounds(true)
+    // this.r3.setCollideWorldBounds(true)
+    // this.r4.setCollideWorldBounds(true)
+    // this.r5.setCollideWorldBounds(true)
+    // this.r6.setCollideWorldBounds(true)
+    // this.r1.play("blobs_anim");
+    // this.r2.play("blobs_anim");
+    // this.r3.play("blobs_anim");
+    // this.r4.play("blobs_anim");
+    // this.r5.play("blobs_anim");
+    // this.r6.play("blobs_anim");
 
-
+    this.physics.add.collider(this.orgs, this.orgs, this.spawn, null, this); 
     
     //  WebGL only
 
-    this.physics.add.collider(r1, platforms);
-    this.physics.add.collider(r2, platforms);
-    this.physics.add.collider(r3, platforms);
-    this.physics.add.collider(r4, platforms);
-    this.physics.add.collider(r5, platforms);
-    this.physics.add.collider(r6, platforms);
+    // this.physics.add.collider(this.r1, platforms);
+    // this.physics.add.collider(this.r2, platforms);
+    // this.physics.add.collider(this.r3, platforms);
+    // this.physics.add.collider(this.r4, platforms);
+    // this.physics.add.collider(this.r5, platforms);
+    // this.physics.add.collider(this.r6, platforms);
 
-    // this.tweens.add({
-
-    //   targets: r4,
-    //   scaleX: 0.25,
-    //   scaleY: 0.5,
-    //   yoyo: true,
-    //   repeat: -1,
-    //   ease: 'Sine.easeInOut'
-
-    // });
-
-    // this.tweens.add({
-
-    //   targets: r5,
-    //   scaleX: 0.25,
-    //   scaleY: 0.5,
-    //   yoyo: true,
-    //   repeat: -1,
-    //   ease: 'Sine.easeInOut'
-
-    // });
-
-    // this.tweens.add({
-
-    //   targets: r6,
-    //   scaleX: 0.25,
-    //   scaleY: 0.5,
-    //   yoyo: true,
-    //   repeat: -1,
-    //   ease: 'Sine.easeInOut'
-
-    // });
-
-    // this.tweens.add({
-
-    //   targets: r1,
-    //   scaleX: 0.25,
-    //   scaleY: 0.5,
-    //   yoyo: true,
-    //   repeat: -1,
-    //   ease: 'Sine.easeInOut'
-
-    // });
-
-    // this.tweens.add({
-
-    //   targets: r2,
-    //   scaleX: 0.25,
-    //   scaleY: 0.5,
-    //   yoyo: true,
-    //   repeat: -1,
-    //   ease: 'Sine.easeInOut'
-
-    // });
-
+    
     // this.tweens.add({
 
     //   targets: r3,
@@ -135,26 +81,28 @@ this.blobs.setScale(2)
 
     // });
 
-
   }
-
+  spawn(org1, org2){
+    if(iterations - org1.age > 500 && iterations - org2.age > 500 && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300){
+      console.log("inside spawn")
+      const randomX = Phaser.Math.Between(0, 600)
+      const randomY = Phaser.Math.Between(0, 800)
+      let newOrg = new Org(this, randomX, randomY, iterations)
+      org1.reproductionCycle = 0;
+      org2.reproductionCycle = 0;
+    }
+  }
 
   update() {
     if (!(iterations % delay)) { //This is used to "slow down" the animation
       //The clearing has to be done BEFORE the item generation, otherwise it won't work
       /* generateItems(items); */
-      r1.x = r1.x + Phaser.Math.Between(-5, 5)
-      r1.y = r1.y + Phaser.Math.Between(-5, 5)
-      r2.x = r2.x + Phaser.Math.Between(-5, 5)
-      r2.y = r2.y + Phaser.Math.Between(-5, 5)
-      r3.x = r3.x + Phaser.Math.Between(-5, 5)
-      r3.y = r3.y + Phaser.Math.Between(-5, 5)
-      r4.x = r4.x + Phaser.Math.Between(-5, 5)
-      r4.y = r4.y + Phaser.Math.Between(-5, 5)
-      r5.x = r5.x + Phaser.Math.Between(-5, 5)
-      r5.y = r5.y + Phaser.Math.Between(-5, 5)
-      r6.x = r6.x + Phaser.Math.Between(-5, 5)
-      r6.y = r6.y + Phaser.Math.Between(-5, 5)
+      for(let i=0; i< this.orgs.getChildren().length; i++){
+        let org = this.orgs.getChildren()[i]
+        org.x = org.x + Phaser.Math.Between(-10, 10)
+        org.y = org.y + Phaser.Math.Between(-10, 10)
+        org.reproductionCycle += 5;
+      }
       //allCells = [ ...arr, ...arr2]
       //console.log(context.getImageData(101, 201, 2, 2).data[0])
     }
@@ -162,7 +110,7 @@ this.blobs.setScale(2)
     //console.log(arr)
     //console.log(iterations)
 
-
+console.log(this.r1.reproductionCycle, "reprod")
   }
 
 
