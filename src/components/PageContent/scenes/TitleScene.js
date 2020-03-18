@@ -32,6 +32,8 @@ class TitleScene extends Phaser.Scene {
       org.age++;
       org.grow();
       if(org.age > 2000) {
+        //this.orgs.remove(org, false, false)
+        org.age = 0;
         this.dyingOrg(org);
       }
     }
@@ -65,11 +67,11 @@ class TitleScene extends Phaser.Scene {
   }
 
   dyingOrg(org){
-    while(org.alpha > 0){
+    for(counter > 0){
       this.time.addEvent({
         delay: 1000,
         callback: function(){
-          org.dying()
+          org.dying();
         },
         callbackScope: this,
         loop: false
