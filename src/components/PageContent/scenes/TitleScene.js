@@ -20,31 +20,43 @@ class TitleScene extends Phaser.Scene {
   create() {
 
     this.add.image(400, 300, 'sky');
+    
+    this.blobs = this.add.sprite( 300, 300, "blobs")
+    this.blobs.play("blobs_anim");
 
 
     // platforms = this.physics.add.staticGroup();
 
     // platforms.create(400, 568, 'ground').setScale(2).refreshBody();
 
-    r4 = this.physics.add.sprite(200, 200, 'star');
-    r5 = this.physics.add.sprite(400, 200, 'star');
-    r6 = this.physics.add.sprite(600, 200, 'star');
-    r1 = this.physics.add.sprite(200, 400, 'star');
-    r2 = this.physics.add.sprite(400, 400, 'star');
-    r3 = this.physics.add.sprite(600, 400, 'star');
+    r4 = this.physics.add.sprite(200, 200, 'blobs');
+    r5 = this.physics.add.sprite(400, 200, 'blobs');
+    r6 = this.physics.add.sprite(600, 200, 'blobs');
+    r1 = this.physics.add.sprite(200, 400, 'blobs');
+    r2 = this.physics.add.sprite(400, 400, 'blobs');
+    r3 = this.physics.add.sprite(600, 400, 'blobs');
 
+
+    r1.setScale(2)
+    r2.setScale(2)
+    r3.setScale(2)
+    r4.setScale(2)
+    r5.setScale(2)
+    r6.setScale(2)
+ 
+this.blobs.setScale(2)
     r1.setCollideWorldBounds(true)
     r2.setCollideWorldBounds(true)
     r3.setCollideWorldBounds(true)
     r4.setCollideWorldBounds(true)
     r5.setCollideWorldBounds(true)
     r6.setCollideWorldBounds(true)
-    r1.setBounce(1);
-    r2.setBounce(1);
-    r3.setBounce(1);
-    r4.setBounce(1);
-    r5.setBounce(1);
-    r6.setBounce(1);
+    r1.play("blobs_anim");
+    r2.play("blobs_anim");
+    r3.play("blobs_anim");
+    r4.play("blobs_anim");
+    r5.play("blobs_anim");
+    r6.play("blobs_anim");
 
 
     
@@ -57,71 +69,71 @@ class TitleScene extends Phaser.Scene {
     this.physics.add.collider(r5, platforms);
     this.physics.add.collider(r6, platforms);
 
-    this.tweens.add({
+    // this.tweens.add({
 
-      targets: r4,
-      scaleX: 0.25,
-      scaleY: 0.5,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut'
+    //   targets: r4,
+    //   scaleX: 0.25,
+    //   scaleY: 0.5,
+    //   yoyo: true,
+    //   repeat: -1,
+    //   ease: 'Sine.easeInOut'
 
-    });
+    // });
 
-    this.tweens.add({
+    // this.tweens.add({
 
-      targets: r5,
-      scaleX: 0.25,
-      scaleY: 0.5,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut'
+    //   targets: r5,
+    //   scaleX: 0.25,
+    //   scaleY: 0.5,
+    //   yoyo: true,
+    //   repeat: -1,
+    //   ease: 'Sine.easeInOut'
 
-    });
+    // });
 
-    this.tweens.add({
+    // this.tweens.add({
 
-      targets: r6,
-      scaleX: 0.25,
-      scaleY: 0.5,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut'
+    //   targets: r6,
+    //   scaleX: 0.25,
+    //   scaleY: 0.5,
+    //   yoyo: true,
+    //   repeat: -1,
+    //   ease: 'Sine.easeInOut'
 
-    });
+    // });
 
-    this.tweens.add({
+    // this.tweens.add({
 
-      targets: r1,
-      scaleX: 0.25,
-      scaleY: 0.5,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut'
+    //   targets: r1,
+    //   scaleX: 0.25,
+    //   scaleY: 0.5,
+    //   yoyo: true,
+    //   repeat: -1,
+    //   ease: 'Sine.easeInOut'
 
-    });
+    // });
 
-    this.tweens.add({
+    // this.tweens.add({
 
-      targets: r2,
-      scaleX: 0.25,
-      scaleY: 0.5,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut'
+    //   targets: r2,
+    //   scaleX: 0.25,
+    //   scaleY: 0.5,
+    //   yoyo: true,
+    //   repeat: -1,
+    //   ease: 'Sine.easeInOut'
 
-    });
+    // });
 
-    this.tweens.add({
+    // this.tweens.add({
 
-      targets: r3,
-      scaleX: 0.25,
-      scaleY: 0.5,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut'
+    //   targets: r3,
+    //   scaleX: 0.25,
+    //   scaleY: 0.5,
+    //   yoyo: true,
+    //   repeat: -1,
+    //   ease: 'Sine.easeInOut'
 
-    });
+    // });
 
 
   }
