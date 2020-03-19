@@ -34,12 +34,11 @@ class Org extends Phaser.GameObjects.Sprite{
   } 
 
   dying(){
-    this.body.alpha -= 0.25
+    //console.log("AHH IM DYING")
+    this.alpha -= 0.25
     this.scale -= 0.25
     this.setScale(this.scale)
   }
-  destroy(){
-    this.body.destroy();
-  }
+  
 }
 export default Org;

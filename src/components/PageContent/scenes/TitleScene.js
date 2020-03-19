@@ -10,6 +10,7 @@ class TitleScene extends Phaser.Scene {
   }
 
   create() {
+    // this.gameTime = new Phaser.Timer(this);
 
     this.add.image(400, 300, 'sky');
     this.orgs = this.physics.add.group();
@@ -21,8 +22,7 @@ class TitleScene extends Phaser.Scene {
     this.r5 = new Org(this, 400, 400, iterations, 20, 30)
     this.r6 = new Org(this, 600, 400, iterations, 3, 4)
 
-    this.physics.add.overlap(this.orgs, this.orgs, this.spawn, null, this); 
-
+    this.physics.add.overlap(this.orgs, this.orgs, this.spawn, null, this);
   }
 
   update() {
@@ -31,18 +31,24 @@ class TitleScene extends Phaser.Scene {
       org.reproductionCycle++;
       org.age++;
       org.grow();
+      
       if(org.age > 2000) {
-        //this.orgs.remove(org, false, false)
-        org.age = 0;
+        org.setVelocity(0,0);
+        this.orgs.remove(org, false, false)
         this.dyingOrg(org);
-      }
+        }
     }
+
     iterations++;
+    if (iterations % 20 === 0 ) {
+      console.log(this.orgs.getChildren().length)
+    }
+
   }
 
   spawn(org1, org2) {
     if(org1.age > 500 && org2.age > 500 && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300){
-     
+
       const randomX = Phaser.Math.Between(-5, 5)
       const randomY = Phaser.Math.Between(-5, 5)
       const velX = Phaser.Math.Between(0, 100)
@@ -67,19 +73,20 @@ class TitleScene extends Phaser.Scene {
   }
 
   dyingOrg(org){
-    for(counter > 0){
-      this.time.addEvent({
-        delay: 1000,
-        callback: function(){
-          org.dying();
-        },
-        callbackScope: this,
-        loop: false
-      })
-    }
-    org.destroy();
+    //console.log("Hey I'm in here")
+    this.time.addEvent({
+      delay: 1000,
+      callback: function(){
+        org.dying();
+
+        if(org.scale <= 0){
+          org.destroy();
+        }
+      },
+      callbackScope: this,
+      repeat: 6
+    });
   }
-    
 
 }
 
