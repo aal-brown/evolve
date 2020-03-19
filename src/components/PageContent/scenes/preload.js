@@ -6,7 +6,6 @@ export default class Preload extends Phaser.Scene {
   }
 
   preload() {
-    
     this.load.image('sky', '/assets/sky.png');
     this.load.image('ground', '/assets/platform.png');
     //this.load.image('star', '/assets/star.png');
@@ -14,7 +13,28 @@ export default class Preload extends Phaser.Scene {
     this.load.spritesheet("blobs", "assets/blobs.png", {
       frameWidth: 32,
       frameHeight: 32
-    })
+    });
+
+    this.load.spritesheet("mushy peas", "/assets/food1.png", {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+    this.load.spritesheet("chicken", "/assets/food2.png", {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+    this.load.spritesheet("chocolate", "/assets/food3.png", {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+    this.load.spritesheet("pasta", "/assets/food4.png", {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+    this.load.spritesheet("raspberries", "/assets/food5.png", {
+      frameWidth: 32,
+      frameHeight: 32
+    });
 
     this.load.on("progress", () => {
       this.add.text(20, 20, "Loading game...")
@@ -24,12 +44,12 @@ export default class Preload extends Phaser.Scene {
       this.scene.start("TitleScene")
     });
   }
-   create() {
+  create() {
     this.anims.create({
       key: "blobs_anim",
       frames: this.anims.generateFrameNumbers("blobs"),
       frameRate: 10,
       repeat: -1 //means infinite loop!
     });
-   }
+  }
 }

@@ -6,6 +6,7 @@ class Org extends Phaser.GameObjects.Sprite{
     this.age = 0;
     this.reproductionCycle = 50;
     this.scale = 0.25;
+    this.energy = 2000;
     scene.add.existing(this);
     scene.physics.world.enableBody(this);
     this.play("blobs_anim");
@@ -18,7 +19,7 @@ class Org extends Phaser.GameObjects.Sprite{
     this.tint = Math.random() * 0xffffff;
   }
 
-  setVelocity(velX, velY){
+  setVelocity(velX, velY) {
     this.body.velocity.x = velX;
     this.body.velocity.y = velY;
   }
@@ -34,7 +35,7 @@ class Org extends Phaser.GameObjects.Sprite{
     }
   } 
 
-  dying(){
+  dying() {
     //console.log("AHH IM DYING")
     this.alpha -= 0.25
     this.scale -= 0.25

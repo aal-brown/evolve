@@ -1,5 +1,5 @@
 import React, {
-  Component
+  Component, useState
 } from 'react'
 import Phaser from 'phaser'
 import {
@@ -8,6 +8,7 @@ import {
 import Preload from "./scenes/preload";
 import TitleScene from './scenes/TitleScene';
 import LeftSideBar from './LeftSideBar.js'
+
 
 
 class Game extends Component {
@@ -32,8 +33,6 @@ class Game extends Component {
     scene: [Preload, TitleScene]
     }
   }
-    
-
 
   render() {
      const addOrg = function() { 
@@ -50,7 +49,7 @@ class Game extends Component {
       initialize,
       game
     } = this.state
-    return ( 
+    return (
       <div id="game-container">
       <IonPhaser game = {
         game

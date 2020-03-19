@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 import Org from "./Org";
+import Food from "./Food";
+import axios from "axios";
 
 let iterations = 0;
 
@@ -9,11 +11,23 @@ class TitleScene extends Phaser.Scene {
     super('TitleScene')
   }
 
-  create() {
+  async create() {
+
+    const foodData = await this.getFoodData();
+    console.log("inside the create func ", foodData);
+
+    // axios.get("http://localhost:3000/foods")
+    // .then((res) => {
+    //   foodsData = res.data
+    //   console.log("inside TitleScene", foodsData)})
+    // .catch((err) => console.log(err.message));
     // this.gameTime = new Phaser.Timer(this);
+
+    //===========================================Organisms====================================================
 
     this.add.image(400, 300, 'sky');
     this.orgs = this.physics.add.group();
+   
 
     this.r1 = new Org(this, 400, 200, iterations, 50, 60)
     this.r2 = new Org(this, 400, 400, iterations, 100, 100)
@@ -23,32 +37,62 @@ class TitleScene extends Phaser.Scene {
     this.r6 = new Org(this, 600, 400, iterations, 3, 4)
 
     this.physics.add.overlap(this.orgs, this.orgs, this.spawn, null, this);
+
+    this.physics.add.overlap(this.orgs, this.foods, this.eat, null, this);
+
+    //============================================Foods=======================================================
+    this.foods = this.physics.add.group();
+    this.f1 = new Food(this, Phaser.Math.Between(20,580), Phaser.Math.Between(20,780), foodData[Phaser.Math.Between(1, 5)])
+    this.f2 = new Food(this, Phaser.Math.Between(20,580), Phaser.Math.Between(20,780), foodData[Phaser.Math.Between(1, 5)])
+    this.f3 = new Food(this, Phaser.Math.Between(20,580), Phaser.Math.Between(20,780), foodData[Phaser.Math.Between(1, 5)])
+    this.f4 = new Food(this, Phaser.Math.Between(20,580), Phaser.Math.Between(20,780), foodData[Phaser.Math.Between(1, 5)])
+    this.f5 = new Food(this, Phaser.Math.Between(20,580), Phaser.Math.Between(20,780), foodData[Phaser.Math.Between(1, 5)])
+
   }
 
   update() {
-    for(let i = 0; i < this.orgs.getChildren().length; i++){
-      let org = this.orgs.getChildren()[i]
-      org.reproductionCycle++;
-      org.age++;
-      org.grow();
-
-      if (!org.age % 600) {
-        org.tint = org.tint * 0.5;
-      }
-      
-      if(org.age > 2000) {
-        org.tint = 0.001 * 0xffffff;
-        org.setVelocity(0,0);
-        this.orgs.remove(org, false, false)
-        this.dyingOrg(org);
+    if(this.orgs){
+      for(let i = 0; i < this.orgs.getChildren().length; i++){
+        let org = this.orgs.getChildren()[i]
+        org.reproductionCycle++;
+        org.age++;
+        if (org.energy > 0) {
+          org.energy--;
         }
-    }
+        org.grow();
+        org.body.velocityX = (org.body.velocityX * org.energy/2000)
+        org.body.velocityY = (org.body.velocityY * org.energy/2000)
+        console.log(org.energy)
+        if (!org.age % 600) {
+          org.tint = org.tint * 0.5;
+        }
 
-    iterations++;
-    if (iterations % 20 === 0 ) {
-      console.log(this.orgs.getChildren().length)
-    }
+        if(org.age > 2000) {
+          org.tint = 0.001 * 0xffffff;
+          org.setVelocity(0,0);
+          this.orgs.remove(org, false, false)
+          this.dyingOrg(org);
+        }
+      }
+        for(let i = 0; i < this.foods.getChildren().length; i++){
+          let food = this.foods.getChildren()[i]
 
+          if(food.energy === 0) {
+            food.destroy();
+          }
+
+      iterations++;
+        }
+   }
+  }
+
+  getFoodData = async function() {
+    return axios.get("http://localhost:3000/foods")
+      .then((res) => {
+        console.log("inside TitleScene", res.data)
+        return res.data;
+      })
+      .catch((err) => console.log(err.message));
   }
 
   spawn(org1, org2) {
@@ -64,7 +108,7 @@ class TitleScene extends Phaser.Scene {
       org2.reproductionCycle = 0;
       org1.setVelocity(0,0);
       org2.setVelocity(0,0);
-  
+
       this.time.addEvent({
         delay: 1000,
         callback: function(){
@@ -77,7 +121,18 @@ class TitleScene extends Phaser.Scene {
     }
   }
 
-  dyingOrg(org){
+eat(org, food) {
+
+  if (food.energy > 15) {
+    org.energy += 15
+    food.energy -= 15
+  } else if (food.energy <= 15 && food.energy > 0) {
+    org.energy += food.energy
+    food.energy = 0
+  }
+}
+
+ dyingOrg(org){
     //console.log("Hey I'm in here")
     this.time.addEvent({
       delay: 1000,
