@@ -31,8 +31,13 @@ class TitleScene extends Phaser.Scene {
       org.reproductionCycle++;
       org.age++;
       org.grow();
+
+      if (!org.age % 600) {
+        org.tint = org.tint * 0.5;
+      }
       
       if(org.age > 2000) {
+        org.tint = 0.001 * 0xffffff;
         org.setVelocity(0,0);
         this.orgs.remove(org, false, false)
         this.dyingOrg(org);
@@ -59,7 +64,7 @@ class TitleScene extends Phaser.Scene {
       org2.reproductionCycle = 0;
       org1.setVelocity(0,0);
       org2.setVelocity(0,0);
-
+  
       this.time.addEvent({
         delay: 1000,
         callback: function(){

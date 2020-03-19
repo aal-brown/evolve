@@ -11,10 +11,11 @@ class Org extends Phaser.GameObjects.Sprite{
     this.play("blobs_anim");
     scene.orgs.add(this);
     this.body.setCollideWorldBounds(true);
-    this.body.setBounce(1)
+    this.body.setBounce(1);
     this.body.velocity.x = velX;
     this.body.velocity.y = velY;
     
+    this.tint = Math.random() * 0xffffff;
   }
 
   setVelocity(velX, velY){
