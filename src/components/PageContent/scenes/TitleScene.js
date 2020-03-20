@@ -89,7 +89,7 @@ class TitleScene extends Phaser.Scene {
         let org = this.orgs.getChildren()[i]
         org.reproductionCycle++;
         org.age++;
-        org.eatingCycle++;
+        org.eatCycle++;
         if (org.energy > 0) {
           org.energy--;
         }
@@ -97,9 +97,9 @@ class TitleScene extends Phaser.Scene {
         org.body.velocityX = (org.body.velocityX * org.energy/2000)
         org.body.velocityY = (org.body.velocityY * org.energy/2000)
         
-        if (!org.age % 600) {
-          org.tint = org.tint * 0.5;
-        }
+        // if (!org.age % 600) {
+        //   org.tint = org.tint * 0.5;
+        // }
 
         if(org.age > 2000) {
           org.tint = 0.001 * 0xffffff;
@@ -111,7 +111,8 @@ class TitleScene extends Phaser.Scene {
         for(let i = 0; i < this.foods.getChildren().length; i++){
           let food = this.foods.getChildren()[i]
 
-          if(food.energy === 0) {
+          if(food.energy <= 0) {
+            console.log("food destroy")
             food.destroy();
           }
 
@@ -138,6 +139,7 @@ class TitleScene extends Phaser.Scene {
   }
 
   spawn(org1, org2) {
+    // console.log(this.physics)
     if(org1.age > 500 && org2.age > 500 && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300){
 
       const randomX = Phaser.Math.Between(-5, 5)
@@ -164,15 +166,16 @@ class TitleScene extends Phaser.Scene {
   }
 
   eat(org, food) {
-    org.eatingCycle = 0;
-    console.log("inside eat", food.energy)
-    if (food.energy > 15 && org.eatingCycle > 1000) {
+    if (food.energy > 15 && org.eatCycle > 350) {
       org.energy += 15
       food.energy -= 15
       console.log(food.nameStr, food.energy)
-    } else if (food.energy <= 15 && food.energy > 0 && org.eatingCycle > 1000) {
+      org.eatCycle = 0;
+    } else if (food.energy <= 15 && food.energy > 0 && org.eatCycle > 350) {
+      console.log("inside the food is zero!")
       org.energy += food.energy
-      food.energy = 0
+      org.eatCycle = 0;
+      food.energy = 0;
     }
   }
 
