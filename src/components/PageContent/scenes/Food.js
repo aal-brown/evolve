@@ -4,7 +4,7 @@ class Food extends Phaser.GameObjects.Sprite {
   constructor(scene, x, y, foodObj) {
     super(scene, x, y, foodObj.name);
     this.nameStr = foodObj.name;
-    this.energy = foodObj.energy_level
+    this.energy = foodObj.energy;
     scene.add.existing(this)
     scene.physics.world.enableBody(this);
     scene.foods.add(this);

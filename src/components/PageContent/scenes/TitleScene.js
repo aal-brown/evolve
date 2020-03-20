@@ -12,7 +12,7 @@ class TitleScene extends Phaser.Scene {
   }
 
   async create() {
-
+   this.pausePhysics = false;
     const foodData = await this.getFoodData();
     console.log("inside the create func ", foodData);
 
@@ -23,30 +23,66 @@ class TitleScene extends Phaser.Scene {
     // .catch((err) => console.log(err.message));
     // this.gameTime = new Phaser.Timer(this);
 
+
+    //Create a black strip at the top of the screen.
+
     //===========================================Organisms====================================================
 
     this.add.image(400, 300, 'sky');
-    this.orgs = this.physics.add.group();
-   
 
-    this.r1 = new Org(this, 400, 200, iterations, 50, 60)
-    this.r2 = new Org(this, 400, 400, iterations, 100, 100)
-    this.r3 = new Org(this, 400, 600, iterations, 25, 35)
-    this.r4 = new Org(this, 200, 400, iterations, 10, 20)
-    this.r5 = new Org(this, 400, 400, iterations, 20, 30)
-    this.r6 = new Org(this, 600, 400, iterations, 3, 4)
+    let partition = this.add.graphics();
+    partition.fillStyle(0x000000,1);
+    partition.beginPath();
+    partition.moveTo(0, 0);
+    partition.lineTo(100, 0);
+    partition.lineTo(100, this.game.config.height);
+    partition.lineTo(0, this.game.config.height);
+    partition.lineTo(0,0);
+    partition.closePath();
+    partition.fillPath()
+
+    this.partitions = this.physics.add.staticGroup();
+    this.partitions.add(partition);
+    console.log(this.partitions)
+
+    this.orgs = this.physics.add.group();
+    this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    
+    if(Phaser.Input.Keyboard.JustDown(this.spacebar) && this.pausePhysics === false  ){
+    
+      // Physics becomes active
+      this.pausePhysics = true;
+  
+      // Pause `Physics`
+      this.physics.pause ( );
+  
+    } else {
+      // Set `Physics` variable back to `off`
+      this.pausePhysics = false;
+      this.physics.resume();
+    }
+    console.log(this)
+    console.log(this.game.config.width)
+
+    this.r1 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 50, 60)
+    this.r2 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 100, 100)
+    this.r3 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 25, 35)
+    this.r4 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 10, 20)
+    this.r5 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 20, 30)
+    this.r6 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 3, 4)
 
     this.physics.add.overlap(this.orgs, this.orgs, this.spawn, null, this);
-
-    this.physics.add.overlap(this.orgs, this.foods, this.eat, null, this);
-
+    this.physics.add.collider(this.orgs, this.partitions);
+    
     //============================================Foods=======================================================
     this.foods = this.physics.add.group();
-    this.f1 = new Food(this, Phaser.Math.Between(20,580), Phaser.Math.Between(20,780), foodData[Phaser.Math.Between(1, 5)])
-    this.f2 = new Food(this, Phaser.Math.Between(20,580), Phaser.Math.Between(20,780), foodData[Phaser.Math.Between(1, 5)])
-    this.f3 = new Food(this, Phaser.Math.Between(20,580), Phaser.Math.Between(20,780), foodData[Phaser.Math.Between(1, 5)])
-    this.f4 = new Food(this, Phaser.Math.Between(20,580), Phaser.Math.Between(20,780), foodData[Phaser.Math.Between(1, 5)])
-    this.f5 = new Food(this, Phaser.Math.Between(20,580), Phaser.Math.Between(20,780), foodData[Phaser.Math.Between(1, 5)])
+    this.f1 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
+    this.f2 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
+    this.f3 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
+    this.f4 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
+    this.f5 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
+
+    this.physics.add.overlap(this.orgs, this.foods, this.eat, null, this);
 
   }
 
@@ -56,13 +92,14 @@ class TitleScene extends Phaser.Scene {
         let org = this.orgs.getChildren()[i]
         org.reproductionCycle++;
         org.age++;
+        org.eatingCycle++;
         if (org.energy > 0) {
           org.energy--;
         }
         org.grow();
         org.body.velocityX = (org.body.velocityX * org.energy/2000)
         org.body.velocityY = (org.body.velocityY * org.energy/2000)
-        console.log(org.energy)
+        
         if (!org.age % 600) {
           org.tint = org.tint * 0.5;
         }
@@ -83,7 +120,7 @@ class TitleScene extends Phaser.Scene {
 
       iterations++;
         }
-   }
+    }
   }
 
   getFoodData = async function() {
@@ -121,16 +158,18 @@ class TitleScene extends Phaser.Scene {
     }
   }
 
-eat(org, food) {
-
-  if (food.energy > 15) {
-    org.energy += 15
-    food.energy -= 15
-  } else if (food.energy <= 15 && food.energy > 0) {
-    org.energy += food.energy
-    food.energy = 0
+  eat(org, food) {
+    org.eatingCycle = 0;
+    console.log("inside eat", food.energy)
+    if (food.energy > 15 && org.eatingCycle > 1000) {
+      org.energy += 15
+      food.energy -= 15
+      console.log(food.nameStr, food.energy)
+    } else if (food.energy <= 15 && food.energy > 0 && org.eatingCycle > 1000) {
+      org.energy += food.energy
+      food.energy = 0
+    }
   }
-}
 
  dyingOrg(org){
     //console.log("Hey I'm in here")

@@ -3,8 +3,17 @@ class Org extends Phaser.GameObjects.Sprite{
   constructor(scene, x, y, iterations, velX, velY){
   super(scene, x, y, "blobs")
 
+
+    // this.lifespan
+    //this.speed
+    //this.strength
+    //this.energy efficiency
+    //this.max_energy
+    //this.
+
     this.age = 0;
     this.reproductionCycle = 50;
+    this.eatCycle = 0;
     this.scale = 0.25;
     this.energy = 2000;
     scene.add.existing(this);
