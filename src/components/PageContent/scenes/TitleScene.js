@@ -3,7 +3,6 @@ import Org from "./Org";
 import Food from "./Food";
 import axios from "axios";
 
-let iterations = 0;
 
 class TitleScene extends Phaser.Scene {
 
@@ -49,14 +48,16 @@ class TitleScene extends Phaser.Scene {
     this.background = this.add.image(400, 300, 'sky');
 
     this.orgs = this.physics.add.group();
-  
+   
+    //Organisms on-click
+    this.input.on("gameobjectdown", this.writeAttributes);
 
-    this.r1 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 50, 60,1)
-    this.r2 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 100, 100,2)
-    this.r3 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 25, 35,3)
-    this.r4 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 10, 20,4)
-    this.r5 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 20, 30,5)
-    this.r6 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 3, 4,6)
+    this.r1 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null)
+    this.r2 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null)
+    this.r3 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null)
+    this.r4 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null)
+    this.r5 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null)
+    this.r6 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null)
     this.orgNum = 6;
   
     this.r1.setInteractive()
@@ -65,9 +66,6 @@ class TitleScene extends Phaser.Scene {
     this.r4.setInteractive()
     this.r5.setInteractive()
     this.r6.setInteractive()
-    
-    //Organisms on-click
-    this.input.on("gameobjectdown", this.writeAttributes);
 
     this.physics.add.overlap(this.orgs, this.orgs, this.spawn, null, this);
     this.physics.add.collider(this.orgs, this.partitions);
@@ -180,7 +178,6 @@ class TitleScene extends Phaser.Scene {
       
       
 
-      iterations++;
         }
     }
   }
@@ -188,12 +185,13 @@ class TitleScene extends Phaser.Scene {
   checkClosestMoveTo(source,objects) {
     // console.log(Phaser.Math.Distance.Between(org,food))
     let closest = this.physics.closest(source,objects)
+    console.log("distance", Phaser.Math.Distance.Between(source.x, source.y,closest.x, closest.y))
     //this.physics.moveTo()
     this.physics.moveToObject(source,closest,90)
   }
 
   addOrg() {
-  let addedOrg = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, Phaser.Math.Between(0, 100), Phaser.Math.Between(0, 100), this.orgNum)
+    let addedOrg = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), Phaser.Math.Between(0, 100), Phaser.Math.Between(0, 100), null, null, this.orgNum)
     this.orgNum++;
     addedOrg.setInteractive();
   }
@@ -216,10 +214,8 @@ class TitleScene extends Phaser.Scene {
 
       const randomX = Phaser.Math.Between(-5, 5)
       const randomY = Phaser.Math.Between(-5, 5)
-      const velX = Phaser.Math.Between(0, 100)
-      const velY = Phaser.Math.Between(0, 100)
 
-      let newOrg = new Org(this, org1.x + randomX, org1.y + randomY, iterations, velX, velY, this.orgNum)
+      let newOrg = new Org(this, org1.x + randomX, org1.y + randomY, org1, org2, this.orgNum)
       org1.reproductionCycle = 0;
       org2.reproductionCycle = 0;
       org1.setVelocity(0,0);
