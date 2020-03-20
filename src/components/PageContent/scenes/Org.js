@@ -4,7 +4,7 @@ class Org extends Phaser.GameObjects.Sprite{
   constructor(scene, x, y, iterations, velX, velY){
   super(scene, x, y, "blobs")
     //this.attributes = genAttrVal
-    //this.lifespan =
+    //this.lifespan = 
     //this.speed
     //this.strength
     //this.energy efficiency
@@ -20,6 +20,7 @@ class Org extends Phaser.GameObjects.Sprite{
     //this.score
     //this.status?
     //this.target?
+    //this.generation
 
     //this.flatener
     //this.parent1
@@ -58,7 +59,7 @@ class Org extends Phaser.GameObjects.Sprite{
     //part of search algorithm
   }
 
-  genAttrValue(attr) {
+  genAttrValue(parent1,parent2, flatness) {
     //could return an array with all attributes?
   }
 

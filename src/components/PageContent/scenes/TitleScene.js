@@ -81,12 +81,17 @@ class TitleScene extends Phaser.Scene {
         this.scene.addFood(foodData);
       }
     })
+
+    // this.checkClosestMoveTo(this.orgs.getChildren()[0], this.foods.getChildren())
   }
 
   update() {
     if(this.orgs){
       for(let i = 0; i < this.orgs.getChildren().length; i++){
         let org = this.orgs.getChildren()[i]
+        if(this.foods.getChildren().length > 0) {
+          this.checkClosestMoveTo(org,this.foods.getChildren())
+        }
         org.reproductionCycle++;
         org.age++;
         org.eatCycle++;
@@ -115,10 +120,22 @@ class TitleScene extends Phaser.Scene {
             console.log("food destroy")
             food.destroy();
           }
+      
+      
 
       iterations++;
         }
     }
+  }
+
+  checkClosestMoveTo(source,objects) {
+    console.log("org",source)
+    source.setScale(2)
+    // console.log(Phaser.Math.Distance.Between(org,food))
+    let closest = this.physics.closest(source,objects)
+    //this.physics.moveTo()
+    console.log(closest)
+    this.physics.moveToObject(source,closest,90)
   }
 
   addOrg() {
@@ -132,14 +149,12 @@ class TitleScene extends Phaser.Scene {
   getFoodData = async function() {
     return axios.get("http://localhost:3000/foods")
       .then((res) => {
-        console.log("inside TitleScene", res.data)
         return res.data;
       })
       .catch((err) => console.log(err.message));
   }
 
-  spawn(org1, org2) {
-    // console.log(this.physics)
+  spawn(org1, org2,) {
     if(org1.age > 500 && org2.age > 500 && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300){
 
       const randomX = Phaser.Math.Between(-5, 5)
@@ -169,10 +184,8 @@ class TitleScene extends Phaser.Scene {
     if (food.energy > 15 && org.eatCycle > 350) {
       org.energy += 15
       food.energy -= 15
-      console.log(food.nameStr, food.energy)
       org.eatCycle = 0;
     } else if (food.energy <= 15 && food.energy > 0 && org.eatCycle > 350) {
-      console.log("inside the food is zero!")
       org.energy += food.energy
       org.eatCycle = 0;
       food.energy = 0;
@@ -180,7 +193,6 @@ class TitleScene extends Phaser.Scene {
   }
 
  dyingOrg(org){
-    //console.log("Hey I'm in here")
     this.time.addEvent({
       delay: 1000,
       callback: function(){
