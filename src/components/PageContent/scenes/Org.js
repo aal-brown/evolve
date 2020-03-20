@@ -4,7 +4,7 @@ class Org extends Phaser.GameObjects.Sprite{
   super(scene, x, y, "blobs")
 
 
-    // this.lifespan
+    //this.lifespan
     //this.speed
     //this.strength
     //this.energy efficiency

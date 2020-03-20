@@ -7,7 +7,7 @@ import {
 } from '@ion-phaser/react'
 import Preload from "./scenes/preload";
 import TitleScene from './scenes/TitleScene';
-import LeftSideBar from './LeftSideBar.js'
+// import LeftSideBar from './LeftSideBar.js'
 
 //let canvas = document.querySelector('canvas');
 //canvas.width = window.innerWidth;
@@ -17,8 +17,9 @@ class Game extends Component {
   state = {
     initialize: true,
     game: {
-      width: window.innerWidth,
+      width: window.outerWidth,
       height: window.innerHeight,
+      backgroundColor: 0xFFD966,
       parent: 'game-container',
       type: Phaser.AUTO,
       physics: {
@@ -28,6 +29,9 @@ class Game extends Component {
               enableBody: true
              }
         }
+    },
+    dom: {
+      createContainer: true
     },
     scale: {
       mode: Phaser.Scale.FIT,
@@ -60,13 +64,13 @@ class Game extends Component {
         initialize
       }
       />
-      < LeftSideBar
+      {/* < LeftSideBar
        addOrg = {addOrg}
        addFood = {addFood}
        changeTemp = {changeTemp}
        save = {save}
        getSeed = {getSeed}
-        />
+        /> */}
       </div>
     )
   }

@@ -15,7 +15,7 @@ class TitleScene extends Phaser.Scene {
    this.pausePhysics = false;
     const foodData = await this.getFoodData();
     console.log("inside the create func ", foodData);
-
+  
     // axios.get("http://localhost:3000/foods")
     // .then((res) => {
     //   foodsData = res.data
@@ -28,27 +28,12 @@ class TitleScene extends Phaser.Scene {
 
     //===========================================Organisms====================================================
 
-    this.add.image(400, 300, 'sky');
-
-    let partition = this.add.graphics();
-    partition.fillStyle(0x000000,1);
-    partition.beginPath();
-    partition.moveTo(0, 0);
-    partition.lineTo(100, 0);
-    partition.lineTo(100, this.game.config.height);
-    partition.lineTo(0, this.game.config.height);
-    partition.lineTo(0,0);
-    partition.closePath();
-    partition.fillPath()
-
-    this.partitions = this.physics.add.staticGroup();
-    this.partitions.add(partition);
-    console.log(this.partitions)
+    //this.add.image(400, 300, 'sky');
 
     this.orgs = this.physics.add.group();
     this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     
-    if(Phaser.Input.Keyboard.JustDown(this.spacebar) && this.pausePhysics === false  ){
+    if (Phaser.Input.Keyboard.JustDown(this.spacebar) && this.pausePhysics === false) {
     
       // Physics becomes active
       this.pausePhysics = true;
@@ -61,8 +46,6 @@ class TitleScene extends Phaser.Scene {
       this.pausePhysics = false;
       this.physics.resume();
     }
-    console.log(this)
-    console.log(this.game.config.width)
 
     this.r1 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 50, 60)
     this.r2 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 100, 100)
@@ -73,7 +56,7 @@ class TitleScene extends Phaser.Scene {
 
     this.physics.add.overlap(this.orgs, this.orgs, this.spawn, null, this);
     this.physics.add.collider(this.orgs, this.partitions);
-    
+
     //============================================Foods=======================================================
     this.foods = this.physics.add.group();
     this.f1 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
@@ -84,6 +67,20 @@ class TitleScene extends Phaser.Scene {
 
     this.physics.add.overlap(this.orgs, this.foods, this.eat, null, this);
 
+  //================= buttons ==============================================//
+    const htmlForm = this.add
+    .dom(350, 300)
+    .createFromCache("buttons");
+
+    htmlForm.addListener("click");
+    // Have it setup so a random word gets set as server name
+    htmlForm.on("click", function(event) {
+      if (event.target.name === "addOrg") {
+        this.scene.addOrg();
+      } else if (event.target.name === "addFood") {
+        this.scene.addFood(foodData);
+      }
+    })
   }
 
   update() {
@@ -123,6 +120,14 @@ class TitleScene extends Phaser.Scene {
     }
   }
 
+  addOrg() {
+    new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, Phaser.Math.Between(0, 100), Phaser.Math.Between(0, 100))
+  }
+
+  addFood(foodData) {
+    new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
+  }
+  
   getFoodData = async function() {
     return axios.get("http://localhost:3000/foods")
       .then((res) => {

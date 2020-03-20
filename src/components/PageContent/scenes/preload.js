@@ -35,6 +35,7 @@ export default class Preload extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
     });
+    this.load.html("buttons", "/assets/html/buttons.html");
 
     this.load.on("progress", () => {
       this.add.text(20, 20, "Loading game...")
