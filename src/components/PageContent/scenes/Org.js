@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import Game from "../Game";
 class Org extends Phaser.GameObjects.Sprite{
-  constructor(scene, x, y, iterations, velX, velY){
+  constructor(scene, x, y, iterations, velX, velY,orgNum){
   super(scene, x, y, "blobs")
     //this.attributes = genAttrVal
     //this.lifespan = 
@@ -26,6 +26,8 @@ class Org extends Phaser.GameObjects.Sprite{
     //this.parent1
     //this.parent2
 
+
+    this.id = orgNum;
     this.age = 0;
     this.reproductionCycle = 50;
     this.eatCycle = 1000;

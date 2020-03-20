@@ -15,7 +15,7 @@ class TitleScene extends Phaser.Scene {
    this.pausePhysics = false;
     const foodData = await this.getFoodData();
     console.log("inside the create func ", foodData);
-  
+    
     // axios.get("http://localhost:3000/foods")
     // .then((res) => {
     //   foodsData = res.data
@@ -47,12 +47,22 @@ class TitleScene extends Phaser.Scene {
       this.physics.resume();
     }
 
-    this.r1 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 50, 60)
-    this.r2 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 100, 100)
-    this.r3 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 25, 35)
-    this.r4 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 10, 20)
-    this.r5 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 20, 30)
-    this.r6 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 3, 4)
+    this.r1 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 50, 60,1)
+    this.r2 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 100, 100,2)
+    this.r3 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 25, 35,3)
+    this.r4 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 10, 20,4)
+    this.r5 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 20, 30,5)
+    this.r6 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), iterations, 3, 4,6)
+    this.orgNum = 6;
+  
+    this.r1.setInteractive()
+    this.r2.setInteractive()
+    this.r3.setInteractive()
+    this.r4.setInteractive()
+    this.r5.setInteractive()
+    this.r6.setInteractive()
+
+    this.input.on("gameobjectdown", this.consoleLog);
 
     this.physics.add.overlap(this.orgs, this.orgs, this.spawn, null, this);
     this.physics.add.collider(this.orgs, this.partitions);
@@ -77,12 +87,20 @@ class TitleScene extends Phaser.Scene {
     htmlForm.on("click", function(event) {
       if (event.target.name === "addOrg") {
         this.scene.addOrg();
+        this.scene.orgNum++;
       } else if (event.target.name === "addFood") {
         this.scene.addFood(foodData);
       }
     })
 
     // this.checkClosestMoveTo(this.orgs.getChildren()[0], this.foods.getChildren())
+  }
+  // destroyShip(pointer, gameObject) {
+  //   gameObject.setTexture("explosion")
+  //   gameObject.play("explosion_anim")
+  // }
+  consoleLog(pointer, gameObject ) {
+    console.log(gameObject.id)
   }
 
   update() {
@@ -129,12 +147,9 @@ class TitleScene extends Phaser.Scene {
   }
 
   checkClosestMoveTo(source,objects) {
-    console.log("org",source)
-    source.setScale(2)
     // console.log(Phaser.Math.Distance.Between(org,food))
     let closest = this.physics.closest(source,objects)
     //this.physics.moveTo()
-    console.log(closest)
     this.physics.moveToObject(source,closest,90)
   }
 
@@ -156,17 +171,19 @@ class TitleScene extends Phaser.Scene {
 
   spawn(org1, org2,) {
     if(org1.age > 500 && org2.age > 500 && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300){
+      this.orgNum++
 
       const randomX = Phaser.Math.Between(-5, 5)
       const randomY = Phaser.Math.Between(-5, 5)
       const velX = Phaser.Math.Between(0, 100)
       const velY = Phaser.Math.Between(0, 100)
 
-      let newOrg = new Org(this, org1.x + randomX, org1.y + randomY, iterations, velX, velY)
+      let newOrg = new Org(this, org1.x + randomX, org1.y + randomY, iterations, velX, velY, this.orgNum)
       org1.reproductionCycle = 0;
       org2.reproductionCycle = 0;
       org1.setVelocity(0,0);
       org2.setVelocity(0,0);
+      newOrg.setInteractive();
 
       this.time.addEvent({
         delay: 1000,
@@ -182,11 +199,11 @@ class TitleScene extends Phaser.Scene {
 
   eat(org, food) {
     if (food.energy > 15 && org.eatCycle > 350) {
-      org.energy += 15
-      food.energy -= 15
+      org.energy += 15;
+      food.energy -= 15;
       org.eatCycle = 0;
     } else if (food.energy <= 15 && food.energy > 0 && org.eatCycle > 350) {
-      org.energy += food.energy
+      org.energy += food.energy;
       org.eatCycle = 0;
       food.energy = 0;
     }
