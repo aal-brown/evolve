@@ -352,16 +352,20 @@ class TitleScene extends Phaser.Scene {
     let gameID = cookieArr[1];
     gameID = gameID.slice(9);
 
-    let gameStateObj = {
-      orgs: orgs,
-      foods: foods
-    }
-    let orgString = JSON.stringify(orgs)
-    console.log("game org string: ", orgString)
+    let gameStateObject = {
+      orgs: [],
+      foods: []
+    };
 
-    let gameStateStr = JSON.stringify(gameStateObj);
-    
-    console.log("parsed org string: ", JSON.parse(orgString));
+    orgs.forEach((org) => {
+      gameStateObject.orgs.push(org.getAttributes());
+    })
+
+    foods.forEach((food) => {
+      gameStateObject.foods.push(food.getAttributes());
+    })
+
+    gameStateObject = JSON.stringify(gameStateObject);
 
     let newGameBool = await this.newGame(gameID);
 
@@ -372,30 +376,35 @@ class TitleScene extends Phaser.Scene {
       axios({
         method: 'PUT',
         url,
-        data: { save_text: gameStateStr },
+        data: { save_text: gameStateObject },
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' }
       })
       .then(resp => {
-        console.log(resp);
+        console.log("Saved successfully:", resp);
       })
-      .catch(err => console.error(err.message));
+      .catch(err => console.log("Error attempting to save:", err.message));
     } else {
       console.log("POST NEW SAVE");
-    }
-    
-    // let gameData = {
-    //   save_text: "testy text",
-    //   game_id: gameID
-    // };
+      const url = `http://localhost:3000/game_saves`;
 
-    // axios({
-    //   method: 'POST',
-    //   url,
-    //   data: gameData,
-    //   mode: 'no-cors',
-    //   headers: { 'Content-Type': 'application/json' }
-    // })
+      let gameData = {
+        game_id: gameID,
+        save_text: gameStateObject
+      };
+  
+      axios({
+        method: 'POST',
+        url,
+        data: gameData,
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(resp => {
+        console.log("Saved successfully:", resp);
+      })
+      .catch(err => console.log("Error attempting to save:", err.message));
+    }
   }
 
   newGame = async function(gameID) {

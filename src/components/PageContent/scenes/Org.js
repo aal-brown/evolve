@@ -38,16 +38,16 @@ class Org extends Phaser.GameObjects.Sprite {
       } else if (!parent1.predator && !parent2.predator){ 
         this.predator = false
       } else {
-      const val1 = Phaser.Math.Between(0, 1)
-      this.predator = (val1 === 0 ? true : false)
+        const val1 = Phaser.Math.Between(0, 1)
+        this.predator = (val1 === 0 ? true : false)
       }
       if(parent1.type === 1 && parent2.type === 1){
         this.type = 1
       } else if (parent1.type === 2 && parent2.type === 2){ 
         this.type = 2
       } else {
-      const val2 = Phaser.Math.Between(1, 2)
-      this.type = (val2 === 1 ? 1 : 2)
+        const val2 = Phaser.Math.Between(1, 2)
+        this.type = (val2 === 1 ? 1 : 2)
       }
       this.perception = mathNormInherited(parent1.perception, parent2.perception)
       this.litter_size = (mathNormInherited(parent1.litter_size, parent2.litter_size) <= 0 ? 1 : mathNormInherited(parent1.litter_size, parent2.litter_size))
@@ -108,8 +108,9 @@ class Org extends Phaser.GameObjects.Sprite {
     this.body.setBounce(1);
     this.body.velocity.x = this.velx;
     this.body.velocity.y = this.vely;
+    this.colour = Math.random() * 0xffffff;
 
-    this.tint = Math.random() * 0xffffff;
+    this.tint = this.colour;
   }
 
   //Check the distance between org and all other elements, (based on what is passed in), if this distance is less than perception than return true. Else return false.
@@ -174,6 +175,38 @@ class Org extends Phaser.GameObjects.Sprite {
     this.alpha -= 0.25
     this.scale -= 0.25
     this.setScale(this.scale)
+  }
+
+  getAttributes() {
+    let orgAttributes = {
+      orgNum: this.id,
+      age: this.age,
+      score: this.score,
+      reproductionCycle: this.reproductionCycle,
+      eatCycle: this.eatCycle,
+      scale: this.scale,
+      energy: this.energy,
+      velx: this.velx,
+      vely: this.vely,
+      colour: this.colour,
+      lifespan: this.lifespan,
+      strength: this.strength,
+      energy_efficiency: this.energy_efficiency,
+      max_energy: this.max_energy,
+      aggression: this.aggression,
+      health: this.health,
+      predator: this.predator,
+      perception: this.perception,
+      litter_size: this.litter_size,
+      breeding_age: this.breeding_age,
+      speed: this.speed,
+      type: this.type,
+      generation: this.generation,
+      parent1: this.parent1.id,
+      parent2: this.parent2.id
+    };
+
+    return orgAttributes;
   }
 
 
