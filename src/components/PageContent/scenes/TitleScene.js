@@ -11,7 +11,7 @@ class TitleScene extends Phaser.Scene {
   }
 
   async create() {
-   this.pausePhysics = false;
+    
     const foodData = await this.getFoodData();
     console.log("inside the create func ", foodData);
     
@@ -25,25 +25,11 @@ class TitleScene extends Phaser.Scene {
 
     //Create a black strip at the top of the screen.
 
-    //=========================================================pause================================================
+    //=========================================================Pause================================================
+    this.input.keyboard.on('keydown-SPACE', this.togglePause, this)
+    this.pausePhysics = false;
 
-    // this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-    
-    // if (Phaser.Input.Keyboard.JustDown(this.spacebar) && this.pausePhysics === false) {
-    
-    //   // Physics becomes active
-    //   this.pausePhysics = true;
-  
-    //   // Pause `Physics`
-    //   this.physics.pause();
-  
-    // } else {
-    //   // Set `Physics` variable back to `off`
-    //   this.pausePhysics = false;
-    //   this.physics.resume();
-    // }
-
-    //===========================================Organisms====================================================
+   //===========================================Organisms====================================================
 
     this.background = this.add.image(400, 300, 'sky');
 
@@ -72,15 +58,17 @@ class TitleScene extends Phaser.Scene {
 
     //============================================Foods=======================================================
     this.foods = this.physics.add.group();
-    this.f1 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
-    this.f2 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
-    this.f3 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
-    this.f4 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
-    this.f5 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
+    this.f1 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+    this.f2 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+    this.f3 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+    this.f4 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+    this.f5 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
 
     this.physics.add.overlap(this.orgs, this.foods, this.eat, null, this);
 
   //============================================================== left sidebar ==============================================//
+  //button = game.add.button()
+ 
     const htmlForm = this.add
     .dom(350, 300)
     .createFromCache("buttons");
@@ -95,73 +83,39 @@ class TitleScene extends Phaser.Scene {
       }
     })
 
+    this.lsToggle = this.add.text(200,20,"Toggle",{color: "#000000", fontSize: 14})
+    this.lsToggle.setInteractive().on("pointerdown", function() {
+      htmlForm.visible = (htmlForm.visible ? false : true)
+    });
+
   //============================================================== Right sidebar ==============================================//  
   const rightSidebar = this.add
   .dom(1500, 300)
   .createFromCache("right-sidebar");
-  // .createFromCache("right-sidebar");
-  // console.log(rightSidebar.parent.insertAdjacentText(name="orgID"))
 
-  // rightSidebar.addListener("click");
-  // Have it setup so a random word gets set as server name
-  // htmlForm.on("click", function(event) {
-  //   if (event.target.name === "addOrg") {
-  //     this.scene.addOrg();
-  //   } else if (event.target.name === "addFood") {
-  //     this.scene.addFood(foodData);
-  //   }
-  // })
-  //this.rightsidebar = 0;
   this.background.setInteractive();
 
-  console.log(this.game.dom)
-  console.log(this.Phaser)
-  console.log(this.scene)
-  console.log(this)
-  console.log(Phaser.DOM)
-  console.log(Phaser)
-  console.log(document.querySelector("#test"))
-  //console.log(document.cookie, "cookie")
-  
-  //document.querySelector
-  }
-  
-  consoleLog(pointer, gameObject ) {
-    console.log(gameObject.id)
-  }
-  //document.querySelector("#rolum") 
-  writeAttributes(pointer, gameObject) {
+  //===========================================================Fullscreen Toggle=========================================================
+  this.fsToggle = this.add.text(1800,20, "FULLSCREEN",{color: "#000000", fontSize: 14})
 
-  if(!(gameObject instanceof Org)) {
-    document.querySelector(".rightSidebarItems").innerHTML = ""
-    return
-  }
-  document.querySelector(".rightSidebarItems").innerHTML = ""
+  this.fsToggle.setInteractive().on("pointerdown", function() {
+    if (this.scene.scale.isFullscreen) {
+        this.scene.scale.stopFullscreen();
+        // On stop full screen
+    } else {
+        this.scene.scale.startFullscreen();
+        // On start full screen
+    }
+  });
+  // console.log(this.physics.pause)
+  
+  //=============================================================Testing stuff============================================================
 
-  let rsElem = document.querySelector(".rightSidebarItems")
-  let attrList = document.createElement("span")
-  attrList.innerHTML = ` 
-    <ul id="attrList">
-    <li>Score: ${gameObject.score} </li> 
-    <li>ID: ${gameObject.id}</li>
-    <li>AGE: ${gameObject.age} </li>
-    <li>ORGS: ${this.scene.orgs.getChildren().length} </li>
-    <li>Speed: ${gameObject.speed} </li> 
-    <li>Lifespan: ${gameObject.lifespan} </li> 
-    <li>Strength: ${gameObject.strength} </li>
-    <li>Aggression: ${gameObject.aggression} </li>
-    <li>Predator: ${gameObject.predator} </li>
-    <li>Perception: ${gameObject.perception} </li>
-    <li>Energy Efficiency: ${gameObject.energy_efficiency} </li>
-    <li>Health: ${gameObject.health} </li>
-    <li>Max Energy: ${gameObject.max_energy} </li>
-    <li>Litter Size: ${gameObject.litter_size} </li>
-    <li>Breeding Age: ${gameObject.breeding_age} </li>
-    <li>Generation: ${gameObject.generation} </li>
-    <li>Parents: ${gameObject.parent1.id} ${gameObject.parent2.id} </li>
-    </ul>
-    `
-  Phaser.DOM.AddToDOM(attrList, rsElem)
+  // console.log("this.cameras",this.cameras)
+
+  // console.log("phaser.input",Phaser.Input)
+  //console.log(this.game.renderer.snapshot)
+
   }
 
     // this.rightsidebar = this.scene.add.text(1650,50,
@@ -189,7 +143,10 @@ class TitleScene extends Phaser.Scene {
 
 
   update() {
-    if(this.orgs){
+   
+    if(this.orgs && !this.pausePhysics){
+      
+      
       for(let i = 0; i < this.orgs.getChildren().length; i++){
         let org = this.orgs.getChildren()[i]
         if(this.foods.getChildren().length > 0) {
@@ -227,12 +184,69 @@ class TitleScene extends Phaser.Scene {
     }
   }
 
+
+  //When energy runs below 50% their speed is reduced 30%. when it is below 20% it is reduced to
+  // Helper functions
+  
+
+  searchAlg(source, foodObjs, orgObjs) {
+    //Energy, health, age, type, agression, predator, reproductive age
+
+    //If type A, search for food, or mate 
+    //If type B, search for food, 
+  }
+
+  //if search alg reveals nothing in perception distance
+  movementFunc() {
+
+  }
+
   checkClosestMoveTo(source,objects) {
     let closest = this.physics.closest(source,objects)
     if(source.distanceBetweenPerceived(closest)) {
       this.physics.moveToObject(source,closest,source.speed)
+    }
   }
-}
+
+  consoleLog(pointer, gameObject ) {
+    console.log(gameObject.id)
+  }
+
+  //document.querySelector("#rolum") 
+  writeAttributes(pointer, gameObject) {
+
+    if(!(gameObject instanceof Org)) {
+      document.querySelector(".rightSidebarItems").innerHTML = ""
+      return
+    }
+
+    document.querySelector(".rightSidebarItems").innerHTML = ""
+
+    let rsElem = document.querySelector(".rightSidebarItems")
+    let attrList = document.createElement("span")
+    attrList.innerHTML = ` 
+      <ul id="attrList">
+      <li>Score: ${gameObject.score} </li> 
+      <li>ID: ${gameObject.id}</li>
+      <li>AGE: ${gameObject.age} </li>
+      <li>ORGS: ${this.scene.orgs.getChildren().length} </li>
+      <li>Speed: ${gameObject.speed} </li> 
+      <li>Lifespan: ${gameObject.lifespan} </li> 
+      <li>Strength: ${gameObject.strength} </li>
+      <li>Aggression: ${gameObject.aggression} </li>
+      <li>Predator: ${gameObject.predator} </li>
+      <li>Perception: ${gameObject.perception} </li>
+      <li>Energy Efficiency: ${gameObject.energy_efficiency} </li>
+      <li>Health: ${gameObject.health} </li>
+      <li>Max Energy: ${gameObject.max_energy} </li>
+      <li>Litter Size: ${gameObject.litter_size} </li>
+      <li>Breeding Age: ${gameObject.breeding_age} </li>
+      <li>Generation: ${gameObject.generation} </li>
+      <li>Parents: ${gameObject.parent1.id} ${gameObject.parent2.id} </li>
+      </ul>
+    `
+    Phaser.DOM.AddToDOM(attrList, rsElem)
+  }
 
   addOrg() {
     let addedOrg = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, this.orgNum)
@@ -241,9 +255,9 @@ class TitleScene extends Phaser.Scene {
   }
 
   addFood(foodData) {
-    new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
+    new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
   }
-  
+
   getFoodData = async function() {
     return axios.get("http://localhost:3000/foods")
       .then((res) => {
@@ -267,17 +281,17 @@ class TitleScene extends Phaser.Scene {
     // }else {
       if(org1.age > 500 && org2.age > 500 && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300){
         this.orgNum++
-  
+
         const randomX = Phaser.Math.Between(-5, 5)
         const randomY = Phaser.Math.Between(-5, 5)
-  
+
         let newOrg = new Org(this, org1.x + randomX, org1.y + randomY, org1, org2, this.orgNum)
         org1.reproductionCycle = 0;
         org2.reproductionCycle = 0;
         org1.setVelocity(0,0);
         org2.setVelocity(0,0);
         newOrg.setInteractive();
-  
+
         this.time.addEvent({
           delay: 1000,
           callback: function(){
@@ -317,6 +331,22 @@ class TitleScene extends Phaser.Scene {
       repeat: 6
     });
   }
+
+  togglePause() {
+  console.log("togglepause called")
+    if (!this.pausePhysics) {
+        this.physics.pause(); // resume game
+        this.pausePhysics = true
+        this.pauseText = this.add.text(this.game.config.width / 2, 20, "PAUSED",{color: "#000000",
+        fontSize: 50})
+    } else {
+
+        this.pausePhysics = false
+        this.physics.resume();
+        this.pauseText.destroy();
+        //pauseText.visible = true;
+    }
+}
 
 }
 
