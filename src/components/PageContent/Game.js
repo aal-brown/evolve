@@ -64,6 +64,7 @@ class Game extends Component {
         initialize
       }
       />
+      <div id="test"></div>
       {/* < LeftSideBar
        addOrg = {addOrg}
        addFood = {addFood}

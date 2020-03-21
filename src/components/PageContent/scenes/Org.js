@@ -19,7 +19,7 @@ class Org extends Phaser.GameObjects.Sprite {
      return Math.floor(distribution.ppf(Math.random()));
     }
 
-    function avg(n1, n2){
+    function avg(n1, n2) {
       return ((n1 + n2)* 0.5)
     }
     if (parent1 && parent2) {
