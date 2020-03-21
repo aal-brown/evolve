@@ -14,6 +14,10 @@ export default class Preload extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
     });
+    this.load.spritesheet("damage", "assets/damage.png", {
+      frameWidth: 32,
+      frameHeight: 32
+    });
 
     this.load.spritesheet("mushy peas", "/assets/food1.png", {
       frameWidth: 32,
@@ -50,6 +54,12 @@ export default class Preload extends Phaser.Scene {
     this.anims.create({
       key: "blobs_anim",
       frames: this.anims.generateFrameNumbers("blobs"),
+      frameRate: 10,
+      repeat: -1 //means infinite loop!
+    });
+    this.anims.create({
+      key: "damage_anim",
+      frames: this.anims.generateFrameNumbers("damage"),
       frameRate: 10,
       repeat: -1 //means infinite loop!
     });
