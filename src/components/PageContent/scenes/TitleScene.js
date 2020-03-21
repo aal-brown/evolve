@@ -14,13 +14,6 @@ class TitleScene extends Phaser.Scene {
     this.pausePhysics = false;
     const foodData = await this.getFoodData();
     
-    this.newGame = true;
-    if(!this.newGame) {
-      this.gameID = await this.getGameID(); //eventually implement so we can load saved games
-    } else {
-      this.gameID = null;
-    }
-    
     console.log("inside the create func ", foodData);
     
     // axios.get("http://localhost:3000/foods")
@@ -101,7 +94,7 @@ class TitleScene extends Phaser.Scene {
       } else if (event.target.name === "addFood") {
         this.scene.addFood(foodData);
       } else if (event.target.name === "save") {
-        this.scene.onSave(this.newGame);
+        this.scene.onSave(this.scene.orgs.getChildren(), this.scene.foods.getChildren());
       }
     })
 
@@ -262,10 +255,6 @@ class TitleScene extends Phaser.Scene {
       .catch((err) => console.log(err.message));
   }
 
-  getGameID = async function() {
-    //implement for loading saved games
-  }
-
   spawn(org1, org2,) {
     if(org1.age > 500 && org2.age > 500 && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300){
       this.orgNum++
@@ -358,16 +347,67 @@ class TitleScene extends Phaser.Scene {
     });
   }
 
-  onSave(newGame) {
-    console.log(document.cookie);
-    // if(!newGame) {
-    //   //implement for saving games after the initial save
-    // } else {
-    //   const url = "http://localhost:3000/game_saves";
-    //   let gameData = {
-    //     save_string
-    //   }
-    // }
+  onSave = async function(orgs, foods) {
+    const cookieArr = document.cookie.split(';');
+    let gameID = cookieArr[1];
+    gameID = gameID.slice(9);
+
+    let gameStateObj = {
+      orgs: orgs,
+      foods: foods
+    }
+    let orgString = JSON.stringify(orgs)
+    console.log("game org string: ", orgString)
+
+    let gameStateStr = JSON.stringify(gameStateObj);
+    
+    console.log("parsed org string: ", JSON.parse(orgString));
+
+    let newGameBool = await this.newGame(gameID);
+
+    if(newGameBool) {
+      console.log("UPDATING SAVE");
+      const url = `http://localhost:3000/game_saves/${gameID}`;
+
+      axios({
+        method: 'PUT',
+        url,
+        data: { save_text: gameStateStr },
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(resp => {
+        console.log(resp);
+      })
+      .catch(err => console.error(err.message));
+    } else {
+      console.log("POST NEW SAVE");
+    }
+    
+    // let gameData = {
+    //   save_text: "testy text",
+    //   game_id: gameID
+    // };
+
+    // axios({
+    //   method: 'POST',
+    //   url,
+    //   data: gameData,
+    //   mode: 'no-cors',
+    //   headers: { 'Content-Type': 'application/json' }
+    // })
+  }
+
+  newGame = async function(gameID) {
+    return axios.get(`http://localhost:3000/game_saves/${gameID}`)
+      .then((res) => {
+        return true;
+      })
+      .catch((err) => {
+        if (err.message === "Request failed with status code 404") {
+          return false;
+        }
+      })
   }
 
 }

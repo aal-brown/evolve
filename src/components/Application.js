@@ -64,6 +64,7 @@ useEffect(() => {
         view={view}
         setView={setView}
         cookies={cookies}
+        setCookie={setCookie}
         removeCookie={removeCookie}
       />
       <main className="layout">
