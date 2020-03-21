@@ -39,6 +39,11 @@ export default class Preload extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
     });
+
+    this.load.image('fullscreen',"assets/fullscreen2.png")
+    this.load.image('minimize',"assets/minimize2.png")
+    this.load.image('toggle-ls',"assets/menu-icon.png")
+
     this.load.html("buttons", "/assets/html/buttons.html");
     this.load.html("right-sidebar", "/assets/html/right-sidebar.html");
 
@@ -49,6 +54,8 @@ export default class Preload extends Phaser.Scene {
     this.load.on("complete", () => {
       this.scene.start("TitleScene")
     });
+
+
   }
   create() {
     this.anims.create({

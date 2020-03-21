@@ -11,9 +11,9 @@
   width: 8rem;
   border-width: 2px;
   border-style: solid;
-  border-color: $green;
+  border-color: black;
   color: $white;
-  background-color: $green;
+  background-color: black;
   z-index: 10;
 }
 
@@ -21,7 +21,7 @@
   @include button-active;
 
   color: $white;
-  background-color: $green2;
+  background-color: grey;
   border: 2px solid transparent;
 }
 
@@ -38,9 +38,10 @@
   opacity: 0.7;
 }
 .sidebarButtons {
-  height: 800px;
-  width: 600px;
+  height: 30em;
+  width: 20em;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
+  position: relative;
 }

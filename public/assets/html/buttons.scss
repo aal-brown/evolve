@@ -19,7 +19,6 @@
 
 .sideBarButton:hover {
   @include button-active;
-
   color: $white;
   background-color: $green2;
   border: 2px solid transparent;

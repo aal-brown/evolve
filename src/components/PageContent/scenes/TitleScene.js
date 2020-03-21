@@ -69,13 +69,14 @@ class TitleScene extends Phaser.Scene {
   //============================================================== left sidebar ==============================================//
   //button = game.add.button()
  
-    const htmlForm = this.add
-    .dom(350, 300)
+    const leftSidebar = this.add
+    .dom(180, 20)
     .createFromCache("buttons");
 
-    htmlForm.addListener("click");
+    leftSidebar.setOrigin(0,0)
+    leftSidebar.addListener("click");
     // Have it setup so a random word gets set as server name
-    htmlForm.on("click", function(event) {
+    leftSidebar.on("click", function(event) {
       if (event.target.name === "addOrg") {
         this.scene.addOrg();
       } else if (event.target.name === "addFood") {
@@ -83,26 +84,34 @@ class TitleScene extends Phaser.Scene {
       }
     })
 
-    this.lsToggle = this.add.text(200,20,"Toggle",{color: "#000000", fontSize: 14})
+    this.lsToggle = this.add.sprite(10,5,"toggle-ls")
+    this.lsToggle.setScale(0.5)
+    this.lsToggle.setOrigin(0,0)
     this.lsToggle.setInteractive().on("pointerdown", function() {
-      htmlForm.visible = (htmlForm.visible ? false : true)
+      leftSidebar.visible = (leftSidebar.visible ? false : true)
     });
 
   //============================================================== Right sidebar ==============================================//  
   const rightSidebar = this.add
-  .dom(1500, 300)
+  .dom((this.game.config.width - 130),20)
   .createFromCache("right-sidebar");
+
+  rightSidebar.setOrigin(0,0)
 
   this.background.setInteractive();
 
   //===========================================================Fullscreen Toggle=========================================================
-  this.fsToggle = this.add.text(1800,20, "FULLSCREEN",{color: "#000000", fontSize: 14})
+  this.fsToggle = this.add.sprite((this.game.config.width - 55),10, "fullscreen")
+  this.fsToggle.setOrigin(0,0)
+  this.fsToggle.setScale(0.5)
 
   this.fsToggle.setInteractive().on("pointerdown", function() {
     if (this.scene.scale.isFullscreen) {
         this.scene.scale.stopFullscreen();
+        this.fsToggle = this.setTexture("fullscreen");
         // On stop full screen
     } else {
+        this.fsToggle = this.setTexture("minimize")
         this.scene.scale.startFullscreen();
         // On start full screen
     }
@@ -146,7 +155,6 @@ class TitleScene extends Phaser.Scene {
    
     if(this.orgs && !this.pausePhysics){
       
-      
       for(let i = 0; i < this.orgs.getChildren().length; i++){
         let org = this.orgs.getChildren()[i]
         if(this.foods.getChildren().length > 0) {
@@ -187,6 +195,21 @@ class TitleScene extends Phaser.Scene {
 
   //When energy runs below 50% their speed is reduced 30%. when it is below 20% it is reduced to
   // Helper functions
+
+
+  togglePause() {
+    if (!this.pausePhysics) {
+        this.physics.pause(); 
+        this.pausePhysics = true
+        this.pauseText = this.add.text(this.game.config.width / 2, 20, "PAUSED",{color: "#000000", fontSize: 50})
+
+    } else {
+        this.pausePhysics = false
+        this.physics.resume();
+        this.pauseText.destroy();
+        //pauseText.visible = true;
+    }
+  }
   
 
   searchAlg(source, foodObjs, orgObjs) {
@@ -214,7 +237,7 @@ class TitleScene extends Phaser.Scene {
 
   //document.querySelector("#rolum") 
   writeAttributes(pointer, gameObject) {
-
+ 
     if(!(gameObject instanceof Org)) {
       document.querySelector(".rightSidebarItems").innerHTML = ""
       return
@@ -332,21 +355,6 @@ class TitleScene extends Phaser.Scene {
     });
   }
 
-  togglePause() {
-  console.log("togglepause called")
-    if (!this.pausePhysics) {
-        this.physics.pause(); // resume game
-        this.pausePhysics = true
-        this.pauseText = this.add.text(this.game.config.width / 2, 20, "PAUSED",{color: "#000000",
-        fontSize: 50})
-    } else {
-
-        this.pausePhysics = false
-        this.physics.resume();
-        this.pauseText.destroy();
-        //pauseText.visible = true;
-    }
-}
 
 }
 
