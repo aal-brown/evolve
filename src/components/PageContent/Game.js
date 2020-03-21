@@ -76,7 +76,6 @@ class Game extends Component{
   }
 
   render() {
-    this.setGameID();
      const addOrg = function() { 
       console.log("Add Organism") };
     const addFood = function() { 
@@ -100,6 +99,9 @@ class Game extends Component{
         initialize
       }
       />
+      <div id="test"></div>
+      />
+      <div id="test"></div>
       {/* < LeftSideBar
        addOrg = {addOrg}
        addFood = {addFood}
