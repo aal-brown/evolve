@@ -11,8 +11,16 @@ class TitleScene extends Phaser.Scene {
   }
 
   async create() {
-   this.pausePhysics = false;
+    this.pausePhysics = false;
     const foodData = await this.getFoodData();
+    
+    this.newGame = true;
+    if(!this.newGame) {
+      this.gameID = await this.getGameID(); //eventually implement so we can load saved games
+    } else {
+      this.gameID = null;
+    }
+    
     console.log("inside the create func ", foodData);
     
     // axios.get("http://localhost:3000/foods")
@@ -72,11 +80,11 @@ class TitleScene extends Phaser.Scene {
 
     //============================================Foods=======================================================
     this.foods = this.physics.add.group();
-    this.f1 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
-    this.f2 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
-    this.f3 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
-    this.f4 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
-    this.f5 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
+    this.f1 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+    this.f2 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+    this.f3 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+    this.f4 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+    this.f5 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
 
     this.physics.add.overlap(this.orgs, this.foods, this.eat, null, this);
 
@@ -92,6 +100,8 @@ class TitleScene extends Phaser.Scene {
         this.scene.addOrg();
       } else if (event.target.name === "addFood") {
         this.scene.addFood(foodData);
+      } else if (event.target.name === "save") {
+        this.scene.onSave(this.newGame);
       }
     })
 
@@ -145,7 +155,7 @@ class TitleScene extends Phaser.Scene {
       for(let i = 0; i < this.orgs.getChildren().length; i++){
         let org = this.orgs.getChildren()[i]
         if(this.foods.getChildren().length > 0) {
-          this.checkClosestMoveTo(org,this.foods.getChildren())
+          //this.checkClosestMoveTo(org,this.foods.getChildren())
         }
         org.reproductionCycle++;
         org.age++;
@@ -191,13 +201,13 @@ class TitleScene extends Phaser.Scene {
   }
 
   addOrg() {
-    let addedOrg = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), Phaser.Math.Between(0, 100), Phaser.Math.Between(0, 100), null, null, this.orgNum)
+    let addedOrg = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, this.orgNum)
     this.orgNum++;
     addedOrg.setInteractive();
   }
 
   addFood(foodData) {
-    new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(1, 5)])
+    new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
   }
   
   getFoodData = async function() {
@@ -206,6 +216,10 @@ class TitleScene extends Phaser.Scene {
         return res.data;
       })
       .catch((err) => console.log(err.message));
+  }
+
+  getGameID = async function() {
+    //implement for loading saved games
   }
 
   spawn(org1, org2,) {
@@ -259,6 +273,18 @@ class TitleScene extends Phaser.Scene {
       callbackScope: this,
       repeat: 6
     });
+  }
+
+  onSave(newGame) {
+    console.log(document.cookie);
+    // if(!newGame) {
+    //   //implement for saving games after the initial save
+    // } else {
+    //   const url = "http://localhost:3000/game_saves";
+    //   let gameData = {
+    //     save_string
+    //   }
+    // }
   }
 
 }
