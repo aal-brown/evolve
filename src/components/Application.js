@@ -69,7 +69,7 @@ useEffect(() => {
       />
       <main className="layout">
         <PageContent
-        // games={gameData}
+        //games={gameData}
         view={view}
         setView={setView}
         cookies={cookies}
