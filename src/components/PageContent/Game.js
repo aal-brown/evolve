@@ -42,16 +42,6 @@ class Game extends Component{
   }
 
   render() {
-     const addOrg = function() { 
-      console.log("Add Organism") };
-    const addFood = function() { 
-      console.log("Add Food") };
-    const changeTemp = function() { 
-      console.log("Change Temp") };
-    const save = function() { 
-      console.log("Save") };
-    const getSeed = function() { 
-      console.log("Get Seed") };
     const {
       initialize,
       game

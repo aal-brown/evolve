@@ -261,7 +261,6 @@ class TitleScene extends Phaser.Scene {
   checkClosestMoveTo(source,objects,bool) {
     if (objects.length) {
       let closest = this.physics.closest(source,objects)
-
       if (bool) {
       this.physics.moveToObject(source,closest,source.speed)
       return
