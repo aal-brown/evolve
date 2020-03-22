@@ -13,6 +13,7 @@ class TitleScene extends Phaser.Scene {
   async create() {
     
     const foodData = await this.getFoodData();
+    
     console.log("inside the create func ", foodData);
     
     // axios.get("http://localhost:3000/foods")
@@ -80,6 +81,8 @@ class TitleScene extends Phaser.Scene {
         this.scene.addOrg();
       } else if (event.target.name === "addFood") {
         this.scene.addFood(foodData);
+      } else if (event.target.name === "save") {
+        this.scene.onSave(this.scene.orgs.getChildren(), this.scene.foods.getChildren());
       }
     })
 
@@ -118,30 +121,6 @@ class TitleScene extends Phaser.Scene {
 
   }
 
-    // this.rightsidebar = this.scene.add.text(1650,50,
-    //   `\n 
-    //   Score: ${gameObject.score} \n
-    //   ID: ${gameObject.id} \n
-    //   AGE: ${gameObject.age} \n
-    //   ORGS: ${this.scene.orgs.getChildren().length} \n
-    //   Speed: ${gameObject.speed} \n 
-    //   Lifespan: ${gameObject.lifespan} \n 
-    //   Strength: ${gameObject.strength} \n
-    //   Aggression: ${gameObject.aggression} \n
-    //   Predator: ${gameObject.predator} \n
-    //   Perception: ${gameObject.perception} \n
-    //   Energy Efficiency: ${gameObject.energy_efficiency} \n
-    //   Health: ${gameObject.health} \n
-    //   Max Energy: ${gameObject.max_energy} \n
-    //   Litter Size: ${gameObject.litter_size} \n
-    //   Breeding Age: ${gameObject.breeding_age} \n
-    //   Generation: ${gameObject.generation} \n
-    //   Parents: ${gameObject.parent1.id} ${gameObject.parent2.id} \n
-    //   `, {color: "#000000",
-    //   fontSize: 14}
-  //)};
-
-
   update() {
    
     if(this.orgs && !this.pausePhysics){
@@ -150,7 +129,7 @@ class TitleScene extends Phaser.Scene {
       for(let i = 0; i < this.orgs.getChildren().length; i++){
         let org = this.orgs.getChildren()[i]
         if(this.foods.getChildren().length > 0) {
-          this.checkClosestMoveTo(org,this.foods.getChildren())
+          //this.checkClosestMoveTo(org,this.foods.getChildren())
         }
         org.reproductionCycle++;
         org.age++;
@@ -266,6 +245,32 @@ class TitleScene extends Phaser.Scene {
       .catch((err) => console.log(err.message));
   }
 
+  spawn(org1, org2,) {
+    if(org1.age > 500 && org2.age > 500 && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300){
+      this.orgNum++
+
+      const randomX = Phaser.Math.Between(-5, 5)
+      const randomY = Phaser.Math.Between(-5, 5)
+
+      let newOrg = new Org(this, org1.x + randomX, org1.y + randomY, org1, org2, this.orgNum)
+      org1.reproductionCycle = 0;
+      org2.reproductionCycle = 0;
+      org1.setVelocity(0,0);
+      org2.setVelocity(0,0);
+      newOrg.setInteractive();
+
+      this.time.addEvent({
+        delay: 1000,
+        callback: function(){
+          org1.resetSpeed();
+          org2.resetSpeed();
+        },
+        callbackScope: this,
+        loop: false
+      })
+    }
+  }
+
   attackOrSpawn(org1, org2,) {
     // if(org1.predator && !org2.predator){
     // org2.setTexture("damage")
@@ -317,7 +322,7 @@ class TitleScene extends Phaser.Scene {
     }
   }
 
- dyingOrg(org){
+  dyingOrg(org){
     this.time.addEvent({
       delay: 1000,
       callback: function(){
@@ -347,6 +352,77 @@ class TitleScene extends Phaser.Scene {
         //pauseText.visible = true;
     }
 }
+  onSave = async function(orgs, foods) {
+    const cookieArr = document.cookie.split(';');
+    let gameID = cookieArr[1];
+    gameID = gameID.slice(9);
+
+    let gameStateObject = {
+      orgs: [],
+      foods: []
+    };
+
+    orgs.forEach((org) => {
+      gameStateObject.orgs.push(org.getAttributes());
+    })
+
+    foods.forEach((food) => {
+      gameStateObject.foods.push(food.getAttributes());
+    })
+
+    gameStateObject = JSON.stringify(gameStateObject);
+
+    let newGameBool = await this.newGame(gameID);
+
+    if(newGameBool) {
+      console.log("UPDATING SAVE");
+      const url = `http://localhost:3000/game_saves/${gameID}`;
+
+      axios({
+        method: 'PUT',
+        url,
+        data: { save_text: gameStateObject },
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(resp => {
+        console.log("Saved successfully:", resp);
+      })
+      .catch(err => console.log("Error attempting to save:", err.message));
+    } else {
+      console.log("POST NEW SAVE");
+      const url = `http://localhost:3000/game_saves`;
+
+      let gameData = {
+        game_id: gameID,
+        save_text: gameStateObject
+      };
+  
+      axios({
+        method: 'POST',
+        url,
+        data: gameData,
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(resp => {
+        console.log("Saved successfully:", resp);
+      })
+      .catch(err => console.log("Error attempting to save:", err.message));
+    }
+  }
+
+  newGame = async function(gameID) {
+    return axios.get(`http://localhost:3000/game_saves/${gameID}`)
+      .then((res) => {
+        return true;
+      })
+      .catch((err) => {
+        if (err.message === "Request failed with status code 404") {
+          return false;
+        }
+      })
+  }
 
 }
 
