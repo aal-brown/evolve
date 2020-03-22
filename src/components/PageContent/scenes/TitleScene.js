@@ -11,14 +11,32 @@ class TitleScene extends Phaser.Scene {
   }
 
   async create() {
-    
-    const foodData = await this.getFoodData();
+    //==========================================================Creating New Game================================================================
+    const cookieArr = document.cookie.split(';');
+    let gameID = cookieArr[1];
+    gameID = gameID.slice(9);
 
-    //=========================================================Pause================================================
+    const foodData = await this.getFoodData();
+    this.orgNum = 0;
+    
+    if (await this.newGame(gameID)) {
+      let gameData = await this.getGameData(gameID);
+      gameData = JSON.parse(gameData.save_text);
+      console.log(gameData);
+      const loadedOrgs = gameData.orgs;
+      const loadedFoods = gameData.foods;
+
+      for (const org of loadedOrgs) {
+        let newOrg = new Org(this, org.velx, Phaser.Math.Between(20,this.game.config.height), null, null, )
+        newOrg.setInteractive();
+        this.orgNum++
+      }
+    }
+    //===================================================================Pause======================================================
     this.input.keyboard.on('keydown-SPACE', this.togglePause, this)
     this.pausePhysics = false;
 
-   //===========================================Organisms====================================================
+   //==================================================================Organisms====================================================
     // this.background = this.physics.add.staticGroup();
     // this.background.create(400, 300, 'sky').refreshBody();
     //this.background = this.add.image(400, 300, 'sky')
@@ -28,7 +46,7 @@ class TitleScene extends Phaser.Scene {
     // this.star.setScale(0.25)
 
     this.orgs = this.physics.add.group();
-    this.orgNum = 0;
+    
     //Organisms on-click
     this.input.on("gameobjectdown", this.writeAttributes);
     for(let j = 0; j < 15; j++){
@@ -40,7 +58,7 @@ class TitleScene extends Phaser.Scene {
     this.physics.add.overlap(this.orgs, this.orgs, this.attackOrSpawn, null, this);
     this.physics.add.collider(this.orgs, this.partitions);
 
-    //============================================Foods=======================================================
+    //==============================================================Foods==========================================================
     this.foods = this.physics.add.group();
     this.f1 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
     this.f2 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
@@ -128,9 +146,6 @@ class TitleScene extends Phaser.Scene {
         this.avgAndScore.destroy();
       }
       this.avgAndScore = this.add.text(this.game.config.width / 4, 20, `Avg Score: ${Math.floor((this.getAvgScore(this.orgs.getChildren())))}  No. Orgs: ${this.orgs.getChildren().length}  Highest Score: ${this.getHighestScore(this.orgs.getChildren())}`,{color: "#000000", fontSize: 20})
-  
-
-      console.log(this.getAvgScore(this.orgs.getChildren()))
       
       for (let i = 0; i < this.orgs.getChildren().length; i++){
         let org = this.orgs.getChildren()[i]
@@ -485,7 +500,7 @@ class TitleScene extends Phaser.Scene {
         game_id: gameID,
         save_text: gameStateObject
       };
-  
+
       axios({
         method: 'POST',
         url,
@@ -512,6 +527,13 @@ class TitleScene extends Phaser.Scene {
       })
   }
 
+  getGameData = async function(gameID) {
+    return axios.get(`http://localhost:3000/game_saves/${gameID}`)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => console.log(err.message))
+  }
 }
 
 export default TitleScene;

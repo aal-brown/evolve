@@ -56,8 +56,8 @@ class Org extends Phaser.GameObjects.Sprite {
       this.breeding_age = mathNormInherited(parent1.breeding_age, parent2.breeding_age)
       
       this.generation = parent1.generation + 1
-      this.parent1 = parent1
-      this.parent2 = parent2
+      this.parent1 = parent1.id
+      this.parent2 = parent2.id
       
     } else {
       this.lifespan = mathNorm(2500, 100000)
