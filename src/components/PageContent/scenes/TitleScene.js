@@ -16,8 +16,13 @@ class TitleScene extends Phaser.Scene {
     let gameID = cookieArr[1];
     gameID = gameID.slice(9);
 
+    this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'sky')
+    this.background.setOrigin(0,0);
+
     const foodData = await this.getFoodData();
     this.orgNum = 0;
+    this.foods = this.physics.add.group();
+    this.orgs = this.physics.add.group();
     
     if (await this.newGame(gameID)) {
       let gameData = await this.getGameData(gameID);
@@ -25,49 +30,78 @@ class TitleScene extends Phaser.Scene {
       console.log(gameData);
       const loadedOrgs = gameData.orgs;
       const loadedFoods = gameData.foods;
+      console.log(loadedOrgs)
+      console.log(loadedFoods)
 
       for (const org of loadedOrgs) {
-        let newOrg = new Org(this, org.velx, Phaser.Math.Between(20,this.game.config.height), null, null, )
+        this.orgNum++
+        let newOrg = new Org(this, org.xcoord, org.ycoord, null, null, org.orgNum)
+
+        newOrg.age = org.age;
+        newOrg.score = org.score;
+        newOrg.reproductionCycle = org.reproductionCycle;
+        newOrg.eatCycle = org.eatCycle;
+        newOrg.scale = org.scale;
+        org.setScale(newOrg.scale);
+        newOrg.energy = org.energy;
+        newOrg.velx = org.velx;
+        newOrg.vely = org.vely
+        newOrg.colour = org.colour;
+        newOrg.lifespan = org.lifespan;
+        newOrg.strength = org.strength;
+        newOrg.energy_efficiency = org.energy_efficiency;
+        newOrg.max_energy = org.max_energy;
+        newOrg.aggression = org.aggression;
+        newOrg.health = org.health;
+        newOrg.predator = org.predator;
+        newOrg.perception = org.perception;
+        newOrg.litter_size = org.litter_size;
+        newOrg.breeding_age = org.breeding_age;
+        newOrg.speed = org.speed;
+        newOrg.type = org.type;
+        newOrg.generation = org.generation;
+        newOrg.parent1 = org.parent1;
+        newOrg.parent2 = org.parent2;
+        newOrg.xcoord = org.xcoord;
+        newOrg.ycoord = org.ycoord;
+
+        newOrg.setInteractive();
+      }
+      for (const food of loadedFoods) {
+        console.log("loadng foods in game")
+        let newFood = new Food(this, food.x, food.y,  {name: food.nameStr, energy: food.energy})
+        newFood.energy -= 4000;
+      }
+    } else {
+      for(let j = 0; j < 15; j++){
+        let newOrg =  new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, j+1)
         newOrg.setInteractive();
         this.orgNum++
       }
+
+      this.f1 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+      this.f2 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+      this.f3 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+      this.f4 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+      this.f5 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+      this.f6 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+      this.f7 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
     }
+      
     //===================================================================Pause======================================================
     this.input.keyboard.on('keydown-SPACE', this.togglePause, this)
     this.pausePhysics = false;
 
    //==================================================================Organisms====================================================
-    // this.background = this.physics.add.staticGroup();
-    // this.background.create(400, 300, 'sky').refreshBody();
-    //this.background = this.add.image(400, 300, 'sky')
-    this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'sky')
-    this.background.setOrigin(0,0);
-    // this.star = this.add.image(400, 300, 'star');
-    // this.star.setScale(0.25)
-
-    this.orgs = this.physics.add.group();
     
-    //Organisms on-click
     this.input.on("gameobjectdown", this.writeAttributes);
-    for(let j = 0; j < 15; j++){
-      let newOrg =  new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, j+1)
-      newOrg.setInteractive();
-      this.orgNum++
-    }
-
+  
     this.physics.add.overlap(this.orgs, this.orgs, this.attackOrSpawn, null, this);
     this.physics.add.collider(this.orgs, this.partitions);
 
     //==============================================================Foods==========================================================
-    this.foods = this.physics.add.group();
-    this.f1 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
-    this.f2 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
-    this.f3 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
-    this.f4 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
-    this.f5 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
-    this.f6 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
-    this.f7 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
-
+    
+    
     this.physics.add.overlap(this.orgs, this.foods, this.eat, null, this);
 
   //============================================================== left sidebar ==============================================//
@@ -131,11 +165,7 @@ class TitleScene extends Phaser.Scene {
   
   //=============================================================Testing stuff============================================================
 
-  // console.log("this.cameras",this.cameras)
-
-  // console.log("phaser.input",Phaser.Input)
-  //console.log(this.game.renderer.snapshot)
-
+  
   }
 
   update() {
@@ -236,7 +266,6 @@ class TitleScene extends Phaser.Scene {
         this.pausePhysics = false
         this.physics.resume();
         this.pauseText.destroy();
-        //pauseText.visible = true;
     }
   }
 

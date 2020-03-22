@@ -211,8 +211,10 @@ class Org extends Phaser.GameObjects.Sprite {
       speed: this.speed,
       type: this.type,
       generation: this.generation,
-      parent1: this.parent1.id,
-      parent2: this.parent2.id
+      parent1: this.parent1,
+      parent2: this.parent2,
+      xcoord: this.body.x,
+      ycoord: this.body.y,
     };
 
     return orgAttributes;
