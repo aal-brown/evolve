@@ -23,14 +23,13 @@ export default function MyGames(props) {
   const [gameView, setGameView] = useState(0)
   const [games, setGames] = useState([])
   let user_id = props.cookies.user_id
-  console.log(user_id)
 
   function getData() {
     axios.get("http://localhost:3000/getuser", {
       headers: { "ID": user_id }
     })
     .then((res) => {
-      axios.get("http://localhost:3000/gamedata", {
+      axios.get("http://localhost:3000/games", {
         headers: { "ID": res.data.id }
       })
       .then((res) => setGames(res.data));
@@ -63,6 +62,7 @@ export default function MyGames(props) {
       .then(resp => {
         console.log(resp);
         props.setCookie("game_id", resp.data.id)
+        setGameView(1);
       })
       .catch(err => console.error(err.message));
     })
@@ -71,7 +71,7 @@ export default function MyGames(props) {
   function newGame() {
     console.log("LOADING NEW GAME");
     setGameCookie("game name");
-    setGameView(1);
+    console.log("Is it waiting?")
   }
 
   function exit() {
@@ -95,13 +95,13 @@ export default function MyGames(props) {
     return (
       <MyGamesItem
         key={game.id}
-        img={game.img}
+        img={game.screen_capture}
         created_at={game.created_at}
         updated_at={game.updated_at}
         age={game.playtime} //
         name={game.name}
-        orgs={game.orgs}
-        high_score={game.high_score}
+        orgs={game.num_of_orgs}
+        high_score={game.highest_score}
         // selected={game.name === props.game} hover will be used instead
         load={() => {
           console.log("LOADING GAME:", game.id);

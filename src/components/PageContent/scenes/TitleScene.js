@@ -11,10 +11,13 @@ class TitleScene extends Phaser.Scene {
   }
 
   async create() {
-    //==========================================================Creating New Game================================================================
+    //==========================================================Creating New Game, Loading Game================================================================
+    this.iterations = 0;
     const cookieArr = document.cookie.split(';');
     let gameID = cookieArr[1];
-    gameID = gameID.slice(9);
+    if (gameID) {
+      gameID = gameID.slice(9);
+    }
 
     this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'sky')
     this.background.setOrigin(0,0);
@@ -30,6 +33,9 @@ class TitleScene extends Phaser.Scene {
       console.log(gameData);
       const loadedOrgs = gameData.orgs;
       const loadedFoods = gameData.foods;
+      this.iterations = gameData.iterations;
+
+
       console.log(loadedOrgs)
       console.log(loadedFoods)
 
@@ -42,7 +48,6 @@ class TitleScene extends Phaser.Scene {
         newOrg.reproductionCycle = org.reproductionCycle;
         newOrg.eatCycle = org.eatCycle;
         newOrg.scale = org.scale;
-        org.setScale(newOrg.scale);
         newOrg.energy = org.energy;
         newOrg.velx = org.velx;
         newOrg.vely = org.vely
@@ -120,7 +125,7 @@ class TitleScene extends Phaser.Scene {
       } else if (event.target.name === "addFood") {
         this.scene.addFood(foodData);
       } else if (event.target.name === "save") {
-        this.scene.onSave(this.scene.orgs.getChildren(), this.scene.foods.getChildren());
+        this.scene.onSave(this.scene.orgs.getChildren(), this.scene.foods.getChildren(), this.scene.iterations);
       }
     })
 
@@ -164,18 +169,20 @@ class TitleScene extends Phaser.Scene {
   })
   
   //=============================================================Testing stuff============================================================
-
   
   }
 
   update() {
-   
-   
+    this.iterations++
     if (this.orgs && !this.pausePhysics){
       if(this.avgAndScore){
         this.avgAndScore.destroy();
       }
-      this.avgAndScore = this.add.text(this.game.config.width / 4, 20, `Avg Score: ${Math.floor((this.getAvgScore(this.orgs.getChildren())))}  No. Orgs: ${this.orgs.getChildren().length}  Highest Score: ${this.getHighestScore(this.orgs.getChildren())}`,{color: "#000000", fontSize: 20})
+      this.avgScore = Math.floor((this.getAvgScore(this.orgs.getChildren())));
+      this.highestScore = this.getHighestScore(this.orgs.getChildren());
+      this.numOrgs = this.orgs.getChildren().length;
+      
+      this.avgAndScore = this.add.text(this.game.config.width / 4, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`,{color: "#000000", fontSize: 20})
       
       for (let i = 0; i < this.orgs.getChildren().length; i++){
         let org = this.orgs.getChildren()[i]
@@ -484,63 +491,89 @@ class TitleScene extends Phaser.Scene {
     }
   }
   
-  onSave = async function(orgs, foods) {
+  onSave = async function(orgs, foods, iterations) {
+    console.log("ITERATIONS IN ONSAVE:", iterations);
     const cookieArr = document.cookie.split(';');
     let gameID = cookieArr[1];
-    gameID = gameID.slice(9);
+    if(gameID) {
+      gameID = gameID.slice(9);
 
-    let gameStateObject = {
-      orgs: [],
-      foods: []
-    };
-
-    orgs.forEach((org) => {
-      gameStateObject.orgs.push(org.getAttributes());
-    })
-
-    foods.forEach((food) => {
-      gameStateObject.foods.push(food.getAttributes());
-    })
-
-    gameStateObject = JSON.stringify(gameStateObject);
-
-    let newGameBool = await this.newGame(gameID);
-
-    if(newGameBool) {
-      console.log("UPDATING SAVE");
-      const url = `http://localhost:3000/game_saves/${gameID}`;
-
-      axios({
-        method: 'PUT',
-        url,
-        data: { save_text: gameStateObject },
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' }
-      })
-      .then(resp => {
-        console.log("Saved successfully:", resp);
-      })
-      .catch(err => console.log("Error attempting to save:", err.message));
-    } else {
-      console.log("POST NEW SAVE");
-      const url = `http://localhost:3000/game_saves`;
-
-      let gameData = {
-        game_id: gameID,
-        save_text: gameStateObject
+      let gameStateObject = {
+        orgs: [],
+        foods: [],
+        iterations: iterations
       };
 
-      axios({
-        method: 'POST',
-        url,
-        data: gameData,
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' }
+      orgs.forEach((org) => {
+        gameStateObject.orgs.push(org.getAttributes());
       })
-      .then(resp => {
-        console.log("Saved successfully:", resp);
+
+      foods.forEach((food) => {
+        gameStateObject.foods.push(food.getAttributes());
       })
-      .catch(err => console.log("Error attempting to save:", err.message));
+
+      gameStateObject = JSON.stringify(gameStateObject);
+
+      let newGameBool = await this.newGame(gameID);
+
+      if(newGameBool) {
+        console.log("UPDATING SAVE");
+        const gameSaveUrl = `http://localhost:3000/game_saves/${gameID}`;
+
+        axios({
+          method: 'PUT',
+          url: `http://localhost:3000/game_saves/${gameID}`,
+          data: { save_text: gameStateObject },
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' }
+        })
+        .then(resp => {
+          console.log("Saved successfully:", resp);
+        })
+        .catch(err => console.log("Error attempting to save:", err.message));
+        
+      } else {
+        console.log("POST NEW SAVE");
+        const gameSaveUrl = `http://localhost:3000/game_saves`;
+
+        let gameData = {
+          game_id: gameID,
+          save_text: gameStateObject
+        };
+
+        axios({
+          method: 'POST',
+          url: `http://localhost:3000/game_saves`,
+          data: gameData,
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' }
+        })
+        .then(resp => {
+          console.log("Saved successfully for game saves:", resp);
+        })
+        .catch(err => console.log("Error attempting to save:", err.message));
+      }
+
+      console.log("UPDATING GAME");
+
+        // const gameUrl = ;
+        let gameStats = {
+          highest_score: this.highestScore,
+          playtime: iterations,
+          num_of_orgs: this.numOrgs
+        };
+        console.log(gameStats)
+        axios({
+          method: 'PUT',
+          url: `http://localhost:3000/games/${gameID}`,
+          data: gameStats,
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' }
+        })
+        .then(resp => {
+          console.log("Updated successfully for games:", resp);
+        })
+        .catch(err => console.log("Error attempting to save:", err.message));
     }
   }
 
@@ -563,6 +596,8 @@ class TitleScene extends Phaser.Scene {
       })
       .catch((err) => console.log(err.message))
   }
+
+  getHighestScoreDB
 }
 
 export default TitleScene;

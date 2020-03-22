@@ -38,17 +38,16 @@ useEffect(() => {
   if(cookies.user_id){
     setTopNav([
       { name: "My Profile", id: 1 },
-      { name: "My Games", id: 2 },
+      { name: "Game", id: 2 },
       { name: "About", id: 3 },
       { name: "Guide", id: 4 },
-      { name: "Game", id: 5 },
       { name: "Logout", id: 8 }
     ])
   } else {
     setTopNav([
       { name: "About", id: 3 },
       { name: "Guide", id: 4 },
-      { name: "Game", id: 5 }, 
+      { name: "Game", id: 2 }, 
       { name: "Login", id: 6 },
       { name: "Register", id: 7 }
     ])

@@ -46,14 +46,16 @@ let userData = {
       <form className="login-form form-group" onSubmit={(event) => {event.preventDefault()}}>
         Name: <input className="form-control form-field"
           onChange={(event) => {
-            setName(event.target.value)}}
+            setName(event.target.value)
+          }}
           value={name}
           type="text"
           placeholder="Enter Name"
         />
         Email: <input className="form-control form-field"
           onChange={(event) => {
-            setEmail(event.target.value)}}
+            setEmail(event.target.value)
+          }}
           value={email}
           type="email"
           placeholder="Enter Email"
@@ -68,7 +70,8 @@ let userData = {
         />
         Password: <input className="form-control form-field"
           onChange={(event) => {
-            setPassword(event.target.value)}}
+            setPassword(event.target.value)
+          }}
           value={password}
           type="password"
           placeholder="Enter Password"
@@ -76,7 +79,8 @@ let userData = {
         />
         Confirm Password: <input className="form-control form-field"
           onChange={(event) => {
-            setPasswordConfirm(event.target.value)}}
+            setPasswordConfirm(event.target.value)
+          }}
           value={passwordConfirm}
           type="password"
           placeholder="Confirm Password"

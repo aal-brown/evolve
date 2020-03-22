@@ -34,12 +34,6 @@ export default function PageContent(props) {
         cookies={props.cookies}
         />
       )}
-      { props.view === 5 && (
-        <Game
-        setCookie={props.setCookie}
-        cookies={props.cookies} 
-        />
-      )}
       { props.view === 6 && (
         <Login
         setCookie={props.setCookie}
