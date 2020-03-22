@@ -38,6 +38,7 @@ export default function MyGamesItem(props) {
         </tbody>
       </table>
       <div>
+        <Button onClick={props.load}>Load</Button>
         <Button onClick={props.delete}>Delete</Button>
       </div>
     </li>

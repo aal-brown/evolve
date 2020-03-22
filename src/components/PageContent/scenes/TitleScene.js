@@ -170,7 +170,7 @@ class TitleScene extends Phaser.Scene {
           let food = this.foods.getChildren()[i]
 
           if(food.energy <= 0) {
-            console.log("food destroy")
+            //console.log("food destroy")
             food.destroy();
           }
         }
@@ -229,8 +229,8 @@ class TitleScene extends Phaser.Scene {
   checkClosestMoveTo(source,objects,bool) {
     if (objects.length) {
       let closest = this.physics.closest(source,objects)
-      console.log(closest);
-      console.log(objects)
+      //console.log(closest);
+      //console.log(objects)
       if (bool) {
       this.physics.moveToObject(source,closest,source.speed)
       return
@@ -314,9 +314,9 @@ class TitleScene extends Phaser.Scene {
     //   org2.setTexture("damage")
     //   org2.play("damage_anim")
     // }else {
-    console.log("breeding check:", this.breedingCheck(org1,org2))
+    //console.log("breeding check:", this.breedingCheck(org1,org2))
       if(this.breedingCheck(org1,org2) && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300){
-        console.log("spawning")
+        //console.log("spawning")
         let type1 = this.orderTypes(org1, org2)[0]
 
         for(let i=0; i< type1.litter_size; i++){
@@ -387,7 +387,7 @@ class TitleScene extends Phaser.Scene {
   }
 
   togglePause() {
-  console.log("togglepause called")
+  //console.log("togglepause called")
     if (!this.pausePhysics) {
         this.physics.pause(); // resume game
         this.pausePhysics = true

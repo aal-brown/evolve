@@ -20,7 +20,9 @@ export default function PageContent(props) {
       )}
       { props.view === 2 && (
         <MyGames
-        cookies={props.cookies} //Will be an array of game objects
+        cookies={props.cookies}
+        setCookie={props.setCookie}
+        removeCookie={props.removeCookie}
         />
       )}
       { props.view === 3 && (
