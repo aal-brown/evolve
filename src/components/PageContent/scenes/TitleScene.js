@@ -19,8 +19,9 @@ class TitleScene extends Phaser.Scene {
     this.pausePhysics = false;
 
    //===========================================Organisms====================================================
-
-    this.background = this.add.image(400, 300, 'sky');
+    // this.background = this.physics.add.staticGroup();
+    // this.background.create(400, 300, 'sky').refreshBody();
+    this.background = this.add.image(400, 300, 'sky')
     // this.star = this.add.image(400, 300, 'star');
     // this.star.setScale(0.25)
 
@@ -116,6 +117,19 @@ class TitleScene extends Phaser.Scene {
     }
   });
   // console.log(this.physics.pause)
+
+  //===============================================================Slider Feed===========================================================
+
+  //this.sliderStatus = document.querySelector("#foodToggle").checked
+
+  this.input.on("pointerdown", function(pointer) {
+    
+    if (document.querySelector("#foodToggle").checked) {
+      console.log("toggle and true")
+
+      new Food(this.scene, pointer.x, pointer.y, foodData[Phaser.Math.Between(0, 4)])
+    }
+  })
   
   //=============================================================Testing stuff============================================================
 
@@ -128,10 +142,19 @@ class TitleScene extends Phaser.Scene {
 
   update() {
    
+   
     if (this.orgs && !this.pausePhysics){
+      if(this.avgAndScore){
+        this.avgAndScore.destroy();
+      }
+      this.avgAndScore = this.add.text(this.game.config.width / 4, 20, `Avg Score: ${Math.floor((this.getAvgScore(this.orgs.getChildren())))}  No. Orgs: ${this.orgs.getChildren().length}  Highest Score: ${this.getHighestScore(this.orgs.getChildren())}`,{color: "#000000", fontSize: 20})
+  
+
+      console.log(this.getAvgScore(this.orgs.getChildren()))
       
       for (let i = 0; i < this.orgs.getChildren().length; i++){
         let org = this.orgs.getChildren()[i]
+        
         if (this.foods.getChildren().length > 0) {
           this.searchAlg(org,this.foods.getChildren(), this.orgs.getChildren());
         }
@@ -155,6 +178,23 @@ class TitleScene extends Phaser.Scene {
 
   //When energy runs below 50% their speed is reduced 30%. when it is below 20% it is reduced to
   // Helper functions
+
+  getAvgScore(orgObjs) {
+    let avgScore = 0;
+    if (orgObjs.length) {
+      avgScore = orgObjs.reduce((acc,item) => (acc+item.score),(orgObjs[0].score))/orgObjs.length
+    }
+    return avgScore
+  }
+  getHighestScore(orgObjs) {
+    let highestScore = 0;
+      for(let k = 0; k < orgObjs.length; k++){
+        if(orgObjs[k].score > highestScore){
+          highestScore = orgObjs[k].score
+        }
+      }
+  return highestScore
+}
 
   lifeCycle(org) {
     org.reproductionCycle++;
