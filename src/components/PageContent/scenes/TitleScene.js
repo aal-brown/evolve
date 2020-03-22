@@ -21,7 +21,9 @@ class TitleScene extends Phaser.Scene {
    //===========================================Organisms====================================================
     // this.background = this.physics.add.staticGroup();
     // this.background.create(400, 300, 'sky').refreshBody();
-    this.background = this.add.image(400, 300, 'sky')
+    //this.background = this.add.image(400, 300, 'sky')
+    this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'sky')
+    this.background.setOrigin(0,0);
     // this.star = this.add.image(400, 300, 'star');
     // this.star.setScale(0.25)
 
@@ -315,7 +317,6 @@ class TitleScene extends Phaser.Scene {
       <li>Age: ${gameObject.age} </li>
       <li>Health: ${gameObject.health} </li>
       <li>Energy: ${Math.floor(gameObject.energy)} </li>
-      <li>Org's: ${this.scene.orgs.getChildren().length} </li>
       <li>Speed: ${gameObject.speed} </li> 
       <li>Lifespan: ${gameObject.lifespan} </li> 
       <li>Strength: ${gameObject.strength} </li>
@@ -324,7 +325,6 @@ class TitleScene extends Phaser.Scene {
       <li>Perception: ${gameObject.perception} </li>
       <li>Energy Efficiency: ${gameObject.energy_efficiency} </li>
       <li>Max Health: ${gameObject.max_health} </li>
-      
       <li>Max Energy: ${gameObject.max_energy} </li>
       <li>Litter Size: ${gameObject.litter_size} </li>
       <li>Breeding Age: ${gameObject.breeding_age} </li>
@@ -460,7 +460,8 @@ class TitleScene extends Phaser.Scene {
         this.pauseText.destroy();
         //pauseText.visible = true;
     }
-}
+  }
+  
   onSave = async function(orgs, foods) {
     const cookieArr = document.cookie.split(';');
     let gameID = cookieArr[1];
