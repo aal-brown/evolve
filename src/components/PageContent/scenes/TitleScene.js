@@ -36,20 +36,6 @@ class TitleScene extends Phaser.Scene {
       newOrg.setInteractive();
       this.orgNum++
     }
-    // this.r1 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 1)
-    // this.r2 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 2)
-    // this.r3 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 3)
-    // this.r4 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 4)
-    // this.r5 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 5)
-    // this.r6 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 6)
-    
-  
-    // this.r1.setInteractive()
-    // this.r2.setInteractive()
-    // this.r3.setInteractive()
-    // this.r4.setInteractive()
-    // this.r5.setInteractive()
-    // this.r6.setInteractive()
 
     this.physics.add.overlap(this.orgs, this.orgs, this.attackOrSpawn, null, this);
     this.physics.add.collider(this.orgs, this.partitions);
@@ -75,7 +61,7 @@ class TitleScene extends Phaser.Scene {
 
     leftSidebar.setOrigin(0,0)
     leftSidebar.addListener("click");
-    // Have it setup so a random word gets set as server name
+
     leftSidebar.on("click", function(event) {
       if (event.target.name === "addOrg") {
         this.scene.addOrg();
@@ -111,24 +97,16 @@ class TitleScene extends Phaser.Scene {
     if (this.scene.scale.isFullscreen) {
         this.scene.scale.stopFullscreen();
         this.fsToggle = this.setTexture("fullscreen");
-        // On stop full screen
     } else {
         this.fsToggle = this.setTexture("minimize")
         this.scene.scale.startFullscreen();
-        // On start full screen
     }
   });
-  // console.log(this.physics.pause)
 
   //===============================================================Slider Feed===========================================================
 
-  //this.sliderStatus = document.querySelector("#foodToggle").checked
-
   this.input.on("pointerdown", function(pointer) {
-    
     if (document.querySelector("#foodToggle").checked) {
-      console.log("toggle and true")
-
       new Food(this.scene, pointer.x, pointer.y, foodData[Phaser.Math.Between(0, 4)])
     }
   })
@@ -188,6 +166,7 @@ class TitleScene extends Phaser.Scene {
     }
     return avgScore
   }
+  
   getHighestScore(orgObjs) {
     let highestScore = 0;
       for(let k = 0; k < orgObjs.length; k++){
