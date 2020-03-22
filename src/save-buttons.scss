@@ -1,0 +1,50 @@
+@import "styles/mixins.scss";
+@import "styles/variables.scss";
+
+.saveButton {
+  border-radius: 1rem;
+  border: 0;
+  font-size: 1.5rem;
+  height: 2rem;
+  line-height: 1.2rem;
+  margin-right: 1rem;
+  width: 8rem;
+  border-width: 2px;
+  border-style: solid;
+  border-color: black;
+  color: $white;
+  background-color: black;
+  z-index: 10;
+}
+
+.saveButton:hover {
+  @include button-active;
+
+  color: $white;
+  background-color: grey;
+  border: 2px solid transparent;
+}
+
+
+.saveButton:focus {
+  outline: none;
+}
+
+.saveButton:disabled {
+  border-style: solid;
+  border-color: $white;
+  color: $white;
+  background-color: transparent;
+  opacity: 0.7;
+}
+.saveButtons {
+  height: 2em;
+  width: 8em;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: relative;
+  top: 6em;
+  left:0;
+}
+

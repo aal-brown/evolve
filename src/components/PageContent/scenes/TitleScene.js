@@ -14,7 +14,11 @@ class TitleScene extends Phaser.Scene {
     //==========================================================Creating New Game================================================================
     const cookieArr = document.cookie.split(';');
     let gameID = cookieArr[1];
-    gameID = gameID.slice(9);
+    if (gameID) {
+      gameID = gameID.slice(9);
+    }
+
+    
 
     this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'sky')
     this.background.setOrigin(0,0);
@@ -119,10 +123,26 @@ class TitleScene extends Phaser.Scene {
         this.scene.addOrg();
       } else if (event.target.name === "addFood") {
         this.scene.addFood(foodData);
-      } else if (event.target.name === "save") {
-        this.scene.onSave(this.scene.orgs.getChildren(), this.scene.foods.getChildren());
       }
     })
+    let userID = cookieArr[0];
+    userID = userID.slice(8);
+    console.log(userID)
+    if(userID){
+      const saveButtons = this.add
+      .dom(180, 20)
+      .createFromCache("save-and-seed");
+  
+      saveButtons.setOrigin(0,0)
+      saveButtons.addListener("click");
+  
+      saveButtons.on("click", function(event) {
+        if (event.target.name === "save") {
+          this.scene.onSave(this.scene.orgs.getChildren(), this.scene.foods.getChildren());
+        }
+      })
+    }
+    
 
     this.lsToggle = this.add.sprite(10,5,"toggle-ls")
     this.lsToggle.setScale(0.5)
