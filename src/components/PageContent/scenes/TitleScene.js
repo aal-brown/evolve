@@ -13,26 +13,17 @@ class TitleScene extends Phaser.Scene {
   async create() {
     
     const foodData = await this.getFoodData();
-    
-    console.log("inside the create func ", foodData);
-    
-    // axios.get("http://localhost:3000/foods")
-    // .then((res) => {
-    //   foodsData = res.data
-    //   console.log("inside TitleScene", foodsData)})
-    // .catch((err) => console.log(err.message));
-    // this.gameTime = new Phaser.Timer(this);
-
-
-    //Create a black strip at the top of the screen.
 
     //=========================================================Pause================================================
     this.input.keyboard.on('keydown-SPACE', this.togglePause, this)
     this.pausePhysics = false;
 
    //===========================================Organisms====================================================
-
-    this.background = this.add.image(400, 300, 'sky');
+    // this.background = this.physics.add.staticGroup();
+    // this.background.create(400, 300, 'sky').refreshBody();
+    //this.background = this.add.image(400, 300, 'sky')
+    this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'sky')
+    this.background.setOrigin(0,0);
     // this.star = this.add.image(400, 300, 'star');
     // this.star.setScale(0.25)
 
@@ -70,6 +61,8 @@ class TitleScene extends Phaser.Scene {
     this.f3 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
     this.f4 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
     this.f5 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+    this.f6 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+    this.f7 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
 
     this.physics.add.overlap(this.orgs, this.foods, this.eat, null, this);
 
@@ -126,6 +119,19 @@ class TitleScene extends Phaser.Scene {
     }
   });
   // console.log(this.physics.pause)
+
+  //===============================================================Slider Feed===========================================================
+
+  //this.sliderStatus = document.querySelector("#foodToggle").checked
+
+  this.input.on("pointerdown", function(pointer) {
+    
+    if (document.querySelector("#foodToggle").checked) {
+      console.log("toggle and true")
+
+      new Food(this.scene, pointer.x, pointer.y, foodData[Phaser.Math.Between(0, 4)])
+    }
+  })
   
   //=============================================================Testing stuff============================================================
 
@@ -138,39 +144,33 @@ class TitleScene extends Phaser.Scene {
 
   update() {
    
-    if(this.orgs && !this.pausePhysics){
+   
+    if (this.orgs && !this.pausePhysics){
+      if(this.avgAndScore){
+        this.avgAndScore.destroy();
+      }
+      this.avgAndScore = this.add.text(this.game.config.width / 4, 20, `Avg Score: ${Math.floor((this.getAvgScore(this.orgs.getChildren())))}  No. Orgs: ${this.orgs.getChildren().length}  Highest Score: ${this.getHighestScore(this.orgs.getChildren())}`,{color: "#000000", fontSize: 20})
+  
+
+      console.log(this.getAvgScore(this.orgs.getChildren()))
       
-      for(let i = 0; i < this.orgs.getChildren().length; i++){
+      for (let i = 0; i < this.orgs.getChildren().length; i++){
         let org = this.orgs.getChildren()[i]
-        if(this.foods.getChildren().length > 0) {
+        
+        if (this.foods.getChildren().length > 0) {
           this.searchAlg(org,this.foods.getChildren(), this.orgs.getChildren());
         }
-        org.reproductionCycle++;
-        org.age++;
-        org.eatCycle++;
-        if (org.energy > 0) {
-          org.energy--;
-        }
-        org.grow(0.25);
-        org.body.velocityX = (org.body.velocityX * org.energy/2000)
-        org.body.velocityY = (org.body.velocityY * org.energy/2000)
         
-        // if (!org.age % 600) {
-        //   org.tint = org.tint * 0.5;
-        // }
-
-        if(org.age === org.lifespan) {
-          org.tint = 0.001 * 0xffffff;
-          org.setVelocity(0,0);
-          this.orgs.remove(org, false, false)
-          this.dyingOrg(org);
-        }
+        this.lifeCycle(org)
+        this.energyCycle(org)
+        
+        org.grow(0.25);
+        
       }
-        for(let i = 0; i < this.foods.getChildren().length; i++){
+        for (let i = 0; i < this.foods.getChildren().length; i++){
           let food = this.foods.getChildren()[i]
 
-          if(food.energy <= 0) {
-            //console.log("food destroy")
+          if (food.energy <= 0) {
             food.destroy();
           }
         }
@@ -181,6 +181,56 @@ class TitleScene extends Phaser.Scene {
   //When energy runs below 50% their speed is reduced 30%. when it is below 20% it is reduced to
   // Helper functions
 
+  getAvgScore(orgObjs) {
+    let avgScore = 0;
+    if (orgObjs.length) {
+      avgScore = orgObjs.reduce((acc,item) => (acc+item.score),(orgObjs[0].score))/orgObjs.length
+    }
+    return avgScore
+  }
+  getHighestScore(orgObjs) {
+    let highestScore = 0;
+      for(let k = 0; k < orgObjs.length; k++){
+        if(orgObjs[k].score > highestScore){
+          highestScore = orgObjs[k].score
+        }
+      }
+  return highestScore
+}
+
+  lifeCycle(org) {
+    org.reproductionCycle++;
+    // org.eatCycle++;
+    org.age++
+    if(org.age === org.lifespan || org.health === 0) {
+      org.tint = 0.001 * 0xffffff;
+      org.setVelocity(0,0);
+      this.orgs.remove(org, false, false)
+      this.dyingOrg(org);
+    }
+  }
+
+  energyCycle(org) {
+    let elFactor = 1;
+    if (org.energy_efficiency > 75) {
+      elFactor = 1 - ((org.energy_efficiency - 75) / org.energy_efficiency)
+    } else if (org.energy_efficiency < 75) {
+      elFactor = 75 / org.energy_efficiency
+    }
+
+    if (org.energy <= 0) {
+      org.energy = 0
+    } else {
+      org.energy = org.energy - (1 * elFactor)
+    }
+    
+    if (org.energy < 30) {
+      org.health -= 1
+    } 
+    if (org.energy > 30 && org.health < org.max_health) {
+      org.health++
+    }
+  }
 
   togglePause() {
     if (!this.pausePhysics) {
@@ -196,12 +246,13 @@ class TitleScene extends Phaser.Scene {
     }
   }
 
-
   searchAlg(source, foodObjs, orgObjs) {
-
-    if (source.type === 2 /* && (source.energy/source.max_energy)*100 >=  50 */ && source.age >= source.breeding_age && source.reproductionCycle >= 300 ) {
+    if (source.type === 2 && (source.energy/source.max_energy)*100 >=  50 && (source.max_health/source.health)*100 >= 50 && source.age >= source.breeding_age && source.reproductionCycle >= 300 ) {
       let arr = this.createOrgArray(source,orgObjs)
-      this.checkClosestMoveTo(source, arr, true)
+      if (arr.length) {
+        this.physics.moveToObject(source,arr[0],source.speed)
+      // this.checkClosestMoveTo(source, arr, true)
+      }
     } else {
       this.checkClosestMoveTo(source, foodObjs, false)
     }
@@ -214,10 +265,12 @@ class TitleScene extends Phaser.Scene {
   createOrgArray(source, orgObjs) {
     let arr = [];
     for(const org of orgObjs) {
-      if(source.distanceBetweenPerceived(org) && org.type === 1 && org.score <= source.score) {
+      if(source.distanceBetweenPerceived(org) && org.type === 1 ) {
         arr.push(org)
       }
     }
+
+    arr.sort((a,b) => b.score - a.score)
     return arr
   }
 
@@ -229,8 +282,6 @@ class TitleScene extends Phaser.Scene {
   checkClosestMoveTo(source,objects,bool) {
     if (objects.length) {
       let closest = this.physics.closest(source,objects)
-      //console.log(closest);
-      //console.log(objects)
       if (bool) {
       this.physics.moveToObject(source,closest,source.speed)
       return
@@ -239,6 +290,7 @@ class TitleScene extends Phaser.Scene {
         this.physics.moveToObject(source,closest,source.speed)
       }
     }
+    return
   }
 
   consoleLog(pointer, gameObject ) {
@@ -261,8 +313,9 @@ class TitleScene extends Phaser.Scene {
       <ul id="attrList">
       <li>Score: ${gameObject.score} </li> 
       <li>ID: ${gameObject.id}</li>
-      <li>AGE: ${gameObject.age} </li>
-      <li>Org's: ${this.scene.orgs.getChildren().length} </li>
+      <li>Age: ${gameObject.age} </li>
+      <li>Health: ${gameObject.health} </li>
+      <li>Energy: ${Math.floor(gameObject.energy)} </li>
       <li>Speed: ${gameObject.speed} </li> 
       <li>Lifespan: ${gameObject.lifespan} </li> 
       <li>Strength: ${gameObject.strength} </li>
@@ -271,7 +324,6 @@ class TitleScene extends Phaser.Scene {
       <li>Perception: ${gameObject.perception} </li>
       <li>Energy Efficiency: ${gameObject.energy_efficiency} </li>
       <li>Max Health: ${gameObject.max_health} </li>
-      <li>Health: ${gameObject.health} </li>
       <li>Max Energy: ${gameObject.max_energy} </li>
       <li>Litter Size: ${gameObject.litter_size} </li>
       <li>Breeding Age: ${gameObject.breeding_age} </li>
@@ -314,10 +366,9 @@ class TitleScene extends Phaser.Scene {
     //   org2.setTexture("damage")
     //   org2.play("damage_anim")
     // }else {
-    //console.log("breeding check:", this.breedingCheck(org1,org2))
       if(this.breedingCheck(org1,org2) && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300){
-        //console.log("spawning")
         let type1 = this.orderTypes(org1, org2)[0]
+        type1.energy -= 50
 
         for(let i=0; i< type1.litter_size; i++){
           const randomX = Phaser.Math.Between(-5, 5)
@@ -352,7 +403,7 @@ class TitleScene extends Phaser.Scene {
     let [type1, type2] = this.orderTypes(org1, org2)
     if(type1.type === type2.type){
       return false
-    } else if (type2.score >= type1.score && type1.age >= type1.breeding_age && type2.age >= type2.breeding_age){
+    } else if (/* type2.score >= type1.score && */ type1.age >= type1.breeding_age && type2.age >= type2.breeding_age && type2.energy && (type2.energy/type2.max_energy)*100 >=  50 && (type2.max_health/type2.health)*100 >= 75){
       return true
     } else{
       return false
@@ -360,14 +411,23 @@ class TitleScene extends Phaser.Scene {
   }
 
   eat(org, food) {
-    if (food.energy > 15 && org.eatCycle > 350) {
-      org.energy += 15;
-      food.energy -= 15;
-      org.eatCycle = 0;
-    } else if (food.energy <= 15 && food.energy > 0 && org.eatCycle > 350) {
-      org.energy += food.energy;
-      org.eatCycle = 0;
-      food.energy = 0;
+    let eDiff = org.max_energy - org.energy
+    if (food.energy > 15 && eDiff > 0) {
+      if (eDiff < 15) {
+        org.energy += eDiff;
+        food.energy -= eDiff;
+      } else {
+        org.energy += 15
+        food.energy -= 15
+      }
+    } else if (food.energy <= 15 && food.energy > 0 && eDiff > 0) {
+      if (eDiff < food.energy) {
+        org.energy += eDiff
+        food.energy -= eDiff
+      } else {
+        org.energy += food.energy
+        food.energy = 0
+      }
     }
   }
 
@@ -387,7 +447,6 @@ class TitleScene extends Phaser.Scene {
   }
 
   togglePause() {
-  //console.log("togglepause called")
     if (!this.pausePhysics) {
         this.physics.pause(); // resume game
         this.pausePhysics = true
@@ -400,7 +459,8 @@ class TitleScene extends Phaser.Scene {
         this.pauseText.destroy();
         //pauseText.visible = true;
     }
-}
+  }
+  
   onSave = async function(orgs, foods) {
     const cookieArr = document.cookie.split(';');
     let gameID = cookieArr[1];
