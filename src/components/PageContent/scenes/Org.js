@@ -30,7 +30,8 @@ class Org extends Phaser.GameObjects.Sprite {
       this.energy_efficiency = mathNormInherited(parent1.energy_efficiency, parent2.energy_efficiency)
       this.max_energy = mathNormInherited(parent1.max_energy, parent2.max_energy)
       this.aggression = mathNormInherited(parent1.aggression, parent2.aggression)
-      this.health = mathNormInherited(parent1.health, parent2.health)
+      this.max_health = mathNormInherited(parent1.health, parent2.health)
+      this.health = this.max_health
       this.speed = mathNormInherited(parent1.speed, parent2.speed)
       
       if(parent1.predator && parent2.predator){
@@ -50,7 +51,8 @@ class Org extends Phaser.GameObjects.Sprite {
       this.type = (val2 === 1 ? 1 : 2)
       }
       this.perception = mathNormInherited(parent1.perception, parent2.perception)
-      this.litter_size = (mathNormInherited(parent1.litter_size, parent2.litter_size) <= 0 ? 1 : mathNormInherited(parent1.litter_size, parent2.litter_size))
+      const inheritedLitterVal = mathNormInherited(parent1.litter_size, parent2.litter_size)
+      this.litter_size = (inheritedLitterVal <= 0 ? 1 : inheritedLitterVal)
       this.breeding_age = mathNormInherited(parent1.breeding_age, parent2.breeding_age)
       
       this.generation = parent1.generation + 1
@@ -58,20 +60,22 @@ class Org extends Phaser.GameObjects.Sprite {
       this.parent2 = parent2
       
     } else {
-      this.lifespan = mathNorm(2500, 2500)
+      this.lifespan = mathNorm(2500, 100000)
       this.velx = mathNorm(Phaser.Math.Between(-50, 50), 2)
       this.vely = mathNorm(Phaser.Math.Between(-50, 50), 2)
-      this.strength = mathNorm(75, 2)
-      this.energy_efficiency = mathNorm(75, 2)
-      this.max_energy = mathNorm(300, 2)
-      this.aggression = mathNorm(75, 2)
-      this.health = mathNorm(300, 2)
+      this.strength = mathNorm(75, 200)
+      this.energy_efficiency = mathNorm(75, 200)
+      this.max_energy = mathNorm(300, 1000)
+      this.aggression = mathNorm(75, 200)
+      this.max_health = mathNorm(300, 1000)
+      this.health = this.max_health
       const val1 = Phaser.Math.Between(0, 1)
       this.predator = (val1 === 0 ? true : false)
-      this.perception = mathNorm(200, 2)
-      this.litter_size = (mathNorm(2, 2) <= 0 ? 1 : mathNorm(2, 2))
-      this.breeding_age = mathNorm(500, 2)
-      this.speed = mathNorm(100, 2)
+      this.perception = mathNorm(200, 800)
+      const litterRand = mathNorm(4, 2)
+      this.litter_size = (litterRand <= 0 ? 1 : litterRand)
+      this.breeding_age = mathNorm(500, 5000)
+      this.speed = mathNorm(100, 600)
       const val2 = Phaser.Math.Between(1, 2)
       this.type = (val2 === 1 ? 1 : 2)
       

@@ -32,26 +32,32 @@ class TitleScene extends Phaser.Scene {
    //===========================================Organisms====================================================
 
     this.background = this.add.image(400, 300, 'sky');
+    // this.star = this.add.image(400, 300, 'star');
+    // this.star.setScale(0.25)
 
     this.orgs = this.physics.add.group();
-   
+    this.orgNum = 0;
     //Organisms on-click
     this.input.on("gameobjectdown", this.writeAttributes);
-
-    this.r1 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 1)
-    this.r2 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 2)
-    this.r3 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 3)
-    this.r4 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 4)
-    this.r5 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 5)
-    this.r6 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 6)
-    this.orgNum = 6;
+    for(let j = 0; j < 15; j++){
+      let newOrg =  new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, j+1)
+      newOrg.setInteractive();
+      this.orgNum++
+    }
+    // this.r1 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 1)
+    // this.r2 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 2)
+    // this.r3 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 3)
+    // this.r4 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 4)
+    // this.r5 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 5)
+    // this.r6 = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, 6)
+    
   
-    this.r1.setInteractive()
-    this.r2.setInteractive()
-    this.r3.setInteractive()
-    this.r4.setInteractive()
-    this.r5.setInteractive()
-    this.r6.setInteractive()
+    // this.r1.setInteractive()
+    // this.r2.setInteractive()
+    // this.r3.setInteractive()
+    // this.r4.setInteractive()
+    // this.r5.setInteractive()
+    // this.r6.setInteractive()
 
     this.physics.add.overlap(this.orgs, this.orgs, this.attackOrSpawn, null, this);
     this.physics.add.collider(this.orgs, this.partitions);
@@ -158,7 +164,7 @@ class TitleScene extends Phaser.Scene {
       for(let i = 0; i < this.orgs.getChildren().length; i++){
         let org = this.orgs.getChildren()[i]
         if(this.foods.getChildren().length > 0) {
-          this.checkClosestMoveTo(org,this.foods.getChildren())
+          this.searchAlg(org,this.foods.getChildren(), this.orgs.getChildren());
         }
         org.reproductionCycle++;
         org.age++;
@@ -210,13 +216,30 @@ class TitleScene extends Phaser.Scene {
         //pauseText.visible = true;
     }
   }
-  
+
 
   searchAlg(source, foodObjs, orgObjs) {
+
+    if (source.type === 2 /* && (source.energy/source.max_energy)*100 >=  50 */ && source.age >= source.breeding_age && source.reproductionCycle >= 300 ) {
+      let arr = this.createOrgArray(source,orgObjs)
+      this.checkClosestMoveTo(source, arr, true)
+    } else {
+      this.checkClosestMoveTo(source, foodObjs, false)
+    }
     //Energy, health, age, type, agression, predator, reproductive age
 
     //If type A, search for food, or mate 
     //If type B, search for food, 
+  }
+
+  createOrgArray(source, orgObjs) {
+    let arr = [];
+    for(const org of orgObjs) {
+      if(source.distanceBetweenPerceived(org) && org.type === 1 && org.score <= source.score) {
+        arr.push(org)
+      }
+    }
+    return arr
   }
 
   //if search alg reveals nothing in perception distance
@@ -224,10 +247,18 @@ class TitleScene extends Phaser.Scene {
 
   }
 
-  checkClosestMoveTo(source,objects) {
-    let closest = this.physics.closest(source,objects)
-    if(source.distanceBetweenPerceived(closest)) {
+  checkClosestMoveTo(source,objects,bool) {
+    if (objects.length) {
+      let closest = this.physics.closest(source,objects)
+      console.log(closest);
+      console.log(objects)
+      if (bool) {
       this.physics.moveToObject(source,closest,source.speed)
+      return
+      }
+      if(source.distanceBetweenPerceived(closest)) {
+        this.physics.moveToObject(source,closest,source.speed)
+      }
     }
   }
 
@@ -252,7 +283,7 @@ class TitleScene extends Phaser.Scene {
       <li>Score: ${gameObject.score} </li> 
       <li>ID: ${gameObject.id}</li>
       <li>AGE: ${gameObject.age} </li>
-      <li>ORGS: ${this.scene.orgs.getChildren().length} </li>
+      <li>Org's: ${this.scene.orgs.getChildren().length} </li>
       <li>Speed: ${gameObject.speed} </li> 
       <li>Lifespan: ${gameObject.lifespan} </li> 
       <li>Strength: ${gameObject.strength} </li>
@@ -260,12 +291,14 @@ class TitleScene extends Phaser.Scene {
       <li>Predator: ${gameObject.predator} </li>
       <li>Perception: ${gameObject.perception} </li>
       <li>Energy Efficiency: ${gameObject.energy_efficiency} </li>
+      <li>Max Health: ${gameObject.max_health} </li>
       <li>Health: ${gameObject.health} </li>
       <li>Max Energy: ${gameObject.max_energy} </li>
       <li>Litter Size: ${gameObject.litter_size} </li>
       <li>Breeding Age: ${gameObject.breeding_age} </li>
+      <li>Type: ${gameObject.type} </li>
       <li>Generation: ${gameObject.generation} </li>
-      <li>Parents: ${gameObject.parent1.id} ${gameObject.parent2.id} </li>
+      <li>Parents: ${gameObject.parent1.id} ${gameObject.parent2.id}</li>
       </ul>
     `
     Phaser.DOM.AddToDOM(attrList, rsElem)
@@ -289,31 +322,35 @@ class TitleScene extends Phaser.Scene {
       .catch((err) => console.log(err.message));
   }
 
-  attackOrSpawn(org1, org2,) {
+  attackOrSpawn(org1, org2) {
     // if(org1.predator && !org2.predator){
-    // org2.setTexture("damage")
-    // org2.play("damage_anim")
+    //   org2.setTexture("damage")
+    //   org2.play("damage_anim")
     // } else if(org2.predator && !org1.predator){
-    // org1.setTexture("damage")
-    // org1.play("damage_anim")
+    //   org1.setTexture("damage")
+    //   org1.play("damage_anim")
     // } else if(org1.predator && org2.predator){
-    // org1.setTexture("damage")
-    // org1.play("damage_anim")
-    // org2.setTexture("damage")
-    // org2.play("damage_anim")
+    //   org1.setTexture("damage")
+    //   org1.play("damage_anim")
+    //   org2.setTexture("damage")
+    //   org2.play("damage_anim")
     // }else {
-      if(org1.age > 500 && org2.age > 500 && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300){
-        this.orgNum++
+    console.log("breeding check:", this.breedingCheck(org1,org2))
+      if(this.breedingCheck(org1,org2) && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300){
+        console.log("spawning")
+        let type1 = this.orderTypes(org1, org2)[0]
 
-        const randomX = Phaser.Math.Between(-5, 5)
-        const randomY = Phaser.Math.Between(-5, 5)
-
-        let newOrg = new Org(this, org1.x + randomX, org1.y + randomY, org1, org2, this.orgNum)
+        for(let i=0; i< type1.litter_size; i++){
+          const randomX = Phaser.Math.Between(-5, 5)
+          const randomY = Phaser.Math.Between(-5, 5)
+          let newOrg = new Org(this, org1.x + randomX, org1.y + randomY, org1, org2, this.orgNum)
+          this.orgNum++
+          newOrg.setInteractive();
+        }
         org1.reproductionCycle = 0;
         org2.reproductionCycle = 0;
         org1.setVelocity(0,0);
         org2.setVelocity(0,0);
-        newOrg.setInteractive();
 
         this.time.addEvent({
           delay: 1000,
@@ -326,6 +363,21 @@ class TitleScene extends Phaser.Scene {
         })
       }
     //} 
+  }
+
+  orderTypes(org1, org2){
+     return (org1.type < org2.type ? [org1, org2] : [org2, org1])
+  }
+  
+  breedingCheck(org1,org2) {
+    let [type1, type2] = this.orderTypes(org1, org2)
+    if(type1.type === type2.type){
+      return false
+    } else if (type2.score >= type1.score && type1.age >= type1.breeding_age && type2.age >= type2.breeding_age){
+      return true
+    } else{
+      return false
+    }
   }
 
   eat(org, food) {

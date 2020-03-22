@@ -14,16 +14,19 @@
   color: white;
   text-align: center;
   font-size: 3em;
-  font-family: 'Monoton', cursive;
+  font-family: 'Bungee Shade', cursive;
   height: $topnavheight;
 }
 
 .nav-views {
   display: flex;
   justify-content: space-between;
-  font-family: 'Boogaloo', cursive;
+  font-family: 'Cabin Sketch', cursive;
 }
 
 .header-text {
   font-size: 1.5em;
+}
+.welcome-text {
+  font-family: 'Cabin Sketch', cursive;
 }

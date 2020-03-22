@@ -39,7 +39,7 @@ export default function Topnav(props) {
   return ( 
     <header className="topnav">
     <h2 className="header-text">Evolve</h2>
-    {user && <h4>Welcome: {user}</h4>}
+    {user && <h4 class="welcome-text">Welcome: {user}</h4>}
     <div className="nav-views">{items}</div>
   </header>);
 }
