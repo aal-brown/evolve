@@ -64,20 +64,25 @@ class Org extends Phaser.GameObjects.Sprite {
       this.velx = mathNorm(Phaser.Math.Between(-50, 50), 2)
       this.vely = mathNorm(Phaser.Math.Between(-50, 50), 2)
       this.strength = mathNorm(75, 200)
-      this.energy_efficiency = mathNorm(75, 200)
-      this.max_energy = mathNorm(300, 1000)
+      this.energy_efficiency = mathNorm(75, 750)
+      this.max_energy = mathNorm(800, 8000)
       this.aggression = mathNorm(75, 200)
-      this.max_health = mathNorm(300, 1000)
+      this.max_health = mathNorm(500, 20000)
       this.health = this.max_health
       const val1 = Phaser.Math.Between(0, 1)
       this.predator = (val1 === 0 ? true : false)
-      this.perception = mathNorm(200, 800)
-      const litterRand = mathNorm(4, 2)
+      this.perception = mathNorm(350, 4000)
+      const litterRand = mathNorm(3, 2)
       this.litter_size = (litterRand <= 0 ? 1 : litterRand)
       this.breeding_age = mathNorm(500, 5000)
-      this.speed = mathNorm(100, 600)
-      const val2 = Phaser.Math.Between(1, 2)
-      this.type = (val2 === 1 ? 1 : 2)
+      this.speed = mathNorm(100, 2000)
+      const val2 = Phaser.Math.Between(1, 15)
+      if (val2 <= 5 ) {
+        this.type = 2
+      } else {
+        this.type = 1
+      }
+      // this.type = (val2 === 1 ? 1 : 2)
       
       this.generation = 1
       this.parent1 = {id:0}
@@ -100,10 +105,10 @@ class Org extends Phaser.GameObjects.Sprite {
     this.id = orgNum;
     this.age = 0;
     this.score = this.getScore()
-    this.reproductionCycle = 50;
-    this.eatCycle = 1000;
+    this.reproductionCycle = 100;
+    //this.eatCycle = 20;
     this.scale = 0.25;
-    this.energy = 2000;
+    this.energy = this.max_energy;
     scene.add.existing(this);
     scene.physics.world.enableBody(this);
     this.play("blobs_anim");
@@ -132,16 +137,16 @@ class Org extends Phaser.GameObjects.Sprite {
 
   getScore() {
     let score = (
-      (this.lifespan/2500)*100 + 
-      (this.strength/75)*100 +
-      (this.energy_efficiency) +
-      (this.max_energy/300)*100 +
-      (this.aggression/75)*100 +
-      (this.health/300)*100 +
-      (this.perception/200)*100 +
-      (this.litter_size/3)*100 +
-      (this.breeding_age/500)*100 +
-      (this.speed/100)*100
+      (this.lifespan/2500)*200 + 
+      // (this.strength/75)*100 +
+      (this.energy_efficiency/75)*100 +
+      (this.max_energy/800)*100 +
+      // (this.aggression/75)*100 +
+      (this.health/500)*100 +
+      (this.perception/350)*120 +
+      (this.litter_size/6)*100 +
+      // (this.breeding_age/500)*100 +
+      (this.speed/100)*200
     );
     return Math.ceil(score)
   }
@@ -164,7 +169,7 @@ class Org extends Phaser.GameObjects.Sprite {
   }
 
   grow(value) {
-    if (!(this.age % 250) && this.age <= 1000) {
+    if (!(this.age % 100) && this.age <= 450) {
       this.scale += value
       this.setScale(this.scale)
     }
