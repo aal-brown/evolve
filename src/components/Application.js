@@ -31,7 +31,7 @@ import "components/Application.scss";
 
 export default function Application(props) {
   const [view, setView] = useState(6)
-  const [cookies, setCookie, removeCookie] = useCookies(['user_id']);
+  const [cookies, setCookie, removeCookie] = useCookies(['user_id', 'game_id']);
   const [topNav, setTopNav] = useState([]);
   
 useEffect(() => {
@@ -64,11 +64,12 @@ useEffect(() => {
         view={view}
         setView={setView}
         cookies={cookies}
+        setCookie={setCookie}
         removeCookie={removeCookie}
       />
       <main className="layout">
         <PageContent
-        // games={gameData}
+        //games={gameData}
         view={view}
         setView={setView}
         cookies={cookies}

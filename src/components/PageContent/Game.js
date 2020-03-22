@@ -7,13 +7,14 @@ import {
 } from '@ion-phaser/react'
 import Preload from "./scenes/preload";
 import TitleScene from './scenes/TitleScene';
+
 // import LeftSideBar from './LeftSideBar.js'
 
 //let canvas = document.querySelector('canvas');
 //canvas.width = window.innerWidth;
 //canvas.height = window.innerHeight;
 
-class Game extends Component {
+class Game extends Component{
   state = {
     initialize: true,
     game: {

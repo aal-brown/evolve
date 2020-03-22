@@ -13,6 +13,7 @@ class TitleScene extends Phaser.Scene {
   async create() {
     
     const foodData = await this.getFoodData();
+    
     console.log("inside the create func ", foodData);
     
     // axios.get("http://localhost:3000/foods")
@@ -87,6 +88,8 @@ class TitleScene extends Phaser.Scene {
         this.scene.addOrg();
       } else if (event.target.name === "addFood") {
         this.scene.addFood(foodData);
+      } else if (event.target.name === "save") {
+        this.scene.onSave(this.scene.orgs.getChildren(), this.scene.foods.getChildren());
       }
     })
 
@@ -132,30 +135,6 @@ class TitleScene extends Phaser.Scene {
   //console.log(this.game.renderer.snapshot)
 
   }
-
-    // this.rightsidebar = this.scene.add.text(1650,50,
-    //   `\n 
-    //   Score: ${gameObject.score} \n
-    //   ID: ${gameObject.id} \n
-    //   AGE: ${gameObject.age} \n
-    //   ORGS: ${this.scene.orgs.getChildren().length} \n
-    //   Speed: ${gameObject.speed} \n 
-    //   Lifespan: ${gameObject.lifespan} \n 
-    //   Strength: ${gameObject.strength} \n
-    //   Aggression: ${gameObject.aggression} \n
-    //   Predator: ${gameObject.predator} \n
-    //   Perception: ${gameObject.perception} \n
-    //   Energy Efficiency: ${gameObject.energy_efficiency} \n
-    //   Health: ${gameObject.health} \n
-    //   Max Energy: ${gameObject.max_energy} \n
-    //   Litter Size: ${gameObject.litter_size} \n
-    //   Breeding Age: ${gameObject.breeding_age} \n
-    //   Generation: ${gameObject.generation} \n
-    //   Parents: ${gameObject.parent1.id} ${gameObject.parent2.id} \n
-    //   `, {color: "#000000",
-    //   fontSize: 14}
-  //)};
-
 
   update() {
    
@@ -392,7 +371,7 @@ class TitleScene extends Phaser.Scene {
     }
   }
 
- dyingOrg(org){
+  dyingOrg(org){
     this.time.addEvent({
       delay: 1000,
       callback: function(){
@@ -407,6 +386,92 @@ class TitleScene extends Phaser.Scene {
     });
   }
 
+  togglePause() {
+  console.log("togglepause called")
+    if (!this.pausePhysics) {
+        this.physics.pause(); // resume game
+        this.pausePhysics = true
+        this.pauseText = this.add.text(this.game.config.width / 2, 20, "PAUSED",{color: "#000000",
+        fontSize: 50})
+    } else {
+
+        this.pausePhysics = false
+        this.physics.resume();
+        this.pauseText.destroy();
+        //pauseText.visible = true;
+    }
+}
+  onSave = async function(orgs, foods) {
+    const cookieArr = document.cookie.split(';');
+    let gameID = cookieArr[1];
+    gameID = gameID.slice(9);
+
+    let gameStateObject = {
+      orgs: [],
+      foods: []
+    };
+
+    orgs.forEach((org) => {
+      gameStateObject.orgs.push(org.getAttributes());
+    })
+
+    foods.forEach((food) => {
+      gameStateObject.foods.push(food.getAttributes());
+    })
+
+    gameStateObject = JSON.stringify(gameStateObject);
+
+    let newGameBool = await this.newGame(gameID);
+
+    if(newGameBool) {
+      console.log("UPDATING SAVE");
+      const url = `http://localhost:3000/game_saves/${gameID}`;
+
+      axios({
+        method: 'PUT',
+        url,
+        data: { save_text: gameStateObject },
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(resp => {
+        console.log("Saved successfully:", resp);
+      })
+      .catch(err => console.log("Error attempting to save:", err.message));
+    } else {
+      console.log("POST NEW SAVE");
+      const url = `http://localhost:3000/game_saves`;
+
+      let gameData = {
+        game_id: gameID,
+        save_text: gameStateObject
+      };
+  
+      axios({
+        method: 'POST',
+        url,
+        data: gameData,
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(resp => {
+        console.log("Saved successfully:", resp);
+      })
+      .catch(err => console.log("Error attempting to save:", err.message));
+    }
+  }
+
+  newGame = async function(gameID) {
+    return axios.get(`http://localhost:3000/game_saves/${gameID}`)
+      .then((res) => {
+        return true;
+      })
+      .catch((err) => {
+        if (err.message === "Request failed with status code 404") {
+          return false;
+        }
+      })
+  }
 
 }
 

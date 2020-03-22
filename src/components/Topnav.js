@@ -15,6 +15,37 @@ export default function Topnav(props) {
     })
   }
 
+  function setGameCookie() {
+    const user_id = props.cookies.user_id;
+    const url = "http://localhost:3000/games";
+
+    axios.get("http://localhost:3000/getuser", {
+      headers: { "ID": user_id }
+    })
+    .then((res) => {
+      axios({
+        method: 'POST',
+        url,
+        data: {
+          user_id: res.data.id,
+          name: "game name"
+        },
+        mode: 'no-cors',
+        headers: {
+          // 'Access-Control-Allow-Origin': '*',
+          // 'Accept': '*/*',
+          'Content-Type': 'application/json'
+          // 'User-Agent': 'axios'
+        }
+      })
+      .then(resp => {
+        console.log(resp);
+        props.setCookie("game_id", resp.data.id)
+      })
+      .catch(err => console.error(err.message));
+    })
+  }
+
   useEffect(() => {
     if(props.cookies.user_id){
       getData()
@@ -31,6 +62,8 @@ export default function Topnav(props) {
         if(item.id === 8) {
           props.removeCookie("user_id")
           setUser("")
+        } else if (item.id === 5 && props.cookies.user_id && !props.cookies.game_id) {
+          setGameCookie();
         }
         props.setView(item.id)}
       }
