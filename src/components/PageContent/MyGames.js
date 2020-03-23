@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MyGamesItem from "./MyGamesItem";
 import Button from "../Button";
+import "../Button.scss";
 import Game from "./Game";
 import axios from "axios";
 import "./MyGames.scss"
@@ -149,13 +150,13 @@ export default function MyGames(props) {
         <div className="quit-confirm" style={{visibility: "hidden"}}>
           <h1>Quit?</h1>
           <h2>All unsaved changes will be lost!</h2>
-          <div className="quit-confirm-buttons">
+          <div className="quit-confirm-buttons ">
             <Button className="button--confirm" onClick={exit} >Quit</Button>
-            <Button className="button--confirm" onClick={confirmQuit} >Cancel</Button>
+            <Button className="button--danger" onClick={confirmQuit} >Cancel</Button>
           </div>
         </div>
-        <div className="">
-          <Button className="button--confirm" onClick={confirmQuit} >Quit</Button>
+        <div className="game-button-quit-or-new-game">
+          <Button className="button--danger" onClick={confirmQuit} >Quit Game</Button>
         </div>
         <Game
         />
