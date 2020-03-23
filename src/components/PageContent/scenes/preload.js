@@ -24,25 +24,53 @@ export default class Preload extends Phaser.Scene {
       frameHeight: 32
     });
 
-    this.load.spritesheet("mushy peas", "/assets/food1.png", {
+    this.load.spritesheet("mushy peas", "/assets/foods/sprites-3.png", {
       frameWidth: 32,
       frameHeight: 32
     });
-    this.load.spritesheet("chicken", "/assets/food2.png", {
+    this.load.spritesheet("chicken", "/assets/foods/sprites-14.png", {
       frameWidth: 32,
       frameHeight: 32
     });
-    this.load.spritesheet("chocolate", "/assets/food3.png", {
+    this.load.spritesheet("chocolate", "/assets/foods/sprites-16.png", {
       frameWidth: 32,
       frameHeight: 32
     });
-    this.load.spritesheet("pasta", "/assets/food4.png", {
+    this.load.spritesheet("pasta", "/assets/foods/sprites-18.png", {
       frameWidth: 32,
       frameHeight: 32
     });
-    this.load.spritesheet("raspberries", "/assets/food5.png", {
+    this.load.spritesheet("raspberries", "/assets/foods/sprites-11.png", {
       frameWidth: 32,
       frameHeight: 32
+    });
+    // this.load.spritesheet("mushy peas", "/assets/foods/sprites-0.png", {
+    //   frameWidth: 32,
+    //   frameHeight: 32
+    // });
+    // this.load.spritesheet("mushy peas", "/assets/food1.png", {
+    //   frameWidth: 32,
+    //   frameHeight: 32
+    // });
+    // this.load.spritesheet("chicken", "/assets/food2.png", {
+    //   frameWidth: 32,
+    //   frameHeight: 32
+    // });
+    // this.load.spritesheet("chocolate", "/assets/food3.png", {
+    //   frameWidth: 32,
+    //   frameHeight: 32
+    // });
+    // this.load.spritesheet("pasta", "/assets/food4.png", {
+    //   frameWidth: 32,
+    //   frameHeight: 32
+    // });
+    // this.load.spritesheet("raspberries", "/assets/food5.png", {
+    //   frameWidth: 32,
+    //   frameHeight: 32
+    // });
+    this.load.spritesheet("explosion", "/assets/explosion2.png", {
+      frameWidth: 100,
+      frameHeight: 100
     });
 
     this.load.image('fullscreen',"assets/fullscreen2.png")
@@ -84,6 +112,12 @@ export default class Preload extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers("predator"),
       frameRate: 10,
       repeat: -1 //means infinite loop!
+    });
+    this.anims.create({
+      key: "explosion_anim",
+      frames: this.anims.generateFrameNumbers("explosion"),
+      frameRate: 80,
+      repeat: 0
     });
   }
 }
