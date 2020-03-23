@@ -38,7 +38,7 @@ class Org extends Phaser.GameObjects.Sprite {
       } else if (!parent1.predator && !parent2.predator){ 
         this.predator = false
       } else {
-        const val1 = Phaser.Math.Between(0, 1)
+        const val1 = Phaser.Math.Between(0, 10)
         this.predator = (val1 === 0 ? true : false)
       }
       if(parent1.type === 1 && parent2.type === 1){
@@ -68,7 +68,7 @@ class Org extends Phaser.GameObjects.Sprite {
       this.aggression = mathNorm(75, 200)
       this.max_health = mathNorm(500, 20000)
       this.health = this.max_health
-      const val1 = Phaser.Math.Between(0, 1)
+      const val1 = Phaser.Math.Between(0, 10)
       this.predator = (val1 === 0 ? true : false)
       this.perception = mathNorm(350, 4000)
       const litterRand = mathNorm(3, 2)
@@ -120,6 +120,9 @@ class Org extends Phaser.GameObjects.Sprite {
     this.colour = Math.random() * 0xffffff;
     this.status = "Wandering"
     this.tint = this.colour;
+    this.isShowingDamage = false;
+    this.speedBoost = 51;
+    this.damageCycle = 400;
   }
 
   //Check the distance between org and all other elements, (based on what is passed in), if this distance is less than perception than return true. Else return false.
@@ -183,6 +186,10 @@ class Org extends Phaser.GameObjects.Sprite {
     this.alpha -= 0.25
     this.scale -= 0.25
     this.setScale(this.scale)
+  }
+  damage(){
+    this.setTexture("damage")
+    this.play("damage_anim")
   }
 
   getAttributes() {

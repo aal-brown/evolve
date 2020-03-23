@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+  "proxy": "https://agile-scrubland-73485.herokuapp.com/",
     "@ion-phaser/react": "^1.2.1",
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",

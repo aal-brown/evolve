@@ -32,14 +32,10 @@ class TitleScene extends Phaser.Scene {
     if (!this.newGameBool) {
       let gameData = await this.getGameData(gameID);
       gameData = JSON.parse(gameData.save_text);
-      console.log(gameData);
       const loadedOrgs = gameData.orgs;
       const loadedFoods = gameData.foods;
       this.iterations = gameData.iterations;
 
-
-      console.log(loadedOrgs)
-      console.log(loadedFoods)
 
       for (const org of loadedOrgs) {
         this.orgNum++
@@ -73,6 +69,10 @@ class TitleScene extends Phaser.Scene {
         newOrg.ycoord = org.ycoord;
 
         newOrg.setInteractive();
+        if(newOrg.predator){
+          newOrg.setTexture("predator")
+          newOrg.play("pred_anim")
+        }
       }
       for (const food of loadedFoods) {
         console.log("loadng foods in game")
@@ -84,6 +84,10 @@ class TitleScene extends Phaser.Scene {
       for(let j = 0; j < 15; j++){
         let newOrg =  new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, j+1)
         newOrg.setInteractive();
+        if(newOrg.predator){
+          newOrg.setTexture("predator")
+          newOrg.play("pred_anim")
+        }
         this.orgNum++
       }
 
@@ -251,7 +255,6 @@ class TitleScene extends Phaser.Scene {
       
       for (let i = 0; i < this.orgs.getChildren().length; i++){
         let org = this.orgs.getChildren()[i]
-        console.log(org.speed, Math.sqrt((org.velx**2 + org.vely**2)))
         if (this.foods.getChildren().length > 0) {
           this.searchAlg(org,this.foods.getChildren(), this.orgs.getChildren());
         }
@@ -260,6 +263,14 @@ class TitleScene extends Phaser.Scene {
         this.energyCycle(org)
         
         org.grow(0.25);
+          this.damageTexture(org, org.health, org.isShowingDamage)
+          this.regTexture(org, org.health, org.isShowingDamage)
+          org.speedBoost++;
+          org.damageCycle++;
+          if(org.speedBoost === 50){
+            org.setVelocity(org.velx - 50, org.vely - 50)
+            console.log("reset speedBoost")
+          }
         
       }
         for (let i = 0; i < this.foods.getChildren().length; i++){
@@ -338,7 +349,6 @@ class TitleScene extends Phaser.Scene {
     if (!this.pausePhysics) {
         this.physics.pause(); 
         this.pausePhysics = true
-        console.log(this.game.config.width)
         this.pauseText = this.add.text(this.game.config.width / 2, this.game.config.height / 2, "PAUSE",{color: "#000000", fontSize: 50})
 
     } else {
@@ -440,6 +450,10 @@ class TitleScene extends Phaser.Scene {
   addOrg() {
     let addedOrg = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, this.orgNum)
     this.orgNum++;
+    if(addedOrg.predator){
+      addedOrg.setTexture("predator")
+      addedOrg.play("pred_anim")
+    }
     addedOrg.setInteractive();
   }
 
@@ -449,26 +463,51 @@ class TitleScene extends Phaser.Scene {
   }
 
   getFoodData = async function() {
-    return axios.get("http://localhost:3000/foods")
+    return axios.get("https://agile-scrubland-73485.herokuapp.com/foods")
       .then((res) => {
         return res.data;
       })
       .catch((err) => console.log(err.message));
   }
-
+  damageTexture(org, health, damageBool){
+    if(!damageBool && health < (org.max_health / 2)){
+      org.setTexture("damage")
+      org.play("damage_anim")
+      org.isShowingDamage = true
+    }
+  }
+  regTexture(org, health, damageBool){
+    if(damageBool && health > (org.max_health / 2)){
+      if(org.predator){
+        org.setTexture("predator")
+        org.play("pred_anim")
+      } else {
+        org.setTexture("blobs")
+        org.play("blobs_anim")
+      }
+      org.isShowingDamage = false
+    }
+  }
   attackOrSpawn(org1, org2) {
-    // if(org1.predator && !org2.predator){
-    //   org2.setTexture("damage")
-    //   org2.play("damage_anim")
-    // } else if(org2.predator && !org1.predator){
-    //   org1.setTexture("damage")
-    //   org1.play("damage_anim")
-    // } else if(org1.predator && org2.predator){
-    //   org1.setTexture("damage")
-    //   org1.play("damage_anim")
-    //   org2.setTexture("damage")
-    //   org2.play("damage_anim")
-    // }else {
+    if(org1.predator && !org2.predator && org2.health < (org2.max_health / 2) && org2.damageCycle > 300){
+      console.log("got damaged")
+      org2.health -= 5;
+      org2.damageCycle = 0;
+    } else if(org1.predator && !org2.predator && org2.health > (org2.max_health / 2) && org2.speedBoost > 50  && org2.damageCycle > 300){
+      console.log("ran away!")
+      org2.setVelocity(org2.velx +50 , org2.vely +50)
+      org2.speedBoost = 0;
+      org2.damageCycle = 0;
+    } else if(org2.predator && !org1.predator && org1.health < (org1.max_health / 2) && org1.damageCycle > 300){
+      org1.health -= 5;
+      console.log("got damaged")
+      org1.damageCycle = 0;
+    } else if(org2.predator && !org1.predator && org1.health < (org1.max_health / 2) && org2.speedBoost > 50 && org1.damageCycle > 300){
+      org1.setVelocity(org1.velx + 50, org1.vely + 50)
+      org1.speedBoost = 0;
+      console.log("ran away")
+      org1.damageCycle = 0;
+    }else {
       if(this.breedingCheck(org1,org2) && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300){
         org1.status = "Breeding"
         org2.status = "Breeding"
@@ -497,7 +536,7 @@ class TitleScene extends Phaser.Scene {
           loop: false
         })
       }
-    //} 
+    } 
   }
 
   orderTypes(org1, org2){
@@ -506,7 +545,7 @@ class TitleScene extends Phaser.Scene {
   
   breedingCheck(org1,org2) {
     let [type1, type2] = this.orderTypes(org1, org2)
-    console.log(type2.score - type1.score > -150 && type1.age >= type1.breeding_age && type2.age >= type2.breeding_age && type2.energy && ((type2.energy/type2.max_energy)*100 >= 50) && ((type2.health/type2.max_health)*100 >= 75) && ((type1.energy/type1.max_energy) * 100 >= 50) && (type1.health/type1.max_health)*100 >= 75)
+    //console.log(type2.score - type1.score > -150 && type1.age >= type1.breeding_age && type2.age >= type2.breeding_age && type2.energy && ((type2.energy/type2.max_energy)*100 >= 50) && ((type2.health/type2.max_health)*100 >= 75) && ((type1.energy/type1.max_energy) * 100 >= 50) && (type1.health/type1.max_health)*100 >= 75)
     if(type1.type === type2.type){
       return false
     } else if (type2.score - type1.score > -150 && type1.age >= type1.breeding_age && type2.age >= type2.breeding_age && type2.energy && (type2.energy/type2.max_energy)*100 >= 50 && (type2.health/type2.max_health)*100 >= 75 && (type1.energy/type1.max_energy) * 100 >= 50 && (type1.health/type1.max_health)*100 >= 75){

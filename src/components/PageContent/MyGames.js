@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MyGamesItem from "./MyGamesItem";
 import Button from "../Button";
+import "../Button.scss";
 import Game from "./Game";
 import axios from "axios";
 import "./MyGames.scss"
@@ -123,8 +124,8 @@ export default function MyGames(props) {
     <section>
     { gameView === 0 && (
       <div className="default-game-page">
-        <div className="game-buttons">
-          <Button className="button--confirm" onClick={newGame} >New Game</Button>
+        <div className="game-buttons game-button-quit-or-new-game">
+          <Button className="button--confirm game-button-quit-or-new-game" onClick={newGame} >New Game</Button>
         </div>
         <div className="MyGames">
           {myGames}
@@ -133,8 +134,8 @@ export default function MyGames(props) {
     )}
     { gameView === 1 && (
       <div className="gameCanvas">
-        <div className="">
-          <Button className="button--confirm" onClick={exit} >Quit</Button>
+        <div className="game-buttons game-button-quit-or-new-game">
+          <Button className="button--confirm" onClick={exit} >Quit Game</Button>
         </div>
         <Game
         />
