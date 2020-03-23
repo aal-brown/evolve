@@ -11,12 +11,14 @@ class TitleScene extends Phaser.Scene {
   }
 
   async create() {
-    //==========================================================Creating New Game, Loading Game================================================================
+    //==========================================================Creating New Game / Loading Game================================================================
     this.iterations = 0;
+    this.newGameBool = true;
     const cookieArr = document.cookie.split(';');
     let gameID = cookieArr[1];
     if (gameID) {
       gameID = gameID.slice(9);
+      this.newGameBool = await !this.newGame(gameID);
     }
 
     this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'sky')
@@ -27,7 +29,7 @@ class TitleScene extends Phaser.Scene {
     this.foods = this.physics.add.group();
     this.orgs = this.physics.add.group();
     
-    if (await this.newGame(gameID)) {
+    if (!this.newGameBool) {
       let gameData = await this.getGameData(gameID);
       gameData = JSON.parse(gameData.save_text);
       console.log(gameData);
@@ -133,6 +135,15 @@ class TitleScene extends Phaser.Scene {
         this.scene.addOrg();
       } else if (event.target.name === "addFood") {
         this.scene.addFood(foodData);
+      } else if (event.target.name === "foodToggle") {
+        document.querySelector("#removeBlocksToggle").checked = false
+        document.querySelector("#addBlocksToggle").checked = false
+      } else if (event.target.name === "addBlocksToggle") {
+        document.querySelector("#removeBlocksToggle").checked = false
+        document.querySelector("#addFoodToggle").checked = false
+      } else if (event.target.name === "removeBlocksToggle") {
+        document.querySelector("#addBlocksToggle").checked = false
+        document.querySelector("#addFoodToggle").checked = false
       }
     })
     let userID = cookieArr[0];
@@ -197,7 +208,7 @@ class TitleScene extends Phaser.Scene {
   })
   
   //=============================================================Testing stuff============================================================
-  
+
 
 
 
@@ -217,9 +228,7 @@ class TitleScene extends Phaser.Scene {
   },this) 
     
     this.input.on("gameobjectdown", function(pointer, gameObject) {
-      console.log("removed blocks", document.querySelector("#removeBlocksToggle").checked)
       if (document.querySelector("#removeBlocksToggle").checked && gameObject.type !== "TileSprite") {
-      console.log(gameObject)
         gameObject.destroy()
       }
     } 
@@ -242,7 +251,7 @@ class TitleScene extends Phaser.Scene {
       
       for (let i = 0; i < this.orgs.getChildren().length; i++){
         let org = this.orgs.getChildren()[i]
-        
+        console.log(org.speed, Math.sqrt((org.velx**2 + org.vely**2)))
         if (this.foods.getChildren().length > 0) {
           this.searchAlg(org,this.foods.getChildren(), this.orgs.getChildren());
         }
@@ -341,18 +350,16 @@ class TitleScene extends Phaser.Scene {
 
   searchAlg(source, foodObjs, orgObjs) {
     if (source.type === 2 && (source.energy/source.max_energy)*100 >=  50 && (source.max_health/source.health)*100 >= 50 && source.age >= source.breeding_age && source.reproductionCycle >= 300 ) {
+      source.status = "Searching for mate"
       let arr = this.createOrgArray(source,orgObjs)
       if (arr.length) {
         this.physics.moveToObject(source,arr[0],source.speed)
       // this.checkClosestMoveTo(source, arr, true)
       }
     } else {
+      source.status = "Searching for food"
       this.checkClosestMoveTo(source, foodObjs, false)
     }
-    //Energy, health, age, type, agression, predator, reproductive age
-
-    //If type A, search for food, or mate 
-    //If type B, search for food, 
   }
 
   createOrgArray(source, orgObjs) {
@@ -362,7 +369,7 @@ class TitleScene extends Phaser.Scene {
         arr.push(org)
       }
     }
-
+    //Sorts by the highest scoring type1's
     arr.sort((a,b) => b.score - a.score)
     return arr
   }
@@ -372,6 +379,7 @@ class TitleScene extends Phaser.Scene {
 
   }
 
+  //If false, then it will only
   checkClosestMoveTo(source,objects,bool) {
     if (objects.length) {
       let closest = this.physics.closest(source,objects)
@@ -404,6 +412,7 @@ class TitleScene extends Phaser.Scene {
     let attrList = document.createElement("span")
     attrList.innerHTML = ` 
       <ul id="attrList">
+      <li>Status: ${gameObject.status} </li> 
       <li>Score: ${gameObject.score} </li> 
       <li>ID: ${gameObject.id}</li>
       <li>Age: ${gameObject.age} </li>
@@ -461,6 +470,8 @@ class TitleScene extends Phaser.Scene {
     //   org2.play("damage_anim")
     // }else {
       if(this.breedingCheck(org1,org2) && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300){
+        org1.status = "Breeding"
+        org2.status = "Breeding"
         let type1 = this.orderTypes(org1, org2)[0]
         type1.energy -= 50
 
@@ -527,6 +538,7 @@ class TitleScene extends Phaser.Scene {
   }
 
   dyingOrg(org){
+    org.status = "Dying:"
     this.time.addEvent({
       delay: 1000,
       callback: function(){

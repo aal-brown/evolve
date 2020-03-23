@@ -22,6 +22,7 @@ const lorem = new LoremIpsum({
 export default function MyGames(props) {
   const [gameView, setGameView] = useState(0)
   const [games, setGames] = useState([])
+  props.removeCookie('game_id')
   let user_id = props.cookies.user_id
 
   function getData() {

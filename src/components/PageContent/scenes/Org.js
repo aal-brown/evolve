@@ -23,16 +23,15 @@ class Org extends Phaser.GameObjects.Sprite {
       return ((n1 + n2)* 0.5)
     }
     if (parent1 && parent2) {
+      this.speed = mathNormInherited(parent1.speed, parent2.speed)
       this.lifespan = mathNormInherited(parent1.lifespan, parent2.lifespan)
-      this.velx = mathNormInherited(parent1.velx, parent2.velx)
-      this.vely = mathNormInherited(parent1.vely, parent2.vely)
       this.strength = mathNormInherited(parent1.strength, parent2.strength)
       this.energy_efficiency = mathNormInherited(parent1.energy_efficiency, parent2.energy_efficiency)
       this.max_energy = mathNormInherited(parent1.max_energy, parent2.max_energy)
       this.aggression = mathNormInherited(parent1.aggression, parent2.aggression)
       this.max_health = mathNormInherited(parent1.health, parent2.health)
       this.health = this.max_health
-      this.speed = mathNormInherited(parent1.speed, parent2.speed)
+      
       
       if(parent1.predator && parent2.predator){
         this.predator = true
@@ -61,8 +60,8 @@ class Org extends Phaser.GameObjects.Sprite {
       
     } else {
       this.lifespan = mathNorm(2500, 100000)
-      this.velx = mathNorm(Phaser.Math.Between(-50, 50), 2)
-      this.vely = mathNorm(Phaser.Math.Between(-50, 50), 2)
+      this.speed = mathNorm(100, 2000)
+     
       this.strength = mathNorm(75, 200)
       this.energy_efficiency = mathNorm(75, 750)
       this.max_energy = mathNorm(800, 8000)
@@ -75,7 +74,7 @@ class Org extends Phaser.GameObjects.Sprite {
       const litterRand = mathNorm(3, 2)
       this.litter_size = (litterRand <= 0 ? 1 : litterRand)
       this.breeding_age = mathNorm(500, 5000)
-      this.speed = mathNorm(100, 2000)
+      
       const val2 = Phaser.Math.Between(1, 15)
       if (val2 <= 7 ) {
         this.type = 2
@@ -83,7 +82,7 @@ class Org extends Phaser.GameObjects.Sprite {
         this.type = 1
       }
       // this.type = (val2 === 1 ? 1 : 2)
-      
+
       this.generation = 1
       this.parent1 = 0
       this.parent2 = 0
@@ -101,7 +100,8 @@ class Org extends Phaser.GameObjects.Sprite {
 
     //this.flatener
 
-
+    this.velx = Phaser.Math.Between(-this.speed, this.speed)
+    this.vely = Math.sqrt((this.speed**2) - (this.velx**2))*(-1)**(Math.floor(Phaser.Math.Between(0,1)))
     this.id = orgNum;
     this.age = 0;
     this.score = this.getScore()
@@ -118,7 +118,7 @@ class Org extends Phaser.GameObjects.Sprite {
     this.body.velocity.x = this.velx;
     this.body.velocity.y = this.vely;
     this.colour = Math.random() * 0xffffff;
-
+    this.status = "Wandering"
     this.tint = this.colour;
   }
 
@@ -126,9 +126,6 @@ class Org extends Phaser.GameObjects.Sprite {
   distanceBetweenPerceived(b) {
     let dist = Phaser.Math.Distance.Between(this.body.x, this.body.y, b.x, b.y)
     return dist < this.perception
-    //game.physics.arcade.distanceBetween
-    //get angle between as well
-    //then the x and y speeds should be adjusted based on the angle
   }
 
   search(energy, health, type, age) {
@@ -165,7 +162,9 @@ class Org extends Phaser.GameObjects.Sprite {
   }
 
   resetSpeed() {
-    this.setVelocity(Phaser.Math.Between(0, 100), Phaser.Math.Between(0, 100))
+    this.velx = Phaser.Math.Between(-this.speed, this.speed)
+    this.vely = Math.sqrt((this.speed**2) - (this.velx**2))*(-1)**(Math.floor(Phaser.Math.Between(0,1)))
+    this.setVelocity(this.velx, this.vely)
   }
 
   grow(value) {
