@@ -194,6 +194,7 @@ class Org extends Phaser.GameObjects.Sprite {
 
   getAttributes() {
     let orgAttributes = {
+      org_status: this.status,
       orgNum: this.id,
       age: this.age,
       score: this.score,
