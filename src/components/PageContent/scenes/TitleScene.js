@@ -32,19 +32,14 @@ class TitleScene extends Phaser.Scene {
     if (!this.newGameBool) {
       let gameData = await this.getGameData(gameID);
       gameData = JSON.parse(gameData.save_text);
-      console.log(gameData);
       const loadedOrgs = gameData.orgs;
       const loadedFoods = gameData.foods;
       this.iterations = gameData.iterations;
 
-
-      console.log(loadedOrgs)
-      console.log(loadedFoods)
-
       for (const org of loadedOrgs) {
         this.orgNum++
         let newOrg = new Org(this, org.xcoord, org.ycoord, null, null, org.orgNum)
-
+        newOrg.status = org.org_status
         newOrg.age = org.age;
         newOrg.score = org.score;
         newOrg.reproductionCycle = org.reproductionCycle;
@@ -75,7 +70,6 @@ class TitleScene extends Phaser.Scene {
         newOrg.setInteractive();
       }
       for (const food of loadedFoods) {
-        console.log("loadng foods in game")
         let newFood = new Food(this, food.x, food.y,  {name: food.nameStr, energy: food.energy})
         newFood.energy -= 4000;
         newFood.setInteractive();
@@ -84,6 +78,7 @@ class TitleScene extends Phaser.Scene {
       for(let j = 0; j < 15; j++){
         let newOrg =  new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, j+1)
         newOrg.setInteractive();
+        this.input.setDraggable(newOrg)
         this.orgNum++
       }
 
@@ -103,6 +98,14 @@ class TitleScene extends Phaser.Scene {
       this.f6.setInteractive();
       this.f7.setInteractive();
 
+      this.input.setDraggable(this.f1)
+      this.input.setDraggable(this.f2)
+      this.input.setDraggable(this.f3)
+      this.input.setDraggable(this.f4)
+      this.input.setDraggable(this.f5)
+      this.input.setDraggable(this.f6)
+      this.input.setDraggable(this.f7)
+
     }
       
     //===================================================================Pause======================================================
@@ -112,6 +115,12 @@ class TitleScene extends Phaser.Scene {
    //==================================================================Organisms====================================================
     
     this.input.on("gameobjectdown", this.writeAttributes);
+
+    this.input.on("drag", function(pointer, gameObject, dragX, dragY) {
+      if(gameObject.type !== "TileSprite")
+      gameObject.x = dragX;
+      gameObject.y = dragY;
+    })
   
     this.physics.add.collider(this.orgs, this.orgs, this.attackOrSpawn, null, this);
 
@@ -204,6 +213,7 @@ class TitleScene extends Phaser.Scene {
     if (document.querySelector("#foodToggle").checked) {
       let nFood = new Food(this.scene, pointer.x, pointer.y, foodData[Phaser.Math.Between(0, 4)])
       nFood.setInteractive();
+      this.scene.input.setDraggable(nFood)
     }
   })
   
@@ -224,6 +234,7 @@ class TitleScene extends Phaser.Scene {
     if (pointer.isDown && document.querySelector("#addBlocksToggle").checked) {
       this.newBlock = this.platforms.create(pointer.x, pointer.y, 'block')
       this.newBlock.setInteractive();
+      this.input.setDraggable(this.newBlock)
     }
   },this) 
     
@@ -412,10 +423,11 @@ class TitleScene extends Phaser.Scene {
     let attrList = document.createElement("span")
     attrList.innerHTML = ` 
       <ul id="attrList">
-      <li>Status: ${gameObject.status} </li> 
-      <li>Score: ${gameObject.score} </li> 
+       
+      <li>Score: ${gameObject.score} </li>
+      <li>Status: ${gameObject.status} </li>
+      <li>Age: ${gameObject.age} </li> 
       <li>ID: ${gameObject.id}</li>
-      <li>Age: ${gameObject.age} </li>
       <li>Health: ${gameObject.health} </li>
       <li>Energy: ${Math.floor(gameObject.energy)} </li>
       <li>Speed: ${gameObject.speed} </li> 
@@ -441,11 +453,13 @@ class TitleScene extends Phaser.Scene {
     let addedOrg = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, this.orgNum)
     this.orgNum++;
     addedOrg.setInteractive();
+    this.input.setDraggable(addedOrg)
   }
 
   addFood(foodData) {
     let newFood1 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
     newFood1.setInteractive();
+    this.input.setDraggable(newFood1)
   }
 
   getFoodData = async function() {
@@ -481,6 +495,7 @@ class TitleScene extends Phaser.Scene {
           let newOrg = new Org(this, org1.x + randomX, org1.y + randomY, org1, org2, this.orgNum)
           this.orgNum++
           newOrg.setInteractive();
+          this.input.setDraggable(newOrg)
         }
         org1.reproductionCycle = 0;
         org2.reproductionCycle = 0;
