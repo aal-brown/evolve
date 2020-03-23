@@ -96,8 +96,14 @@ export default function MyGames(props) {
     props.removeCookie("game_id");
   }
 
-  function deleteGame() {
-    console.log("Delete");
+  function deleteGame(id) {
+    axios.delete(`http://localhost:3000/games/${id}`)
+      .then(res => console.log(res))
+      .catch(err => console.log(err.message));
+
+    axios.delete(`http://localhost:3000/game_saves/${id}`)
+      .then(res => console.log(res))
+      .catch(err => console.log(err.message))
   }
 
   useEffect(() => {
@@ -124,7 +130,7 @@ export default function MyGames(props) {
           props.setCookie("game_id", game.id);
           setGameView(1);
         }} //This is a function to start the game
-        delete={deleteGame} //This will prompt for whether the user wants to delete that game
+        delete={() => { deleteGame(game.id) }} //This will prompt for whether the user wants to delete that game
         />
     );
   });
