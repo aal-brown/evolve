@@ -22,6 +22,8 @@ class TitleScene extends Phaser.Scene {
       this.newGameBool = await !this.newGame(gameID);
     }
 
+   
+
     this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'sky')
     this.background.setOrigin(0,0);
 
@@ -29,6 +31,8 @@ class TitleScene extends Phaser.Scene {
     this.orgNum = 0;
     this.foods = this.physics.add.group();
     this.orgs = this.physics.add.group();
+    this.foods.setDepth(0)
+    
     
     if (!this.newGameBool) {
       let gameData = await this.getGameData(gameID);
@@ -69,6 +73,7 @@ class TitleScene extends Phaser.Scene {
         newOrg.ycoord = org.ycoord;
 
         newOrg.setInteractive();
+        newOrg.setDepth(2)
         if(newOrg.predator){
           newOrg.setTexture("predator")
           newOrg.play("pred_anim")
@@ -78,6 +83,7 @@ class TitleScene extends Phaser.Scene {
         let newFood = new Food(this, food.x, food.y,  {name: food.nameStr, energy: food.energy})
         newFood.energy -= 4000;
         newFood.setInteractive();
+        newFood.setDepth(0)
       }
     } else {
       for(let j = 0; j < 15; j++){
@@ -88,6 +94,7 @@ class TitleScene extends Phaser.Scene {
           newOrg.play("pred_anim")
         }
         this.orgNum++
+        newOrg.setDepth(2)
       }
 
       this.f1 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
@@ -105,6 +112,13 @@ class TitleScene extends Phaser.Scene {
       this.f5.setInteractive();
       this.f6.setInteractive();
       this.f7.setInteractive();
+      this.f1.setDepth(0)
+      this.f2.setDepth(0)
+      this.f3.setDepth(0)
+      this.f4.setDepth(0)
+      this.f5.setDepth(0)
+      this.f6.setDepth(0)
+      this.f7.setDepth(0)
 
     }
       
@@ -207,6 +221,7 @@ class TitleScene extends Phaser.Scene {
     if (document.querySelector("#foodToggle").checked) {
       let nFood = new Food(this.scene, pointer.x, pointer.y, foodData[Phaser.Math.Between(0, 4)])
       nFood.setInteractive();
+      nFood.setDepth(0)
     }
   })
   
@@ -455,11 +470,13 @@ class TitleScene extends Phaser.Scene {
       addedOrg.play("pred_anim")
     }
     addedOrg.setInteractive();
+    addedOrg.setDepth(2)
   }
 
   addFood(foodData) {
     let newFood1 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
     newFood1.setInteractive();
+    newFood1.setDepth(0)
   }
 
   getFoodData = async function() {
@@ -525,6 +542,7 @@ class TitleScene extends Phaser.Scene {
           let newOrg = new Org(this, org1.x + randomX, org1.y + randomY, org1, org2, this.orgNum)
           this.orgNum++
           newOrg.setInteractive();
+          newOrg.setDepth(2)
         }
         org1.reproductionCycle = 0;
         org2.reproductionCycle = 0;
