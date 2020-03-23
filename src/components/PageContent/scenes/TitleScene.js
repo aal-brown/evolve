@@ -32,14 +32,10 @@ class TitleScene extends Phaser.Scene {
     if (!this.newGameBool) {
       let gameData = await this.getGameData(gameID);
       gameData = JSON.parse(gameData.save_text);
-      console.log(gameData);
+      
       const loadedOrgs = gameData.orgs;
       const loadedFoods = gameData.foods;
       this.iterations = gameData.iterations;
-
-
-      console.log(loadedOrgs)
-      console.log(loadedFoods)
 
       for (const org of loadedOrgs) {
         this.orgNum++
@@ -75,7 +71,6 @@ class TitleScene extends Phaser.Scene {
         newOrg.setInteractive();
       }
       for (const food of loadedFoods) {
-        console.log("loadng foods in game")
         let newFood = new Food(this, food.x, food.y,  {name: food.nameStr, energy: food.energy})
         newFood.energy -= 4000;
         newFood.setInteractive();
@@ -149,7 +144,7 @@ class TitleScene extends Phaser.Scene {
     let userID = cookieArr[0];
     userID = userID.slice(8);
     let saveButtons;
-    console.log(userID)
+
     if(userID){
       saveButtons = this.add
       .dom(100, 200)
@@ -251,7 +246,7 @@ class TitleScene extends Phaser.Scene {
       
       for (let i = 0; i < this.orgs.getChildren().length; i++){
         let org = this.orgs.getChildren()[i]
-        console.log(org.speed, Math.sqrt((org.velx**2 + org.vely**2)))
+
         if (this.foods.getChildren().length > 0) {
           this.searchAlg(org,this.foods.getChildren(), this.orgs.getChildren());
         }
@@ -338,7 +333,6 @@ class TitleScene extends Phaser.Scene {
     if (!this.pausePhysics) {
         this.physics.pause(); 
         this.pausePhysics = true
-        console.log(this.game.config.width)
         this.pauseText = this.add.text(this.game.config.width / 2, this.game.config.height / 2, "PAUSE",{color: "#000000", fontSize: 50})
 
     } else {
@@ -506,7 +500,7 @@ class TitleScene extends Phaser.Scene {
   
   breedingCheck(org1,org2) {
     let [type1, type2] = this.orderTypes(org1, org2)
-    console.log(type2.score - type1.score > -150 && type1.age >= type1.breeding_age && type2.age >= type2.breeding_age && type2.energy && ((type2.energy/type2.max_energy)*100 >= 50) && ((type2.health/type2.max_health)*100 >= 75) && ((type1.energy/type1.max_energy) * 100 >= 50) && (type1.health/type1.max_health)*100 >= 75)
+ 
     if(type1.type === type2.type){
       return false
     } else if (type2.score - type1.score > -150 && type1.age >= type1.breeding_age && type2.age >= type2.breeding_age && type2.energy && (type2.energy/type2.max_energy)*100 >= 50 && (type2.health/type2.max_health)*100 >= 75 && (type1.energy/type1.max_energy) * 100 >= 50 && (type1.health/type1.max_health)*100 >= 75){
@@ -555,7 +549,6 @@ class TitleScene extends Phaser.Scene {
   }
   
   onSave = async function(orgs, foods, iterations) {
-    console.log("ITERATIONS IN ONSAVE:", iterations);
     const cookieArr = document.cookie.split(';');
     let gameID = cookieArr[1];
     if(gameID) {

@@ -81,6 +81,15 @@ export default function MyGames(props) {
     console.log("Is it waiting?")
   }
 
+  function confirmQuit() {
+    let x = document.getElementsByClassName('quit-confirm')[0];
+    if (x.style.visibility === "hidden") {
+      x.style.visibility = "visible";
+    } else if (x.style.visibility === "visible") {
+      x.style.visibility = "hidden";
+    }
+  }
+
   function exit() {
     setGameView(0);
     props.removeCookie("game_id");
@@ -127,14 +136,26 @@ export default function MyGames(props) {
           <Button className="button--confirm" onClick={newGame} >New Game</Button>
         </div>
         <div className="MyGames">
+          <h1>Saved Games:</h1>
           {myGames}
+          { myGames.length === 0 && !user_id && (
+            <h2>You must log in to see your saved games</h2>
+          )}
         </div>
       </div>
     )}
     { gameView === 1 && (
       <div className="gameCanvas">
+        <div className="quit-confirm" style={{visibility: "hidden"}}>
+          <h1>Quit?</h1>
+          <h2>All unsaved changes will be lost!</h2>
+          <div className="quit-confirm-buttons">
+            <Button className="button--confirm" onClick={exit} >Quit</Button>
+            <Button className="button--confirm" onClick={confirmQuit} >Cancel</Button>
+          </div>
+        </div>
         <div className="">
-          <Button className="button--confirm" onClick={exit} >Quit</Button>
+          <Button className="button--confirm" onClick={confirmQuit} >Quit</Button>
         </div>
         <Game
         />
