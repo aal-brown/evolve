@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import Org from "./Org";
 import Food from "./Food";
+import Explosion from "./Explosion";
 import axios from "axios";
 
 
@@ -492,6 +493,9 @@ class TitleScene extends Phaser.Scene {
       console.log("got damaged")
       org2.health -= 5;
       org2.damageCycle = 0;
+      org1.health += 5;
+      let collision = new Explosion(this, org1.x, org1.y)
+
     } else if(org1.predator && !org2.predator && org2.health > (org2.max_health / 2) && org2.speedBoost > 50  && org2.damageCycle > 300){
       console.log("ran away!")
       org2.setVelocity(org2.velx +50 , org2.vely +50)
@@ -499,8 +503,10 @@ class TitleScene extends Phaser.Scene {
       org2.damageCycle = 0;
     } else if(org2.predator && !org1.predator && org1.health < (org1.max_health / 2) && org1.damageCycle > 300){
       org1.health -= 5;
+      org2.health +=5;
       console.log("got damaged")
       org1.damageCycle = 0;
+      let collision = new Explosion(this, org1.x, org1.y)
     } else if(org2.predator && !org1.predator && org1.health < (org1.max_health / 2) && org2.speedBoost > 50 && org1.damageCycle > 300){
       org1.setVelocity(org1.velx + 50, org1.vely + 50)
       org1.speedBoost = 0;

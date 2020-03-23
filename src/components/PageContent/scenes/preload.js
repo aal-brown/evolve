@@ -44,6 +44,10 @@ export default class Preload extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
     });
+    this.load.spritesheet("explosion", "/assets/explosion2.png", {
+      frameWidth: 100,
+      frameHeight: 100
+    });
 
     this.load.image('fullscreen',"assets/fullscreen2.png")
     this.load.image('minimize',"assets/minimize2.png")
@@ -84,6 +88,12 @@ export default class Preload extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers("predator"),
       frameRate: 10,
       repeat: -1 //means infinite loop!
+    });
+    this.anims.create({
+      key: "explosion_anim",
+      frames: this.anims.generateFrameNumbers("explosion"),
+      frameRate: 63,
+      repeat: 0 //means infinite loop!
     });
   }
 }
