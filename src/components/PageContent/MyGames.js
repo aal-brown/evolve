@@ -149,7 +149,9 @@ export default function MyGames(props) {
       <div className="gameCanvas">
         <div className="quit-confirm" style={{visibility: "hidden"}}>
           <h1>Quit?</h1>
-          <h2>All unsaved changes will be lost!</h2>
+          { user_id && (
+            <h2>All unsaved changes will be lost!</h2>
+          )}
           <div className="quit-confirm-buttons ">
             <Button className="button--confirm" onClick={exit} >Quit</Button>
             <Button className="button--danger" onClick={confirmQuit} >Cancel</Button>
