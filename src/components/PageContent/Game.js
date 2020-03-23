@@ -56,13 +56,6 @@ class Game extends Component{
       }
       />
       <div id="test"></div>
-      {/* < LeftSideBar
-       addOrg = {addOrg}
-       addFood = {addFood}
-       changeTemp = {changeTemp}
-       save = {save}
-       getSeed = {getSeed}
-        /> */}
       </div>
     )
   }

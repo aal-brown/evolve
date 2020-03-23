@@ -45,6 +45,7 @@ export default class Preload extends Phaser.Scene {
     this.load.image('toggle-ls',"assets/menu-icon.png")
 
     this.load.html("buttons", "/assets/html/buttons.html");
+    this.load.html("save-and-seed", "/assets/html/save-and-seed.html");
     this.load.html("right-sidebar", "/assets/html/right-sidebar.html");
 
     this.load.on("progress", () => {

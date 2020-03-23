@@ -70,7 +70,13 @@ export default function MyGames(props) {
 
   function newGame() {
     console.log("LOADING NEW GAME");
-    setGameCookie("game name");
+    if (user_id) {
+      setGameCookie("game name");
+    } else {
+      console.log("no user id")
+      setGameView(1);
+    }
+    
     console.log("Is it waiting?")
   }
 
@@ -82,8 +88,7 @@ export default function MyGames(props) {
   function deleteGame() {
     console.log("Delete");
   }
-  
-  
+
   useEffect(() => {
     if(props.cookies.user_id){
       getData()

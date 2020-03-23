@@ -113,7 +113,7 @@ class TitleScene extends Phaser.Scene {
   //button = game.add.button()
  
     const leftSidebar = this.add
-    .dom(180, 20)
+    .dom(100, 20)
     .createFromCache("buttons");
 
     leftSidebar.setOrigin(0,0)
@@ -124,21 +124,39 @@ class TitleScene extends Phaser.Scene {
         this.scene.addOrg();
       } else if (event.target.name === "addFood") {
         this.scene.addFood(foodData);
-      } else if (event.target.name === "save") {
-        this.scene.onSave(this.scene.orgs.getChildren(), this.scene.foods.getChildren(), this.scene.iterations);
       }
     })
+    let userID = cookieArr[0];
+    userID = userID.slice(8);
+    let saveButtons;
+    console.log(userID)
+    if(userID){
+      saveButtons = this.add
+      .dom(100, 150)
+      .createFromCache("save-and-seed");
+  
+      saveButtons.setOrigin(0,0)
+      saveButtons.addListener("click");
+  
+      saveButtons.on("click", function(event) {
+        if (event.target.name === "save") {
+          this.scene.onSave(this.scene.orgs.getChildren(), this.scene.foods.getChildren(), this.scene.iterations);
+        }
+      })
+    }
+    
 
     this.lsToggle = this.add.sprite(10,5,"toggle-ls")
     this.lsToggle.setScale(0.5)
     this.lsToggle.setOrigin(0,0)
     this.lsToggle.setInteractive().on("pointerdown", function() {
       leftSidebar.visible = (leftSidebar.visible ? false : true)
+      saveButtons.visible = (saveButtons.visible ? false : true)
     });
 
   //============================================================== Right sidebar ==============================================//  
   const rightSidebar = this.add
-  .dom((this.game.config.width - 130),20)
+  .dom((this.game.config.width - 130),80)
   .createFromCache("right-sidebar");
 
   rightSidebar.setOrigin(0,0)
@@ -182,7 +200,7 @@ class TitleScene extends Phaser.Scene {
       this.highestScore = this.getHighestScore(this.orgs.getChildren());
       this.numOrgs = this.orgs.getChildren().length;
       
-      this.avgAndScore = this.add.text(this.game.config.width / 4, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`,{color: "#000000", fontSize: 20})
+      this.avgAndScore = this.add.text(this.game.config.width / 2, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`,{color: "#000000", fontSize: 20})
       
       for (let i = 0; i < this.orgs.getChildren().length; i++){
         let org = this.orgs.getChildren()[i]
@@ -263,18 +281,19 @@ class TitleScene extends Phaser.Scene {
     }
   }
 
-  togglePause() {
-    if (!this.pausePhysics) {
-        this.physics.pause(); 
-        this.pausePhysics = true
-        this.pauseText = this.add.text(this.game.config.width / 2, 20, "PAUSED",{color: "#000000", fontSize: 50})
+  // togglePause() {
+  //   if (!this.pausePhysics) {
+  //       this.physics.pause(); 
+  //       this.pausePhysics = true
+  //       console.log(this.game.config.width)
+  //       this.pauseText = this.add.text(this.game.config.width / 2, this.game.config.height / 2, "TEST",{color: "#000000", fontSize: 50})
 
-    } else {
-        this.pausePhysics = false
-        this.physics.resume();
-        this.pauseText.destroy();
-    }
-  }
+  //   } else {
+  //       this.pausePhysics = false
+  //       this.physics.resume();
+  //       this.pauseText.destroy();
+  //   }
+  // }
 
   searchAlg(source, foodObjs, orgObjs) {
     if (source.type === 2 && (source.energy/source.max_energy)*100 >=  50 && (source.max_health/source.health)*100 >= 50 && source.age >= source.breeding_age && source.reproductionCycle >= 300 ) {
