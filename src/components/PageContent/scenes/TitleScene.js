@@ -475,7 +475,7 @@ class TitleScene extends Phaser.Scene {
         let type1 = this.orderTypes(org1, org2)[0]
         type1.energy -= 50
 
-        for(let i=0; i< type1.litter_size; i++){
+        for(let i=0; i< type1.litter_size; i++){ 
           const randomX = Phaser.Math.Between(-5, 5)
           const randomY = Phaser.Math.Between(-5, 5)
           let newOrg = new Org(this, org1.x + randomX, org1.y + randomY, org1, org2, this.orgNum)
@@ -517,6 +517,7 @@ class TitleScene extends Phaser.Scene {
   }
 
   eat(org, food) {
+    org.status = "Eating"
     let eDiff = org.max_energy - org.energy
     if (food.energy > 15 && eDiff > 0) {
       if (eDiff < 15) {

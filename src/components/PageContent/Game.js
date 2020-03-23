@@ -18,7 +18,7 @@ class Game extends Component{
   state = {
     initialize: true,
     game: {
-      width: window.outerWidth,
+      width: window.innerWidth,
       height: window.innerHeight,
       backgroundColor: 0xFFD966,
       parent: 'game-container',
