@@ -85,8 +85,8 @@ class Org extends Phaser.GameObjects.Sprite {
       // this.type = (val2 === 1 ? 1 : 2)
       
       this.generation = 1
-      this.parent1 = {id:0}
-      this.parent2 = {id:0}
+      this.parent1 = 0
+      this.parent2 = 0
     }
     //this.attributes = genAttrVal
     

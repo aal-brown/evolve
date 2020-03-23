@@ -52,6 +52,18 @@
   top: 4em;
   text-align: center;
 }
+.addBlocksSwitch {
+  display:block;
+  position: absolute;
+  top: 6em;
+  text-align: center;
+}
+.removeBlocksSwitch {
+  display:block;
+  position: absolute;
+  top: 8em;
+  text-align: center;
+}
 
 .switch input {
   opacity: 0;

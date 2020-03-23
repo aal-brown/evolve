@@ -76,6 +76,7 @@ class TitleScene extends Phaser.Scene {
         console.log("loadng foods in game")
         let newFood = new Food(this, food.x, food.y,  {name: food.nameStr, energy: food.energy})
         newFood.energy -= 4000;
+        newFood.setInteractive();
       }
     } else {
       for(let j = 0; j < 15; j++){
@@ -91,6 +92,15 @@ class TitleScene extends Phaser.Scene {
       this.f5 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
       this.f6 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
       this.f7 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+
+      this.f1.setInteractive();
+      this.f2.setInteractive();
+      this.f3.setInteractive();
+      this.f4.setInteractive();
+      this.f5.setInteractive();
+      this.f6.setInteractive();
+      this.f7.setInteractive();
+
     }
       
     //===================================================================Pause======================================================
@@ -102,7 +112,6 @@ class TitleScene extends Phaser.Scene {
     this.input.on("gameobjectdown", this.writeAttributes);
   
     this.physics.add.overlap(this.orgs, this.orgs, this.attackOrSpawn, null, this);
-    this.physics.add.collider(this.orgs, this.partitions);
 
     //==============================================================Foods==========================================================
     
@@ -132,7 +141,7 @@ class TitleScene extends Phaser.Scene {
     console.log(userID)
     if(userID){
       saveButtons = this.add
-      .dom(100, 150)
+      .dom(100, 200)
       .createFromCache("save-and-seed");
   
       saveButtons.setOrigin(0,0)
@@ -188,6 +197,36 @@ class TitleScene extends Phaser.Scene {
   
   //=============================================================Testing stuff============================================================
   
+
+
+
+  //================================================================Blocks==================================================================
+  
+  let rt = this.add.renderTexture(0, 0, this.game.config.width, this.game.config.height)
+  this.platforms = this.physics.add.staticGroup()
+  this.physics.add.collider(this.orgs, this.platforms)
+  
+
+   
+  this.input.on("pointerdown", function(pointer) {
+    if (pointer.isDown && document.querySelector("#addBlocksToggle").checked) {
+      this.newBlock = this.platforms.create(pointer.x, pointer.y, 'block')
+      this.newBlock.setInteractive();
+    }
+  },this) 
+    
+
+  
+  
+    this.input.on("gameobjectdown", function(pointer, gameObject) {
+      console.log("removed blocks", document.querySelector("#removeBlocksToggle").checked)
+      if (document.querySelector("#removeBlocksToggle").checked && gameObject.type !== "TileSprite") {
+      console.log(gameObject)
+        gameObject.destroy()
+      }
+    } 
+  )
+  
   }
 
   update() {
@@ -196,6 +235,7 @@ class TitleScene extends Phaser.Scene {
       if(this.avgAndScore){
         this.avgAndScore.destroy();
       }
+     
       this.avgScore = Math.floor((this.getAvgScore(this.orgs.getChildren())));
       this.highestScore = this.getHighestScore(this.orgs.getChildren());
       this.numOrgs = this.orgs.getChildren().length;
@@ -281,19 +321,20 @@ class TitleScene extends Phaser.Scene {
     }
   }
 
-  // togglePause() {
-  //   if (!this.pausePhysics) {
-  //       this.physics.pause(); 
-  //       this.pausePhysics = true
-  //       console.log(this.game.config.width)
-  //       this.pauseText = this.add.text(this.game.config.width / 2, this.game.config.height / 2, "TEST",{color: "#000000", fontSize: 50})
+  togglePause(event) {
+    event.preventDefault();
+    if (!this.pausePhysics) {
+        this.physics.pause(); 
+        this.pausePhysics = true
+        console.log(this.game.config.width)
+        this.pauseText = this.add.text(this.game.config.width / 2, this.game.config.height / 2, "PAUSE",{color: "#000000", fontSize: 50})
 
-  //   } else {
-  //       this.pausePhysics = false
-  //       this.physics.resume();
-  //       this.pauseText.destroy();
-  //   }
-  // }
+    } else {
+        this.pausePhysics = false
+        this.physics.resume();
+        this.pauseText.destroy();
+    }
+  }
 
   searchAlg(source, foodObjs, orgObjs) {
     if (source.type === 2 && (source.energy/source.max_energy)*100 >=  50 && (source.max_health/source.health)*100 >= 50 && source.age >= source.breeding_age && source.reproductionCycle >= 300 ) {
@@ -378,7 +419,7 @@ class TitleScene extends Phaser.Scene {
       <li>Breeding Age: ${gameObject.breeding_age} </li>
       <li>Type: ${gameObject.type} </li>
       <li>Generation: ${gameObject.generation} </li>
-      <li>Parents: ${gameObject.parent1.id} ${gameObject.parent2.id}</li>
+      <li>Parents: ${gameObject.parent1} ${gameObject.parent2}</li>
       </ul>
     `
     Phaser.DOM.AddToDOM(attrList, rsElem)
@@ -391,7 +432,8 @@ class TitleScene extends Phaser.Scene {
   }
 
   addFood(foodData) {
-    new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+    let newFood = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+    newFood.setInteractive();
   }
 
   getFoodData = async function() {
@@ -493,21 +535,6 @@ class TitleScene extends Phaser.Scene {
       callbackScope: this,
       repeat: 6
     });
-  }
-
-  togglePause() {
-    if (!this.pausePhysics) {
-        this.physics.pause(); // resume game
-        this.pausePhysics = true
-        this.pauseText = this.add.text(this.game.config.width / 2, 20, "PAUSED",{color: "#000000",
-        fontSize: 50})
-    } else {
-
-        this.pausePhysics = false
-        this.physics.resume();
-        this.pauseText.destroy();
-        //pauseText.visible = true;
-    }
   }
   
   onSave = async function(orgs, foods, iterations) {

@@ -9,6 +9,7 @@ export default class Preload extends Phaser.Scene {
     this.load.image('sky', '/assets/sky.png');
     this.load.image('ground', '/assets/platform.png');
     this.load.image('star', '/assets/star.png');
+    this.load.image('platforms', '/assets/platform.png');
     
     this.load.spritesheet("blobs", "assets/blobs.png", {
       frameWidth: 32,
@@ -47,6 +48,9 @@ export default class Preload extends Phaser.Scene {
     this.load.html("buttons", "/assets/html/buttons.html");
     this.load.html("save-and-seed", "/assets/html/save-and-seed.html");
     this.load.html("right-sidebar", "/assets/html/right-sidebar.html");
+
+    this.load.image('block', 'assets/block.png')
+    this.load.image('circle', 'assets/black-circle.png')
 
     this.load.on("progress", () => {
       this.add.text(20, 20, "Loading game...")
