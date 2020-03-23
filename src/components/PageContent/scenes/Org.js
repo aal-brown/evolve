@@ -77,7 +77,7 @@ class Org extends Phaser.GameObjects.Sprite {
       this.breeding_age = mathNorm(500, 5000)
       this.speed = mathNorm(100, 2000)
       const val2 = Phaser.Math.Between(1, 15)
-      if (val2 <= 5 ) {
+      if (val2 <= 7 ) {
         this.type = 2
       } else {
         this.type = 1

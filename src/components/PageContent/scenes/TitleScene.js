@@ -111,7 +111,7 @@ class TitleScene extends Phaser.Scene {
     
     this.input.on("gameobjectdown", this.writeAttributes);
   
-    this.physics.add.overlap(this.orgs, this.orgs, this.attackOrSpawn, null, this);
+    this.physics.add.collider(this.orgs, this.orgs, this.attackOrSpawn, null, this);
 
     //==============================================================Foods==========================================================
     
@@ -191,7 +191,8 @@ class TitleScene extends Phaser.Scene {
 
   this.input.on("pointerdown", function(pointer) {
     if (document.querySelector("#foodToggle").checked) {
-      new Food(this.scene, pointer.x, pointer.y, foodData[Phaser.Math.Between(0, 4)])
+      let nFood = new Food(this.scene, pointer.x, pointer.y, foodData[Phaser.Math.Between(0, 4)])
+      nFood.setInteractive();
     }
   })
   
@@ -215,9 +216,6 @@ class TitleScene extends Phaser.Scene {
     }
   },this) 
     
-
-  
-  
     this.input.on("gameobjectdown", function(pointer, gameObject) {
       console.log("removed blocks", document.querySelector("#removeBlocksToggle").checked)
       if (document.querySelector("#removeBlocksToggle").checked && gameObject.type !== "TileSprite") {
@@ -270,11 +268,16 @@ class TitleScene extends Phaser.Scene {
   // Helper functions
 
   getAvgScore(orgObjs) {
-    let avgScore = 0;
+    // let avgScore = 0;
+    let sum = 0;
+    
     if (orgObjs.length) {
-      avgScore = orgObjs.reduce((acc,item) => (acc+item.score),(orgObjs[0].score))/orgObjs.length
+      // avgScore = orgObjs.reduce((acc,item) => (acc+item.score),(orgObjs[0].score))/orgObjs.length
+      orgObjs.forEach((val) => sum += val.score)
     }
-    return avgScore
+
+   //console.log(sum/orgObjs.length, avgScore)
+    return sum/orgObjs.length
   }
   
   getHighestScore(orgObjs) {
@@ -432,8 +435,8 @@ class TitleScene extends Phaser.Scene {
   }
 
   addFood(foodData) {
-    let newFood = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
-    newFood.setInteractive();
+    let newFood1 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+    newFood1.setInteractive();
   }
 
   getFoodData = async function() {
@@ -492,9 +495,10 @@ class TitleScene extends Phaser.Scene {
   
   breedingCheck(org1,org2) {
     let [type1, type2] = this.orderTypes(org1, org2)
+    console.log(type2.score - type1.score > -150 && type1.age >= type1.breeding_age && type2.age >= type2.breeding_age && type2.energy && ((type2.energy/type2.max_energy)*100 >= 50) && ((type2.health/type2.max_health)*100 >= 75) && ((type1.energy/type1.max_energy) * 100 >= 50) && (type1.health/type1.max_health)*100 >= 75)
     if(type1.type === type2.type){
       return false
-    } else if (/* type2.score >= type1.score && */ type1.age >= type1.breeding_age && type2.age >= type2.breeding_age && type2.energy && (type2.energy/type2.max_energy)*100 >=  50 && (type2.max_health/type2.health)*100 >= 75){
+    } else if (type2.score - type1.score > -150 && type1.age >= type1.breeding_age && type2.age >= type2.breeding_age && type2.energy && (type2.energy/type2.max_energy)*100 >= 50 && (type2.health/type2.max_health)*100 >= 75 && (type1.energy/type1.max_energy) * 100 >= 50 && (type1.health/type1.max_health)*100 >= 75){
       return true
     } else{
       return false
