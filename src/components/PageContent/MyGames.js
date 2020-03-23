@@ -98,12 +98,18 @@ export default function MyGames(props) {
 
   function deleteGame(id) {
     axios.delete(`http://localhost:3000/games/${id}`)
-      .then(res => console.log(res))
+      .then((res) => {
+        console.log(res);
+        
+        axios.delete(`http://localhost:3000/game_saves/${id}`)
+          .then((res) => {
+            console.log(res);
+            
+            getData();
+          })
+          .catch(err => console.log(err.message))
+      })
       .catch(err => console.log(err.message));
-
-    axios.delete(`http://localhost:3000/game_saves/${id}`)
-      .then(res => console.log(res))
-      .catch(err => console.log(err.message))
   }
 
   useEffect(() => {
@@ -134,6 +140,31 @@ export default function MyGames(props) {
         />
     );
   });
+
+  useEffect(() => {
+    myGames = games.map((game) => {
+    
+      return (
+        <MyGamesItem
+          key={game.id}
+          img={game.screen_capture}
+          created_at={game.created_at}
+          updated_at={game.updated_at}
+          age={game.playtime} //
+          name={game.name}
+          orgs={game.num_of_orgs}
+          high_score={game.highest_score}
+          // selected={game.name === props.game} hover will be used instead
+          load={() => {
+            console.log("LOADING GAME:", game.id);
+            props.setCookie("game_id", game.id);
+            setGameView(1);
+          }} //This is a function to start the game
+          delete={() => { deleteGame(game.id) }} //This will prompt for whether the user wants to delete that game
+          />
+      );
+    });
+  }, [games])
 
   return(
     <section>
