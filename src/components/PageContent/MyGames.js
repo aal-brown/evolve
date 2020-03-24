@@ -204,7 +204,7 @@ export default function MyGames(props) {
               placeholder="Title"
             />
           </form>
-          <Button className="button--confirm" onClick={() => { newGame(name) }} >New Game</Button>
+          <Button className="button--confirm" onClick={() => { newGame(name) }} >Start Game</Button>
         </div>
         <div className="MyGames">
           <h1 className="save-title">Saved Games:</h1>
