@@ -26,11 +26,11 @@ export default function MyGames(props) {
   let user_id = props.cookies.user_id
 
   function getData() {
-    axios.get("https://agile-scrubland-73485.herokuapp.com/getuser", {
+    axios.get("http://localhost:3000/getuser", {
       headers: { "ID": user_id }
     })
     .then((res) => {
-      axios.get("https://agile-scrubland-73485.herokuapp.com/games", {
+      axios.get("http://localhost:3000/games", {
         headers: { "ID": res.data.id }
       })
       .then((res) => setGames(res.data));
@@ -39,9 +39,9 @@ export default function MyGames(props) {
 
   function setGameCookie(name) {
     const user_id = props.cookies.user_id;
-    const url = "https://agile-scrubland-73485.herokuapp.com/games";
+    const url = "http://localhost:3000/games";
 
-    axios.get("https://agile-scrubland-73485.herokuapp.com/getuser", {
+    axios.get("http://localhost:3000/getuser", {
       headers: { "ID": user_id }
     })
     .then((res) => {
@@ -96,19 +96,25 @@ export default function MyGames(props) {
     setGameView(1);
   }
 
-  async function exit() {
+  function exit() {
     let id = props.cookies.game_id
-    await axios.get(`http://localhost:3000/game_saves/${id}`)
-      .then(res => console.log(res))
+    axios.get(`http://localhost:3000/game_saves/${id}`)
+      .then((res) => {
+        console.log(res);
+        getData();
+        setGameView(0);
+        props.removeCookie("game_id");
+      })
       .catch((err) => {
         if (err.message === "Request failed with status code 404") {
           axios.delete(`http://localhost:3000/games/${id}`)
-            .then(res => console.log(res))
+            .then((res) => {
+              console.log(res);
+              setGameView(0);
+              props.removeCookie("game_id");
+            })
         }
       })
-
-    setGameView(0);
-    props.removeCookie("game_id");
   }
 
   function deleteGame(id) {
@@ -131,7 +137,7 @@ export default function MyGames(props) {
     if(props.cookies.user_id){
       getData()
     }
-  }, [props.cookies.user_id, getData]);
+  }, [props.cookies.user_id]);
 
   let myGames = games.map((game) => {
     

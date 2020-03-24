@@ -707,8 +707,6 @@ class TitleScene extends Phaser.Scene {
       }
     }
     if (gameID) {
-      gameID = gameID.slice(9);
-
       let gameStateObject = {
         orgs: [],
         foods: [],
