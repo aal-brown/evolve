@@ -14,7 +14,7 @@ class TitleScene extends Phaser.Scene {
   async create() {
     //==========================================================Creating New Game / Loading Game================================================================
     this.iterations = 0;
-    this.newGameBool = true;
+    this.newGameBool = false;
     let gameID = null;
     let userID = null;
     const cookieArr = document.cookie.split(';');

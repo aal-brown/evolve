@@ -184,6 +184,15 @@ export default function MyGames(props) {
     { gameView === 0 && (
       <div className="default-game-page">
         <div className="game-buttons">
+          <form className="new-game-form form-group" onSubmit={(event) => {event.preventDefault()}}>
+            <input className="form-control form-field"
+              onChange={(event) => {
+                setEmail(event.target.value)}}
+              value={email}
+              type="email"
+              placeholder="New Game Name"
+            />
+          </form>
           <Button className="button--confirm" onClick={newGame} >New Game</Button>
         </div>
         <div className="MyGames">
