@@ -123,6 +123,7 @@ class Org extends Phaser.GameObjects.Sprite {
     this.isShowingDamage = false;
     this.speedBoost = 51;
     this.damageCycle = 400;
+    this.predBool = true;
   }
 
   //Check the distance between org and all other elements, (based on what is passed in), if this distance is less than perception than return true. Else return false.
