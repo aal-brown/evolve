@@ -64,7 +64,7 @@ class TitleScene extends Phaser.Scene {
     leftSidebar.setOrigin(0, 0)
     leftSidebar.addListener("click");
 
-    this.lsToggle = this.add.sprite(10, 5, "toggle-ls")
+    this.lsToggle = this.add.image(10, 5, "toggle-ls")
     this.lsToggle.setScale(0.5)
     this.lsToggle.setOrigin(0, 0)
 
@@ -121,7 +121,7 @@ class TitleScene extends Phaser.Scene {
         newOrg.litter_size = org.litter_size;
         newOrg.breeding_age = org.breeding_age;
         newOrg.speed = org.speed;
-        newOrg.type = org.type;
+        newOrg.sex = org.sex;
         newOrg.generation = org.generation;
         newOrg.parent1 = org.parent1;
         newOrg.parent2 = org.parent2;
@@ -203,7 +203,7 @@ class TitleScene extends Phaser.Scene {
     this.input.on("gameobjectdown", this.writeAttributes);
 
     this.input.on("drag", function (pointer, gameObject, dragX, dragY) {
-      if (gameObject.type !== "TileSprite")
+      if (gameObject.type === "Sprite")
         gameObject.x = dragX;
       gameObject.y = dragY;
     })
@@ -256,7 +256,7 @@ class TitleScene extends Phaser.Scene {
     this.background.setInteractive();
 
     //===========================================================Fullscreen Toggle=========================================================
-    this.fsToggle = this.add.sprite((this.game.config.width - 55), 10, "fullscreen")
+    this.fsToggle = this.add.image((this.game.config.width - 55), 10, "fullscreen")
     this.fsToggle.setOrigin(0, 0)
     this.fsToggle.setScale(0.5)
 
@@ -282,7 +282,7 @@ class TitleScene extends Phaser.Scene {
     })
 
     //=============================================================Mute Sound============================================================
-    this.soundToggle = this.add.sprite((this.game.config.width - 110), 10, "volume-on")
+    this.soundToggle = this.add.image((this.game.config.width - 110), 10, "volume-on")
     this.soundToggle.setOrigin(0, 0)
     this.soundToggle.setScale(0.08)
 
@@ -313,8 +313,10 @@ class TitleScene extends Phaser.Scene {
       }
     }, this)
 
+    // && (gameObject instanceof Org || gameObject instanceof Food)
     this.input.on("gameobjectdown", function (pointer, gameObject) {
-      if (document.querySelector("#removeBlocksToggle").checked && gameObject.type !== "TileSprite") {
+      console.log(gameObject.type)
+      if (document.querySelector("#removeBlocksToggle").checked && gameObject.type === "Sprite") {
         gameObject.destroy()
       }
     })
@@ -334,7 +336,10 @@ class TitleScene extends Phaser.Scene {
       this.numOrgs = this.orgs.getChildren().length;
 
       this.avgAndScore = this.add.text(this.game.config.width / 2, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`, { color: "#000000", fontSize: 20 })
-      console.log(this.avgAndScore)
+      this.avgAndScore.setOrigin(this.avgAndScore.width / 2, this.avgAndScore.height / 2)
+      this.avgAndScore = this.add.text(this.game.config.width / 2, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`, { color: "#000000", fontSize: 20 })
+      
+      // console.log(this.avgAndScore)
       for (let i = 0; i < this.orgs.getChildren().length; i++) {
         let org = this.orgs.getChildren()[i]
 
@@ -448,7 +453,7 @@ class TitleScene extends Phaser.Scene {
   }
 
   searchAlg(source, foodObjs, orgObjs) {
-    if (source.type === 2 && (source.energy / source.max_energy) * 100 >= 50 && (source.max_health / source.health) * 100 >= 50 && source.age >= source.breeding_age && source.reproductionCycle >= 300) {
+    if (source.sex === 2 && (source.energy / source.max_energy) * 100 >= 50 && (source.max_health / source.health) * 100 >= 50 && source.age >= source.breeding_age && source.reproductionCycle >= 300) {
       source.status = "Searching for mate"
       let arr = this.createOrgArray(source, orgObjs)
       if (arr.length) {
@@ -464,11 +469,11 @@ class TitleScene extends Phaser.Scene {
   createOrgArray(source, orgObjs) {
     let arr = [];
     for (const org of orgObjs) {
-      if (source.distanceBetweenPerceived(org) && org.type === 1) {
+      if (source.distanceBetweenPerceived(org) && org.sex === 1) {
         arr.push(org)
       }
     }
-    //Sorts by the highest scoring type1's
+    //Sorts by the highest scoring sex1's
     arr.sort((a, b) => b.score - a.score)
     return arr
   }
@@ -529,7 +534,7 @@ class TitleScene extends Phaser.Scene {
       <li>Max Energy: ${gameObject.max_energy} </li>
       <li>Litter Size: ${gameObject.litter_size} </li>
       <li>Breeding Age: ${gameObject.breeding_age} </li>
-      <li>Type: ${gameObject.type} </li>
+      <li>Type: ${gameObject.sex} </li>
       <li>Generation: ${gameObject.generation} </li>
       <li>Parents: ${gameObject.parent1} ${gameObject.parent2}</li>
       </ul>
@@ -625,10 +630,10 @@ class TitleScene extends Phaser.Scene {
       } else if (this.breedingCheck(org1, org2) && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300) {
         org1.status = "Breeding"
         org2.status = "Breeding"
-        let type1 = this.orderTypes(org1, org2)[0]
-        type1.energy -= 50
+        let sex1 = this.orderSexes(org1, org2)[0]
+        sex1.energy -= 50
 
-        for (let i = 0; i < type1.litter_size; i++) {
+        for (let i = 0; i < sex1.litter_size; i++) {
           const randomX = Phaser.Math.Between(-5, 5)
           const randomY = Phaser.Math.Between(-5, 5)
           let newOrg = new Org(this, org1.x + randomX, org1.y + randomY, org1, org2, this.orgNum)
@@ -656,10 +661,10 @@ class TitleScene extends Phaser.Scene {
       if (this.breedingCheck(org1, org2) && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300) {
         org1.status = "Breeding"
         org2.status = "Breeding"
-        let type1 = this.orderTypes(org1, org2)[0]
-        type1.energy -= 50
+        let sex1 = this.orderSexes(org1, org2)[0]
+        sex1.energy -= 50
 
-        for (let i = 0; i < type1.litter_size; i++) {
+        for (let i = 0; i < sex1.litter_size; i++) {
           const randomX = Phaser.Math.Between(-5, 5)
           const randomY = Phaser.Math.Between(-5, 5)
           let newOrg = new Org(this, org1.x + randomX, org1.y + randomY, org1, org2, this.orgNum)
@@ -686,16 +691,15 @@ class TitleScene extends Phaser.Scene {
     }
   }
 
-  orderTypes(org1, org2) {
-    return (org1.type < org2.type ? [org1, org2] : [org2, org1])
+  orderSexes(org1, org2) {
+    return (org1.sex < org2.sex ? [org1, org2] : [org2, org1])
   }
 
   breedingCheck(org1, org2) {
-    let [type1, type2] = this.orderTypes(org1, org2)
-    //console.log(type2.score - type1.score > -150 && type1.age >= type1.breeding_age && type2.age >= type2.breeding_age && type2.energy && ((type2.energy/type2.max_energy)*100 >= 50) && ((type2.health/type2.max_health)*100 >= 75) && ((type1.energy/type1.max_energy) * 100 >= 50) && (type1.health/type1.max_health)*100 >= 75)
-    if (type1.type === type2.type) {
+    let [sex1,sex2] = this.orderSexes(org1, org2)
+    if (sex1.sex === sex2.sex) {
       return false
-    } else if (type2.score - type1.score > -150 && type1.age >= type1.breeding_age && type2.age >= type2.breeding_age && type2.energy && (type2.energy / type2.max_energy) * 100 >= 50 && (type2.health / type2.max_health) * 100 >= 75 && (type1.energy / type1.max_energy) * 100 >= 50 && (type1.health / type1.max_health) * 100 >= 75) {
+    } else if (sex2.score - sex1.score > -150 && sex1.age >= sex1.breeding_age && sex2.age >= sex2.breeding_age && sex2.energy && (sex2.energy / sex2.max_energy) * 100 >= 50 && (sex2.health / sex2.max_health) * 100 >= 75 && (sex1.energy / sex1.max_energy) * 100 >= 50 && (sex1.health / sex1.max_health) * 100 >= 75) {
       return true
     } else {
       return false

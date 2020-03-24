@@ -41,13 +41,13 @@ class Org extends Phaser.GameObjects.Sprite {
         const val1 = Phaser.Math.Between(0, 10)
         this.predator = (val1 === 0 ? true : false)
       }
-      if(parent1.type === 1 && parent2.type === 1){
-        this.type = 1
-      } else if (parent1.type === 2 && parent2.type === 2){ 
-        this.type = 2
+      if(parent1.sex === 1 && parent2.sex === 1){
+        this.sex = 1
+      } else if (parent1.sex === 2 && parent2.sex === 2){ 
+        this.sex = 2
       } else {
         const val2 = Phaser.Math.Between(1, 2)
-        this.type = (val2 === 1 ? 1 : 2)
+        this.sex = (val2 === 1 ? 1 : 2)
       }
       this.perception = mathNormInherited(parent1.perception, parent2.perception)
       const inheritedLitterVal = mathNormInherited(parent1.litter_size, parent2.litter_size)
@@ -83,11 +83,11 @@ class Org extends Phaser.GameObjects.Sprite {
       
       const val2 = Phaser.Math.Between(1, 15)
       if (val2 <= 5 ) {
-        this.type = 2
+        this.sex = 2
       } else {
-        this.type = 1
+        this.sex = 1
       }
-      // this.type = (val2 === 1 ? 1 : 2)
+      // this.sex = (val2 === 1 ? 1 : 2)
 
       this.generation = 1
       this.parent1 = 0
@@ -95,7 +95,7 @@ class Org extends Phaser.GameObjects.Sprite {
     }
     //this.attributes = genAttrVal
     
-    //this.type
+    //this.sex
     
     //this.name
     
@@ -138,7 +138,7 @@ class Org extends Phaser.GameObjects.Sprite {
     return dist < this.perception
   }
 
-  search(energy, health, type, age) {
+  search(energy, health, sex, age) {
     //if energy < 50% or if health is low, and mate not in perception distance
   }
 
@@ -223,7 +223,7 @@ class Org extends Phaser.GameObjects.Sprite {
       litter_size: this.litter_size,
       breeding_age: this.breeding_age,
       speed: this.speed,
-      type: this.type,
+      sex: this.sex,
       generation: this.generation,
       parent1: this.parent1,
       parent2: this.parent2,
