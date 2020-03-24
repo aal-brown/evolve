@@ -16,19 +16,37 @@ class TitleScene extends Phaser.Scene {
     this.newGameBool = true;
     const cookieArr = document.cookie.split(';');
     let gameID = cookieArr[1];
+    
     if (gameID) {
       gameID = gameID.slice(9);
       this.newGameBool = await !this.newGame(gameID);
     }
 
-    this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'sky')
-    this.background.setOrigin(0,0);
+    //Implementing game music
+    this.main_theme = this.sound.add("main_theme")
+
+    let musicConfig = {
+      mute: false,
+      volume: 0.25,
+      rate: 1,
+      detune: 0,
+      seek: 0,
+      loop: true,
+      delay: 0
+    }
+
+    this.main_theme.play(musicConfig)
+
+    console.log(this.game.config.width, this.game.config.height)
+    this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'background-small')
+    //this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'background1')
+    this.background.setOrigin(0, 0);
 
     const foodData = await this.getFoodData();
     this.orgNum = 0;
     this.foods = this.physics.add.group();
     this.orgs = this.physics.add.group();
-    
+
     if (!this.newGameBool) {
       let gameData = await this.getGameData(gameID);
       gameData = JSON.parse(gameData.save_text);
@@ -68,36 +86,36 @@ class TitleScene extends Phaser.Scene {
         newOrg.ycoord = org.ycoord;
 
         newOrg.setInteractive();
-        if(newOrg.predator){
+        if (newOrg.predator) {
           newOrg.setTexture("predator")
           newOrg.play("pred_anim")
         }
       }
       for (const food of loadedFoods) {
-        let newFood = new Food(this, food.x, food.y,  {name: food.nameStr, energy: food.energy})
+        let newFood = new Food(this, food.x, food.y, { name: food.nameStr, energy: food.energy })
         newFood.energy -= 4000;
         newFood.setInteractive();
       }
     } else {
-      for(let j = 0; j < 15; j++){
-        let newOrg =  new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, j+1)
+      for (let j = 0; j < 15; j++) {
+        let newOrg = new Org(this, Phaser.Math.Between(20, this.game.config.width), Phaser.Math.Between(20, this.game.config.height), null, null, j + 1)
         newOrg.setInteractive();
         this.input.setDraggable(newOrg)
         this.orgNum++
-        if(newOrg.predator){
+        if (newOrg.predator) {
           newOrg.setTexture("predator")
           newOrg.play("pred_anim")
         }
-       
+
       }
 
-      this.f1 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
-      this.f2 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
-      this.f3 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
-      this.f4 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
-      this.f5 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
-      this.f6 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
-      this.f7 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+      this.f1 = new Food(this, Phaser.Math.Between(20, this.game.config.width), Phaser.Math.Between(20, this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+      this.f2 = new Food(this, Phaser.Math.Between(20, this.game.config.width), Phaser.Math.Between(20, this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+      this.f3 = new Food(this, Phaser.Math.Between(20, this.game.config.width), Phaser.Math.Between(20, this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+      this.f4 = new Food(this, Phaser.Math.Between(20, this.game.config.width), Phaser.Math.Between(20, this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+      this.f5 = new Food(this, Phaser.Math.Between(20, this.game.config.width), Phaser.Math.Between(20, this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+      this.f6 = new Food(this, Phaser.Math.Between(20, this.game.config.width), Phaser.Math.Between(20, this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+      this.f7 = new Food(this, Phaser.Math.Between(20, this.game.config.width), Phaser.Math.Between(20, this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
 
       this.f1.setInteractive();
       this.f2.setInteractive();
@@ -116,39 +134,44 @@ class TitleScene extends Phaser.Scene {
       this.input.setDraggable(this.f7)
 
     }
-      
+
     //===================================================================Pause======================================================
     this.input.keyboard.on('keydown-SPACE', this.togglePause, this)
     this.pausePhysics = false;
 
-   //==================================================================Organisms====================================================
-    
+    //==================================================================Organisms====================================================
+
     this.input.on("gameobjectdown", this.writeAttributes);
 
-    this.input.on("drag", function(pointer, gameObject, dragX, dragY) {
-      if(gameObject.type !== "TileSprite")
-      gameObject.x = dragX;
+    this.input.on("drag", function (pointer, gameObject, dragX, dragY) {
+      if (gameObject.type !== "TileSprite")
+        gameObject.x = dragX;
       gameObject.y = dragY;
     })
-  
+
     this.physics.add.collider(this.orgs, this.orgs, this.attackOrSpawn, null, this);
 
     //==============================================================Foods==========================================================
-    
-    
+
+
     this.physics.add.overlap(this.orgs, this.foods, this.eat, null, this);
 
-  //============================================================== left sidebar ==============================================//
-  //button = game.add.button()
- 
-    const leftSidebar = this.add
-    .dom(100, 20)
-    .createFromCache("buttons");
+    //============================================================== left sidebar ==============================================//
+    //button = game.add.button()
 
-    leftSidebar.setOrigin(0,0)
+    const leftSidebar = this.add
+      .dom(100, 20)
+      .createFromCache("buttons");
+
+    leftSidebar.setOrigin(0, 0)
     leftSidebar.addListener("click");
 
-    leftSidebar.on("click", function(event) {
+    this.lsToggle = this.add.sprite(10, 5, "toggle-ls")
+    this.lsToggle.setScale(0.5)
+    this.lsToggle.setOrigin(0, 0)
+
+
+    leftSidebar.on("click", function (event) {
       if (event.target.name === "addOrg") {
         this.scene.addOrg();
       } else if (event.target.name === "addFood") {
@@ -164,139 +187,143 @@ class TitleScene extends Phaser.Scene {
         document.querySelector("#addFoodToggle").checked = false
       }
     })
+
     let userID = cookieArr[0];
     userID = userID.slice(8);
     let saveButtons;
 
-    if(userID){
+
+    if (userID) {
       saveButtons = this.add
-      .dom(100, 200)
-      .createFromCache("save-and-seed");
-  
-      saveButtons.setOrigin(0,0)
+        .dom(100, 200)
+        .createFromCache("save-and-seed");
+
+      saveButtons.setOrigin(0, 0)
       saveButtons.addListener("click");
-  
-      saveButtons.on("click", function(event) {
+
+      saveButtons.on("click", function (event) {
         if (event.target.name === "save") {
           this.scene.onSave(this.scene.orgs.getChildren(), this.scene.foods.getChildren(), this.scene.iterations);
         }
       })
     }
-    
 
-    this.lsToggle = this.add.sprite(10,5,"toggle-ls")
-    this.lsToggle.setScale(0.5)
-    this.lsToggle.setOrigin(0,0)
-    this.lsToggle.setInteractive().on("pointerdown", function() {
-      leftSidebar.visible = (leftSidebar.visible ? false : true)
-      saveButtons.visible = (saveButtons.visible ? false : true)
+    this.lsToggle.setInteractive().on("pointerdown", function () {
+      if (leftSidebar) {
+        leftSidebar.visible = (leftSidebar.visible ? false : true)
+      }
+      if (saveButtons) {
+        saveButtons.visible = (saveButtons.visible ? false : true)
+      }
     });
 
-  //============================================================== Right sidebar ==============================================//  
-  const rightSidebar = this.add
-  .dom((this.game.config.width - 130),80)
-  .createFromCache("right-sidebar");
 
-  rightSidebar.setOrigin(0,0)
 
-  this.background.setInteractive();
+    //============================================================== Right sidebar ==============================================//  
+    const rightSidebar = this.add
+      .dom((this.game.config.width - 130), 80)
+      .createFromCache("right-sidebar");
 
-  //===========================================================Fullscreen Toggle=========================================================
-  this.fsToggle = this.add.sprite((this.game.config.width - 55),10, "fullscreen")
-  this.fsToggle.setOrigin(0,0)
-  this.fsToggle.setScale(0.5)
+    rightSidebar.setOrigin(0, 0)
 
-  this.fsToggle.setInteractive().on("pointerdown", function() {
-    if (this.scene.scale.isFullscreen) {
+    this.background.setInteractive();
+
+    //===========================================================Fullscreen Toggle=========================================================
+    this.fsToggle = this.add.sprite((this.game.config.width - 55), 10, "fullscreen")
+    this.fsToggle.setOrigin(0, 0)
+    this.fsToggle.setScale(0.5)
+
+    this.fsToggle.setInteractive().on("pointerdown", function () {
+      if (this.scene.scale.isFullscreen) {
         this.scene.scale.stopFullscreen();
         this.fsToggle = this.setTexture("fullscreen");
-    } else {
+      } else {
         this.fsToggle = this.setTexture("minimize")
         this.scene.scale.startFullscreen();
-    }
-  });
+      }
+    });
 
-  //===============================================================Slider Feed===========================================================
+    //===============================================================Slider Feed===========================================================
 
-  this.input.on("pointerdown", function(pointer) {
-    if (document.querySelector("#foodToggle").checked) {
-      let nFood = new Food(this.scene, pointer.x, pointer.y, foodData[Phaser.Math.Between(0, 4)])
-      nFood.setInteractive();
-      this.scene.input.setDraggable(nFood)
-    }
-  })
-  
-  //=============================================================Testing stuff============================================================
+    this.input.on("pointerdown", function (pointer) {
+      if (document.querySelector("#foodToggle").checked) {
+        let nFood = new Food(this.scene, pointer.x, pointer.y, foodData[Phaser.Math.Between(0, 4)])
+        nFood.setInteractive();
+        this.scene.input.setDraggable(nFood)
+      }
+    })
 
-
+    //=============================================================Testing stuff============================================================
 
 
-  //================================================================Blocks==================================================================
-  
-  let rt = this.add.renderTexture(0, 0, this.game.config.width, this.game.config.height)
-  this.platforms = this.physics.add.staticGroup()
-  this.physics.add.collider(this.orgs, this.platforms)
-  
 
-   
-  this.input.on("pointerdown", function(pointer) {
-    if (pointer.isDown && document.querySelector("#addBlocksToggle").checked) {
-      this.newBlock = this.platforms.create(pointer.x, pointer.y, 'block')
-      this.newBlock.setInteractive();
-      this.input.setDraggable(this.newBlock)
-    }
-  },this) 
-    
-    this.input.on("gameobjectdown", function(pointer, gameObject) {
+
+    //================================================================Blocks==================================================================
+
+    let rt = this.add.renderTexture(0, 0, this.game.config.width, this.game.config.height)
+    this.platforms = this.physics.add.staticGroup()
+    this.physics.add.collider(this.orgs, this.platforms)
+
+
+
+    this.input.on("pointerdown", function (pointer) {
+      if (pointer.isDown && document.querySelector("#addBlocksToggle").checked) {
+        this.newBlock = this.platforms.create(pointer.x, pointer.y, 'block')
+        this.newBlock.setInteractive();
+        this.input.setDraggable(this.newBlock)
+      }
+    }, this)
+
+    this.input.on("gameobjectdown", function (pointer, gameObject) {
       if (document.querySelector("#removeBlocksToggle").checked && gameObject.type !== "TileSprite") {
         gameObject.destroy()
       }
-    } 
-  )
-  
+    }
+    )
+
   }
 
   update() {
     this.iterations++
-    if (this.orgs && !this.pausePhysics){
-      if(this.avgAndScore){
+    if (this.orgs && !this.pausePhysics) {
+      if (this.avgAndScore) {
         this.avgAndScore.destroy();
       }
-     
+
       this.avgScore = Math.floor((this.getAvgScore(this.orgs.getChildren())));
       this.highestScore = this.getHighestScore(this.orgs.getChildren());
       this.numOrgs = this.orgs.getChildren().length;
-      
-      this.avgAndScore = this.add.text(this.game.config.width / 2, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`,{color: "#000000", fontSize: 20})
-      
-      for (let i = 0; i < this.orgs.getChildren().length; i++){
+
+      this.avgAndScore = this.add.text(this.game.config.width / 2, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`, { color: "#000000", fontSize: 20 })
+
+      for (let i = 0; i < this.orgs.getChildren().length; i++) {
         let org = this.orgs.getChildren()[i]
 
         if (this.foods.getChildren().length > 0) {
-          this.searchAlg(org,this.foods.getChildren(), this.orgs.getChildren());
+          this.searchAlg(org, this.foods.getChildren(), this.orgs.getChildren());
         }
-        
+
         this.lifeCycle(org)
         this.energyCycle(org)
-        
-        org.grow(0.25);
-          this.damageTexture(org, org.health, org.isShowingDamage)
-          this.regTexture(org, org.health, org.isShowingDamage)
-          org.speedBoost++;
-          org.damageCycle++;
-          if(org.speedBoost === 50){
-            org.setVelocity(org.velx - 50, org.vely - 50)
-            console.log("reset speedBoost")
-          }
-        
-      }
-        for (let i = 0; i < this.foods.getChildren().length; i++){
-          let food = this.foods.getChildren()[i]
 
-          if (food.energy <= 0) {
-            food.destroy();
-          }
+        org.grow(0.25);
+        this.damageTexture(org, org.health, org.isShowingDamage)
+        this.regTexture(org, org.health, org.isShowingDamage)
+        org.speedBoost++;
+        org.damageCycle++;
+        if (org.speedBoost === 50) {
+          org.setVelocity(org.velx - 50, org.vely - 50)
+          console.log("reset speedBoost")
         }
+
+      }
+      for (let i = 0; i < this.foods.getChildren().length; i++) {
+        let food = this.foods.getChildren()[i]
+
+        if (food.energy <= 0) {
+          food.destroy();
+        }
+      }
     }
   }
 
@@ -307,33 +334,33 @@ class TitleScene extends Phaser.Scene {
   getAvgScore(orgObjs) {
     // let avgScore = 0;
     let sum = 0;
-    
+
     if (orgObjs.length) {
       // avgScore = orgObjs.reduce((acc,item) => (acc+item.score),(orgObjs[0].score))/orgObjs.length
       orgObjs.forEach((val) => sum += val.score)
     }
 
-   //console.log(sum/orgObjs.length, avgScore)
-    return sum/orgObjs.length
+    //console.log(sum/orgObjs.length, avgScore)
+    return sum / orgObjs.length
   }
-  
+
   getHighestScore(orgObjs) {
     let highestScore = 0;
-      for(let k = 0; k < orgObjs.length; k++){
-        if(orgObjs[k].score > highestScore){
-          highestScore = orgObjs[k].score
-        }
+    for (let k = 0; k < orgObjs.length; k++) {
+      if (orgObjs[k].score > highestScore) {
+        highestScore = orgObjs[k].score
       }
-  return highestScore
-}
+    }
+    return highestScore
+  }
 
   lifeCycle(org) {
     org.reproductionCycle++;
     // org.eatCycle++;
     org.age++
-    if(org.age === org.lifespan || org.health === 0) {
+    if (org.age === org.lifespan || org.health === 0) {
       org.tint = 0.001 * 0xffffff;
-      org.setVelocity(0,0);
+      org.setVelocity(0, 0);
       this.orgs.remove(org, false, false)
       this.dyingOrg(org);
     }
@@ -352,10 +379,10 @@ class TitleScene extends Phaser.Scene {
     } else {
       org.energy = org.energy - (1 * elFactor)
     }
-    
+
     if (org.energy < 30) {
       org.health -= 1
-    } 
+    }
     if (org.energy > 30 && org.health < org.max_health) {
       org.health++
     }
@@ -364,24 +391,26 @@ class TitleScene extends Phaser.Scene {
   togglePause(event) {
     event.preventDefault();
     if (!this.pausePhysics) {
-        this.physics.pause(); 
-        this.pausePhysics = true
-        this.pauseText = this.add.text(this.game.config.width / 2, this.game.config.height / 2, "PAUSE",{color: "#000000", fontSize: 50})
+      this.physics.pause();
+      this.pausePhysics = true
+      this.pauseText = this.add.text(this.game.config.width / 2, this.game.config.height / 2, "PAUSE", { color: "#000000", fontSize: 50 })
+      this.main_theme.pause();
 
     } else {
-        this.pausePhysics = false
-        this.physics.resume();
-        this.pauseText.destroy();
+      this.pausePhysics = false
+      this.physics.resume();
+      this.pauseText.destroy();
+      this.main_theme.resume();
     }
   }
 
   searchAlg(source, foodObjs, orgObjs) {
-    if (source.type === 2 && (source.energy/source.max_energy)*100 >=  50 && (source.max_health/source.health)*100 >= 50 && source.age >= source.breeding_age && source.reproductionCycle >= 300 ) {
+    if (source.type === 2 && (source.energy / source.max_energy) * 100 >= 50 && (source.max_health / source.health) * 100 >= 50 && source.age >= source.breeding_age && source.reproductionCycle >= 300) {
       source.status = "Searching for mate"
-      let arr = this.createOrgArray(source,orgObjs)
+      let arr = this.createOrgArray(source, orgObjs)
       if (arr.length) {
-        this.physics.moveToObject(source,arr[0],source.speed)
-      // this.checkClosestMoveTo(source, arr, true)
+        this.physics.moveToObject(source, arr[0], source.speed)
+        // this.checkClosestMoveTo(source, arr, true)
       }
     } else {
       source.status = "Searching for food"
@@ -391,13 +420,13 @@ class TitleScene extends Phaser.Scene {
 
   createOrgArray(source, orgObjs) {
     let arr = [];
-    for(const org of orgObjs) {
-      if(source.distanceBetweenPerceived(org) && org.type === 1 ) {
+    for (const org of orgObjs) {
+      if (source.distanceBetweenPerceived(org) && org.type === 1) {
         arr.push(org)
       }
     }
     //Sorts by the highest scoring type1's
-    arr.sort((a,b) => b.score - a.score)
+    arr.sort((a, b) => b.score - a.score)
     return arr
   }
 
@@ -407,28 +436,28 @@ class TitleScene extends Phaser.Scene {
   }
 
   //If false, then it will only
-  checkClosestMoveTo(source,objects,bool) {
+  checkClosestMoveTo(source, objects, bool) {
     if (objects.length) {
-      let closest = this.physics.closest(source,objects)
+      let closest = this.physics.closest(source, objects)
       if (bool) {
-      this.physics.moveToObject(source,closest,source.speed)
-      return
+        this.physics.moveToObject(source, closest, source.speed)
+        return
       }
-      if(source.distanceBetweenPerceived(closest)) {
-        this.physics.moveToObject(source,closest,source.speed)
+      if (source.distanceBetweenPerceived(closest)) {
+        this.physics.moveToObject(source, closest, source.speed)
       }
     }
     return
   }
 
-  consoleLog(pointer, gameObject ) {
+  consoleLog(pointer, gameObject) {
     console.log(gameObject.id)
   }
 
   //document.querySelector("#rolum") 
   writeAttributes(pointer, gameObject) {
- 
-    if(!(gameObject instanceof Org)) {
+
+    if (!(gameObject instanceof Org)) {
       document.querySelector(".rightSidebarItems").innerHTML = ""
       return
     }
@@ -466,9 +495,9 @@ class TitleScene extends Phaser.Scene {
   }
 
   addOrg() {
-    let addedOrg = new Org(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), null, null, this.orgNum)
+    let addedOrg = new Org(this, Phaser.Math.Between(20, this.game.config.width), Phaser.Math.Between(20, this.game.config.height), null, null, this.orgNum)
     this.orgNum++;
-    if(addedOrg.predator){
+    if (addedOrg.predator) {
       addedOrg.setTexture("predator")
       addedOrg.play("pred_anim")
     }
@@ -477,28 +506,28 @@ class TitleScene extends Phaser.Scene {
   }
 
   addFood(foodData) {
-    let newFood1 = new Food(this, Phaser.Math.Between(20,this.game.config.width), Phaser.Math.Between(20,this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
+    let newFood1 = new Food(this, Phaser.Math.Between(20, this.game.config.width), Phaser.Math.Between(20, this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
     newFood1.setInteractive();
     this.input.setDraggable(newFood1)
   }
 
-  getFoodData = async function() {
+  getFoodData = async function () {
     return axios.get("https://agile-scrubland-73485.herokuapp.com/foods")
       .then((res) => {
         return res.data;
       })
       .catch((err) => console.log(err.message));
   }
-  damageTexture(org, health, damageBool){
-    if(!damageBool && health < (org.max_health / 2)){
+  damageTexture(org, health, damageBool) {
+    if (!damageBool && health < (org.max_health / 2)) {
       org.setTexture("damage")
       org.play("damage_anim")
       org.isShowingDamage = true
     }
   }
-  regTexture(org, health, damageBool){
-    if(damageBool && health > (org.max_health / 2)){
-      if(org.predator){
+  regTexture(org, health, damageBool) {
+    if (damageBool && health > (org.max_health / 2)) {
+      if (org.predator) {
         org.setTexture("predator")
         org.play("pred_anim")
       } else {
@@ -509,32 +538,32 @@ class TitleScene extends Phaser.Scene {
     }
   }
   attackOrSpawn(org1, org2) {
-    if(org1.predator && !org2.predator && org2.health < (org2.max_health / 2) && org2.damageCycle > 300){
+    if (org1.predator && !org2.predator && org2.health < (org2.max_health / 2) && org2.damageCycle > 300) {
       console.log("got damaged")
       org2.health -= 5;
       org2.damageCycle = 0;
-    } else if(org1.predator && !org2.predator && org2.health > (org2.max_health / 2) && org2.speedBoost > 50  && org2.damageCycle > 300){
+    } else if (org1.predator && !org2.predator && org2.health > (org2.max_health / 2) && org2.speedBoost > 50 && org2.damageCycle > 300) {
       console.log("ran away!")
-      org2.setVelocity(org2.velx +50 , org2.vely +50)
+      org2.setVelocity(org2.velx + 50, org2.vely + 50)
       org2.speedBoost = 0;
       org2.damageCycle = 0;
-    } else if(org2.predator && !org1.predator && org1.health < (org1.max_health / 2) && org1.damageCycle > 300){
+    } else if (org2.predator && !org1.predator && org1.health < (org1.max_health / 2) && org1.damageCycle > 300) {
       org1.health -= 5;
       console.log("got damaged")
       org1.damageCycle = 0;
-    } else if(org2.predator && !org1.predator && org1.health < (org1.max_health / 2) && org2.speedBoost > 50 && org1.damageCycle > 300){
+    } else if (org2.predator && !org1.predator && org1.health < (org1.max_health / 2) && org2.speedBoost > 50 && org1.damageCycle > 300) {
       org1.setVelocity(org1.velx + 50, org1.vely + 50)
       org1.speedBoost = 0;
       console.log("ran away")
       org1.damageCycle = 0;
-    }else {
-      if(this.breedingCheck(org1,org2) && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300){
+    } else {
+      if (this.breedingCheck(org1, org2) && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300) {
         org1.status = "Breeding"
         org2.status = "Breeding"
         let type1 = this.orderTypes(org1, org2)[0]
         type1.energy -= 50
 
-        for(let i=0; i< type1.litter_size; i++){ 
+        for (let i = 0; i < type1.litter_size; i++) {
           const randomX = Phaser.Math.Between(-5, 5)
           const randomY = Phaser.Math.Between(-5, 5)
           let newOrg = new Org(this, org1.x + randomX, org1.y + randomY, org1, org2, this.orgNum)
@@ -544,12 +573,12 @@ class TitleScene extends Phaser.Scene {
         }
         org1.reproductionCycle = 0;
         org2.reproductionCycle = 0;
-        org1.setVelocity(0,0);
-        org2.setVelocity(0,0);
+        org1.setVelocity(0, 0);
+        org2.setVelocity(0, 0);
 
         this.time.addEvent({
           delay: 1000,
-          callback: function(){
+          callback: function () {
             org1.resetSpeed();
             org2.resetSpeed();
           },
@@ -557,21 +586,21 @@ class TitleScene extends Phaser.Scene {
           loop: false
         })
       }
-    } 
+    }
   }
 
-  orderTypes(org1, org2){
-     return (org1.type < org2.type ? [org1, org2] : [org2, org1])
+  orderTypes(org1, org2) {
+    return (org1.type < org2.type ? [org1, org2] : [org2, org1])
   }
-  
-  breedingCheck(org1,org2) {
+
+  breedingCheck(org1, org2) {
     let [type1, type2] = this.orderTypes(org1, org2)
     //console.log(type2.score - type1.score > -150 && type1.age >= type1.breeding_age && type2.age >= type2.breeding_age && type2.energy && ((type2.energy/type2.max_energy)*100 >= 50) && ((type2.health/type2.max_health)*100 >= 75) && ((type1.energy/type1.max_energy) * 100 >= 50) && (type1.health/type1.max_health)*100 >= 75)
-    if(type1.type === type2.type){
+    if (type1.type === type2.type) {
       return false
-    } else if (type2.score - type1.score > -150 && type1.age >= type1.breeding_age && type2.age >= type2.breeding_age && type2.energy && (type2.energy/type2.max_energy)*100 >= 50 && (type2.health/type2.max_health)*100 >= 75 && (type1.energy/type1.max_energy) * 100 >= 50 && (type1.health/type1.max_health)*100 >= 75){
+    } else if (type2.score - type1.score > -150 && type1.age >= type1.breeding_age && type2.age >= type2.breeding_age && type2.energy && (type2.energy / type2.max_energy) * 100 >= 50 && (type2.health / type2.max_health) * 100 >= 75 && (type1.energy / type1.max_energy) * 100 >= 50 && (type1.health / type1.max_health) * 100 >= 75) {
       return true
-    } else{
+    } else {
       return false
     }
   }
@@ -598,14 +627,14 @@ class TitleScene extends Phaser.Scene {
     }
   }
 
-  dyingOrg(org){
+  dyingOrg(org) {
     org.status = "Dying:"
     this.time.addEvent({
       delay: 1000,
-      callback: function(){
+      callback: function () {
         org.dying();
 
-        if(org.scale <= 0){
+        if (org.scale <= 0) {
           org.destroy();
         }
       },
@@ -613,11 +642,11 @@ class TitleScene extends Phaser.Scene {
       repeat: 6
     });
   }
-  
-  onSave = async function(orgs, foods, iterations) {
+
+  onSave = async function (orgs, foods, iterations) {
     const cookieArr = document.cookie.split(';');
     let gameID = cookieArr[1];
-    if(gameID) {
+    if (gameID) {
       gameID = gameID.slice(9);
 
       let gameStateObject = {
@@ -638,7 +667,7 @@ class TitleScene extends Phaser.Scene {
 
       let newGameBool = await this.newGame(gameID);
 
-      if(newGameBool) {
+      if (newGameBool) {
         console.log("UPDATING SAVE");
         const gameSaveUrl = `http://localhost:3000/game_saves/${gameID}`;
 
@@ -649,11 +678,11 @@ class TitleScene extends Phaser.Scene {
           mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' }
         })
-        .then(resp => {
-          console.log("Saved successfully:", resp);
-        })
-        .catch(err => console.log("Error attempting to save:", err.message));
-        
+          .then(resp => {
+            console.log("Saved successfully:", resp);
+          })
+          .catch(err => console.log("Error attempting to save:", err.message));
+
       } else {
         console.log("POST NEW SAVE");
         const gameSaveUrl = `http://localhost:3000/game_saves`;
@@ -670,28 +699,28 @@ class TitleScene extends Phaser.Scene {
           mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' }
         })
-        .then(resp => {
-          console.log("Saved successfully for game saves:", resp);
-        })
-        .catch(err => console.log("Error attempting to save:", err.message));
+          .then(resp => {
+            console.log("Saved successfully for game saves:", resp);
+          })
+          .catch(err => console.log("Error attempting to save:", err.message));
       }
 
       console.log("UPDATING GAME");
 
-        // const gameUrl = ;
-        let gameStats = {
-          highest_score: this.highestScore,
-          playtime: iterations,
-          num_of_orgs: this.numOrgs
-        };
-        console.log(gameStats)
-        axios({
-          method: 'PUT',
-          url: `http://localhost:3000/games/${gameID}`,
-          data: gameStats,
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' }
-        })
+      // const gameUrl = ;
+      let gameStats = {
+        highest_score: this.highestScore,
+        playtime: iterations,
+        num_of_orgs: this.numOrgs
+      };
+      console.log(gameStats)
+      axios({
+        method: 'PUT',
+        url: `http://localhost:3000/games/${gameID}`,
+        data: gameStats,
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' }
+      })
         .then(resp => {
           console.log("Updated successfully for games:", resp);
         })
@@ -699,7 +728,7 @@ class TitleScene extends Phaser.Scene {
     }
   }
 
-  newGame = async function(gameID) {
+  newGame = async function (gameID) {
     return axios.get(`http://localhost:3000/game_saves/${gameID}`)
       .then((res) => {
         return true;
@@ -711,7 +740,7 @@ class TitleScene extends Phaser.Scene {
       })
   }
 
-  getGameData = async function(gameID) {
+  getGameData = async function (gameID) {
     return axios.get(`http://localhost:3000/game_saves/${gameID}`)
       .then((res) => {
         return res.data;
