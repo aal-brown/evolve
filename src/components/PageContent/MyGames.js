@@ -101,7 +101,8 @@ export default function MyGames(props) {
 
   function exit() {
     let id = props.cookies.game_id
-    axios.get(`https://agile-scrubland-73485.herokuapp.com/game_saves/${id}`)
+    if (id) {
+      axios.get(`https://agile-scrubland-73485.herokuapp.com/game_saves/${id}`)
       .then((res) => {
         console.log(res);
         getData();
@@ -118,6 +119,9 @@ export default function MyGames(props) {
             })
         }
       })
+    } else {
+      setGameView(0);
+    }
   }
 
   function deleteGame(id) {
