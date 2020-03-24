@@ -18,6 +18,7 @@ class TitleScene extends Phaser.Scene {
     let gameID = null;
     let userID = null;
     const cookieArr = document.cookie.split(';');
+
     for (let cookie of cookieArr) {
       if (cookie.includes('user_id')) {
         userID = cookie.slice(8);
@@ -27,7 +28,22 @@ class TitleScene extends Phaser.Scene {
       }
     }
 
-    this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'sky')
+    //Implementing game music
+    this.main_theme = this.sound.add("main_theme")
+    let musicConfig = {
+      mute: false,
+      volume: 0.25,
+      rate: 1,
+      detune: 0,
+      seek: 0,
+      loop: true,
+      delay: 0
+    }
+
+    this.main_theme.play(musicConfig)
+
+    this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'background-small')
+    //this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'background1')
     this.background.setOrigin(0, 0);
 
     const foodData = await this.getFoodData();
@@ -36,30 +52,38 @@ class TitleScene extends Phaser.Scene {
     this.orgs = this.physics.add.group();
     this.foods.setDepth(0)
 
+
+  //This was moved here to make the predator buttons work
     const leftSidebar = this.add
-    .dom(100, 20)
-    .createFromCache("buttons");
+      .dom(100, 20)
+      .createFromCache("buttons");
 
-  leftSidebar.setOrigin(0,0)
-  leftSidebar.addListener("click");
+    leftSidebar.setOrigin(0, 0)
+    leftSidebar.addListener("click");
 
-  leftSidebar.on("click", function(event) {
-    if (event.target.name === "addOrg") {
-      this.scene.addOrg();
-    } else if (event.target.name === "addFood") {
-      this.scene.addFood(foodData);
-    } else if (event.target.name === "foodToggle") {
-      document.querySelector("#removeBlocksToggle").checked = false
-      document.querySelector("#addBlocksToggle").checked = false
-    } else if (event.target.name === "addBlocksToggle") {
-      document.querySelector("#removeBlocksToggle").checked = false
-      document.querySelector("#addFoodToggle").checked = false
-    } else if (event.target.name === "removeBlocksToggle") {
-      document.querySelector("#addBlocksToggle").checked = false
-      document.querySelector("#addFoodToggle").checked = false
-    }
-  })
+    this.lsToggle = this.add.sprite(10, 5, "toggle-ls")
+    this.lsToggle.setScale(0.5)
+    this.lsToggle.setOrigin(0, 0)
 
+    leftSidebar.setOrigin(0,0)
+    leftSidebar.addListener("click");
+  
+    leftSidebar.on("click", function(event) {
+      if (event.target.name === "addOrg") {
+        this.scene.addOrg();
+      } else if (event.target.name === "addFood") {
+        this.scene.addFood(foodData);
+      } else if (event.target.name === "foodToggle") {
+        document.querySelector("#removeBlocksToggle").checked = false
+        document.querySelector("#addBlocksToggle").checked = false
+      } else if (event.target.name === "addBlocksToggle") {
+        document.querySelector("#removeBlocksToggle").checked = false
+        document.querySelector("#addFoodToggle").checked = false
+      } else if (event.target.name === "removeBlocksToggle") {
+        document.querySelector("#addBlocksToggle").checked = false
+        document.querySelector("#addFoodToggle").checked = false
+      }
+    })
 
     if (this.newGameBool) {
       let gameData = await this.getGameData(gameID);
@@ -107,10 +131,7 @@ class TitleScene extends Phaser.Scene {
         }
       }
       for (const food of loadedFoods) {
-        let newFood = new Food(this, food.x, food.y, {
-          name: food.nameStr,
-          energy: food.energy
-        })
+        let newFood = new Food(this, food.x, food.y, { name: food.nameStr, energy: food.energy })
         newFood.energy -= 4000;
         newFood.setInteractive();
         newFood.setDepth(0)
@@ -203,14 +224,16 @@ class TitleScene extends Phaser.Scene {
       })
     }
 
-
-    this.lsToggle = this.add.sprite(10, 5, "toggle-ls")
-    this.lsToggle.setScale(0.5)
-    this.lsToggle.setOrigin(0, 0)
     this.lsToggle.setInteractive().on("pointerdown", function () {
-      leftSidebar.visible = (leftSidebar.visible ? false : true)
-      saveButtons.visible = (saveButtons.visible ? false : true)
+      if (leftSidebar) {
+        leftSidebar.visible = (leftSidebar.visible ? false : true)
+      }
+      if (saveButtons) {
+        saveButtons.visible = (saveButtons.visible ? false : true)
+      }
     });
+
+
 
     //============================================================== Right sidebar ==============================================//  
     const rightSidebar = this.add
@@ -287,10 +310,7 @@ class TitleScene extends Phaser.Scene {
       this.highestScore = this.getHighestScore(this.orgs.getChildren());
       this.numOrgs = this.orgs.getChildren().length;
 
-      this.avgAndScore = this.add.text(this.game.config.width / 2, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`, {
-        color: "#000000",
-        fontSize: 20
-      })
+      this.avgAndScore = this.add.text(this.game.config.width / 2, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`, { color: "#000000", fontSize: 20 })
 
       for (let i = 0; i < this.orgs.getChildren().length; i++) {
         let org = this.orgs.getChildren()[i]
@@ -393,15 +413,14 @@ class TitleScene extends Phaser.Scene {
     if (!this.pausePhysics) {
       this.physics.pause();
       this.pausePhysics = true
-      this.pauseText = this.add.text(this.game.config.width / 2, this.game.config.height / 2, "PAUSE", {
-        color: "#000000",
-        fontSize: 50
-      })
+      this.pauseText = this.add.text(this.game.config.width / 2, this.game.config.height / 2, "PAUSE", { color: "#000000", fontSize: 50 })
+      this.main_theme.pause();
 
     } else {
       this.pausePhysics = false
       this.physics.resume();
       this.pauseText.destroy();
+      this.main_theme.resume();
     }
   }
 
@@ -730,16 +749,12 @@ class TitleScene extends Phaser.Scene {
         const gameSaveUrl = `http://localhost:3000/game_saves/${gameID}`;
 
         axios({
-            method: 'PUT',
-            url: `http://localhost:3000/game_saves/${gameID}`,
-            data: {
-              save_text: gameStateObject
-            },
-            mode: 'no-cors',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
+          method: 'PUT',
+          url: `http://localhost:3000/game_saves/${gameID}`,
+          data: { save_text: gameStateObject },
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' }
+        })
           .then(resp => {
             console.log("Saved successfully:", resp);
           })
@@ -755,14 +770,12 @@ class TitleScene extends Phaser.Scene {
         };
 
         axios({
-            method: 'POST',
-            url: `http://localhost:3000/game_saves`,
-            data: gameData,
-            mode: 'no-cors',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
+          method: 'POST',
+          url: `http://localhost:3000/game_saves`,
+          data: gameData,
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' }
+        })
           .then(resp => {
             console.log("Saved successfully for game saves:", resp);
           })
@@ -779,14 +792,12 @@ class TitleScene extends Phaser.Scene {
       };
       console.log(gameStats)
       axios({
-          method: 'PUT',
-          url: `http://localhost:3000/games/${gameID}`,
-          data: gameStats,
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
+        method: 'PUT',
+        url: `http://localhost:3000/games/${gameID}`,
+        data: gameStats,
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' }
+      })
         .then(resp => {
           console.log("Updated successfully for games:", resp);
         })

@@ -52,6 +52,9 @@ class Org extends Phaser.GameObjects.Sprite {
       this.perception = mathNormInherited(parent1.perception, parent2.perception)
       const inheritedLitterVal = mathNormInherited(parent1.litter_size, parent2.litter_size)
       this.litter_size = (inheritedLitterVal <= 0 ? 1 : inheritedLitterVal)
+      if (this.litter_size > 7) {
+        this.litter_size = 7
+      }
       this.breeding_age = mathNormInherited(parent1.breeding_age, parent2.breeding_age)
       
       this.generation = parent1.generation + 1
@@ -73,10 +76,13 @@ class Org extends Phaser.GameObjects.Sprite {
       this.perception = mathNorm(350, 4000)
       const litterRand = mathNorm(3, 2)
       this.litter_size = (litterRand <= 0 ? 1 : litterRand)
+      if (this.litter_size > 7) {
+        this.litter_size = 7
+      }
       this.breeding_age = mathNorm(500, 5000)
       
       const val2 = Phaser.Math.Between(1, 15)
-      if (val2 <= 7 ) {
+      if (val2 <= 5 ) {
         this.type = 2
       } else {
         this.type = 1
