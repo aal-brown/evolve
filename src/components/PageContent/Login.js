@@ -7,7 +7,7 @@ export default function Login(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const url = "http://localhost:3000/sessions";
+  const url = "https://agile-scrubland-73485.herokuapp.com/sessions";
 
   let userData = {
   email: email,
