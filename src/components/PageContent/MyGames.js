@@ -27,11 +27,11 @@ export default function MyGames(props) {
   let user_id = props.cookies.user_id
 
   function getData() {
-    axios.get("http://localhost:3000/getuser", {
+    axios.get("https://agile-scrubland-73485.herokuapp.com/getuser", {
       headers: { "ID": user_id }
     })
     .then((res) => {
-      axios.get("http://localhost:3000/games", {
+      axios.get("https://agile-scrubland-73485.herokuapp.com/games", {
         headers: { "ID": res.data.id }
       })
       .then((res) => setGames(res.data));
@@ -40,9 +40,9 @@ export default function MyGames(props) {
 
   function setGameCookie(name) {
     const user_id = props.cookies.user_id;
-    const url = "http://localhost:3000/games";
+    const url = "https://agile-scrubland-73485.herokuapp.com/games";
 
-    axios.get("http://localhost:3000/getuser", {
+    axios.get("https://agile-scrubland-73485.herokuapp.com/getuser", {
       headers: { "ID": user_id }
     })
     .then((res) => {
@@ -149,7 +149,9 @@ export default function MyGames(props) {
       <div className="gameCanvas">
         <div className="quit-confirm" style={{visibility: "hidden"}}>
           <h1>Quit?</h1>
-          <h2>All unsaved changes will be lost!</h2>
+          { user_id && (
+            <h2>All unsaved changes will be lost!</h2>
+          )}
           <div className="quit-confirm-buttons ">
             <Button className="button--confirm" onClick={exit} >Quit</Button>
             <Button className="button--danger" onClick={confirmQuit} >Cancel</Button>

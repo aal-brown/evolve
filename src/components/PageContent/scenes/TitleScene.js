@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import Org from "./Org";
 import Food from "./Food";
+import Explosion from "./Explosion";
 import axios from "axios";
 
 
@@ -46,6 +47,23 @@ class TitleScene extends Phaser.Scene {
     this.orgNum = 0;
     this.foods = this.physics.add.group();
     this.orgs = this.physics.add.group();
+    this.foods.setDepth(0)
+
+
+  //This was moved here to make the predator buttons work
+    const leftSidebar = this.add
+      .dom(100, 20)
+      .createFromCache("buttons");
+
+    leftSidebar.setOrigin(0, 0)
+    leftSidebar.addListener("click");
+
+    this.lsToggle = this.add.sprite(10, 5, "toggle-ls")
+    this.lsToggle.setScale(0.5)
+    this.lsToggle.setOrigin(0, 0)
+
+
+
 
     if (!this.newGameBool) {
       let gameData = await this.getGameData(gameID);
@@ -86,7 +104,8 @@ class TitleScene extends Phaser.Scene {
         newOrg.ycoord = org.ycoord;
 
         newOrg.setInteractive();
-        if (newOrg.predator) {
+        newOrg.setDepth(2)
+        if (newOrg.predator && document.querySelector("#predatorToggle").checked) {
           newOrg.setTexture("predator")
           newOrg.play("pred_anim")
         }
@@ -95,6 +114,7 @@ class TitleScene extends Phaser.Scene {
         let newFood = new Food(this, food.x, food.y, { name: food.nameStr, energy: food.energy })
         newFood.energy -= 4000;
         newFood.setInteractive();
+        newFood.setDepth(0)
       }
     } else {
       for (let j = 0; j < 15; j++) {
@@ -102,11 +122,12 @@ class TitleScene extends Phaser.Scene {
         newOrg.setInteractive();
         this.input.setDraggable(newOrg)
         this.orgNum++
-        if (newOrg.predator) {
+        if (newOrg.predator && document.querySelector("#predatorToggle").checked) {
           newOrg.setTexture("predator")
           newOrg.play("pred_anim")
         }
-
+        this.orgNum++
+        newOrg.setDepth(2)
       }
 
       this.f1 = new Food(this, Phaser.Math.Between(20, this.game.config.width), Phaser.Math.Between(20, this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
@@ -124,6 +145,13 @@ class TitleScene extends Phaser.Scene {
       this.f5.setInteractive();
       this.f6.setInteractive();
       this.f7.setInteractive();
+      this.f1.setDepth(0)
+      this.f2.setDepth(0)
+      this.f3.setDepth(0)
+      this.f4.setDepth(0)
+      this.f5.setDepth(0)
+      this.f6.setDepth(0)
+      this.f7.setDepth(0)
 
       this.input.setDraggable(this.f1)
       this.input.setDraggable(this.f2)
@@ -159,16 +187,7 @@ class TitleScene extends Phaser.Scene {
     //============================================================== left sidebar ==============================================//
     //button = game.add.button()
 
-    const leftSidebar = this.add
-      .dom(100, 20)
-      .createFromCache("buttons");
 
-    leftSidebar.setOrigin(0, 0)
-    leftSidebar.addListener("click");
-
-    this.lsToggle = this.add.sprite(10, 5, "toggle-ls")
-    this.lsToggle.setScale(0.5)
-    this.lsToggle.setOrigin(0, 0)
 
 
     leftSidebar.on("click", function (event) {
@@ -192,10 +211,9 @@ class TitleScene extends Phaser.Scene {
     userID = userID.slice(8);
     let saveButtons;
 
-
     if (userID) {
       saveButtons = this.add
-        .dom(100, 200)
+        .dom(100, 212)
         .createFromCache("save-and-seed");
 
       saveButtons.setOrigin(0, 0)
@@ -250,6 +268,7 @@ class TitleScene extends Phaser.Scene {
         let nFood = new Food(this.scene, pointer.x, pointer.y, foodData[Phaser.Math.Between(0, 4)])
         nFood.setInteractive();
         this.scene.input.setDraggable(nFood)
+        nFood.setDepth(0)
       }
     })
 
@@ -278,8 +297,7 @@ class TitleScene extends Phaser.Scene {
       if (document.querySelector("#removeBlocksToggle").checked && gameObject.type !== "TileSprite") {
         gameObject.destroy()
       }
-    }
-    )
+    })
 
   }
 
@@ -314,6 +332,10 @@ class TitleScene extends Phaser.Scene {
         if (org.speedBoost === 50) {
           org.setVelocity(org.velx - 50, org.vely - 50)
           console.log("reset speedBoost")
+        }
+
+        if(org.predator){
+          this.predTexture(org)
         }
 
       }
@@ -497,18 +519,20 @@ class TitleScene extends Phaser.Scene {
   addOrg() {
     let addedOrg = new Org(this, Phaser.Math.Between(20, this.game.config.width), Phaser.Math.Between(20, this.game.config.height), null, null, this.orgNum)
     this.orgNum++;
-    if (addedOrg.predator) {
+    if (addedOrg.predator  && document.querySelector("#predatorToggle").checked) {
       addedOrg.setTexture("predator")
       addedOrg.play("pred_anim")
     }
     addedOrg.setInteractive();
     this.input.setDraggable(addedOrg)
+    addedOrg.setDepth(2)
   }
 
   addFood(foodData) {
     let newFood1 = new Food(this, Phaser.Math.Between(20, this.game.config.width), Phaser.Math.Between(20, this.game.config.height), foodData[Phaser.Math.Between(0, 4)])
     newFood1.setInteractive();
     this.input.setDraggable(newFood1)
+    newFood1.setDepth(0)
   }
 
   getFoodData = async function () {
@@ -527,7 +551,7 @@ class TitleScene extends Phaser.Scene {
   }
   regTexture(org, health, damageBool) {
     if (damageBool && health > (org.max_health / 2)) {
-      if (org.predator) {
+      if (org.predator && document.querySelector("#predatorToggle").checked) {
         org.setTexture("predator")
         org.play("pred_anim")
       } else {
@@ -537,25 +561,76 @@ class TitleScene extends Phaser.Scene {
       org.isShowingDamage = false
     }
   }
+  predTexture(org) {
+      if (org.predBool && document.querySelector("#predatorToggle").checked) {
+        org.setTexture("predator")
+        org.play("pred_anim")
+        org.predBool = false
+      } else if (!org.predBool && !document.querySelector("#predatorToggle").checked) {
+          org.setTexture("blobs")
+          org.play("blobs_anim")
+          org.predBool = true
+        }
+  }
   attackOrSpawn(org1, org2) {
-    if (org1.predator && !org2.predator && org2.health < (org2.max_health / 2) && org2.damageCycle > 300) {
-      console.log("got damaged")
-      org2.health -= 5;
-      org2.damageCycle = 0;
-    } else if (org1.predator && !org2.predator && org2.health > (org2.max_health / 2) && org2.speedBoost > 50 && org2.damageCycle > 300) {
-      console.log("ran away!")
-      org2.setVelocity(org2.velx + 50, org2.vely + 50)
-      org2.speedBoost = 0;
-      org2.damageCycle = 0;
-    } else if (org2.predator && !org1.predator && org1.health < (org1.max_health / 2) && org1.damageCycle > 300) {
-      org1.health -= 5;
-      console.log("got damaged")
-      org1.damageCycle = 0;
-    } else if (org2.predator && !org1.predator && org1.health < (org1.max_health / 2) && org2.speedBoost > 50 && org1.damageCycle > 300) {
-      org1.setVelocity(org1.velx + 50, org1.vely + 50)
-      org1.speedBoost = 0;
-      console.log("ran away")
-      org1.damageCycle = 0;
+    if(document.querySelector("#predatorToggle").checked){
+      if (org1.predator && !org2.predator && org2.health < (org2.max_health / 2) && org2.damageCycle > 300) {
+        console.log("got damaged")
+        org2.health -= 5;
+        org2.damageCycle = 0;
+        org1.health += 5;
+        let collision = new Explosion(this, org1.x, org1.y)
+        return
+  
+      } else if (org1.predator && !org2.predator && org2.health > (org2.max_health / 2) && org2.speedBoost > 50 && org2.damageCycle > 300) {
+        console.log("ran away!")
+        org2.setVelocity(org2.velx + 50, org2.vely + 50)
+        org2.speedBoost = 0;
+        org2.damageCycle = 0;
+        return
+      } else if (org2.predator && !org1.predator && org1.health < (org1.max_health / 2) && org1.damageCycle > 300) {
+        org1.health -= 5;
+        org2.health += 5;
+        console.log("got damaged")
+        org1.damageCycle = 0;
+        let collision = new Explosion(this, org1.x, org1.y)
+        return
+      } else if (org2.predator && !org1.predator && org1.health < (org1.max_health / 2) && org2.speedBoost > 50 && org1.damageCycle > 300) {
+        org1.setVelocity(org1.velx + 50, org1.vely + 50)
+        org1.speedBoost = 0;
+        console.log("ran away")
+        org1.damageCycle = 0;
+        return
+      } else if (this.breedingCheck(org1, org2) && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300) {
+        org1.status = "Breeding"
+        org2.status = "Breeding"
+        let type1 = this.orderTypes(org1, org2)[0]
+        type1.energy -= 50
+
+        for (let i = 0; i < type1.litter_size; i++) {
+          const randomX = Phaser.Math.Between(-5, 5)
+          const randomY = Phaser.Math.Between(-5, 5)
+          let newOrg = new Org(this, org1.x + randomX, org1.y + randomY, org1, org2, this.orgNum)
+          this.orgNum++
+          newOrg.setInteractive();
+          this.input.setDraggable(newOrg)
+          newOrg.setDepth(2)
+        }
+        org1.reproductionCycle = 0;
+        org2.reproductionCycle = 0;
+        org1.setVelocity(0, 0);
+        org2.setVelocity(0, 0);
+
+        this.time.addEvent({
+          delay: 1000,
+          callback: function () {
+            org1.resetSpeed();
+            org2.resetSpeed();
+          },
+          callbackScope: this,
+          loop: false
+        })
+      }
     } else {
       if (this.breedingCheck(org1, org2) && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300) {
         org1.status = "Breeding"
@@ -570,6 +645,7 @@ class TitleScene extends Phaser.Scene {
           this.orgNum++
           newOrg.setInteractive();
           this.input.setDraggable(newOrg)
+          newOrg.setDepth(2)
         }
         org1.reproductionCycle = 0;
         org2.reproductionCycle = 0;
