@@ -1,0 +1,31 @@
+@import "styles/variables.scss";
+@import "styles/mixins.scss";
+@import "styles/animations.scss";
+
+.guide-welcome-text {
+  font-size: 2em;
+  font-family: 'Cabin sketch', 'cursive';
+  color: $white;
+  text-align: center;
+  padding: 1em;
+}
+ul.guide-text{
+  font-family: 'Dosis', sans-serif;
+  padding: 1em;
+  font-size: 1.5em;
+  color: $navtext3
+}
+li {
+  list-style-type: disc;
+  list-style-position: inside;
+  padding: 0.5em;
+
+}
+
+.about-text {
+  text-align: center;
+  font-family: 'Dosis', sans-serif;
+  padding: 1em;
+  font-size: 1.5em;
+  color: $navtext3
+}

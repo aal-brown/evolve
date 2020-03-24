@@ -73,7 +73,9 @@ export default function MyGames(props) {
     })
   }
 
-  function newGame(gameName) {
+
+
+  function newGame() {
     console.log("LOADING NEW GAME");
     if (user_id) {
       setGameCookie(gameName);
@@ -205,7 +207,7 @@ export default function MyGames(props) {
           <Button className="button--confirm" onClick={() => { newGame(name) }} >New Game</Button>
         </div>
         <div className="MyGames">
-          <h1>Saved Games:</h1>
+          <h1 className="save-title">Saved Games:</h1>
           {myGames}
           { myGames.length === 0 && !user_id && (
             <h2>You must log in to see your saved games</h2>

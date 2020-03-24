@@ -10,11 +10,15 @@
   flex-direction: row;
   align-items: baseline;
 }
-
+.save-title{
+  font-family: 'Cabin sketch', 'cursive';
+}
 .MyGames {
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-family: 'Dosis', sans-serif;
+  color: #fff
 }
 
 .myGamesItem-list__item {
