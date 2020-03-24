@@ -14,7 +14,7 @@ class TitleScene extends Phaser.Scene {
   async create() {
     //==========================================================Creating New Game / Loading Game================================================================
     this.iterations = 0;
-    this.newGameBool = true;
+    this.newGameBool = false;
     let gameID = null;
     let userID = null;
     const cookieArr = document.cookie.split(';');
@@ -86,6 +86,7 @@ class TitleScene extends Phaser.Scene {
     })
 
     if (this.newGameBool) {
+      console.log(this.newGameBool)
       let gameData = await this.getGameData(gameID);
       gameData = JSON.parse(gameData.save_text);
       const loadedOrgs = gameData.orgs;
@@ -750,7 +751,7 @@ class TitleScene extends Phaser.Scene {
 
         axios({
           method: 'PUT',
-          url: `http://localhost:3000/game_saves/${gameID}`,
+          url: `https://agile-scrubland-73485.herokuapp.com/game_saves/${gameID}`,
           data: { save_text: gameStateObject },
           mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' }
