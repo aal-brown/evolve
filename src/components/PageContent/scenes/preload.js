@@ -88,6 +88,9 @@ export default class Preload extends Phaser.Scene {
     this.load.image('block', 'assets/block.png')
     this.load.image('circle', 'assets/black-circle.png')
 
+    this.load.image("volume-on", "assets/volume-on.png")
+    this.load.image("volume-mute", "assets/volume-mute.png")
+
     this.load.on("progress", () => {
       this.add.text(20, 20, "Loading game...")
     })

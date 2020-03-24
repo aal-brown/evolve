@@ -281,8 +281,20 @@ class TitleScene extends Phaser.Scene {
       }
     })
 
-    //=============================================================Testing stuff============================================================
+    //=============================================================Mute Sound============================================================
+    this.soundToggle = this.add.sprite((this.game.config.width - 110), 10, "volume-on")
+    this.soundToggle.setOrigin(0, 0)
+    this.soundToggle.setScale(0.08)
 
+    this.soundToggle.setInteractive().on("pointerdown", function () {
+      if (this.scene.main_theme.isPlaying) {
+        this.soundToggle = this.setTexture("volume-mute");
+        this.scene.main_theme.stop()
+      } else {
+        this.soundToggle = this.setTexture("volume-on");
+        this.scene.main_theme.play()
+      }
+    });
 
 
 
@@ -309,6 +321,7 @@ class TitleScene extends Phaser.Scene {
 
   }
 
+  //============================================================================================================UPDATE======================================================================================
   update() {
     this.iterations++
     if (this.orgs && !this.pausePhysics) {
@@ -321,7 +334,7 @@ class TitleScene extends Phaser.Scene {
       this.numOrgs = this.orgs.getChildren().length;
 
       this.avgAndScore = this.add.text(this.game.config.width / 2, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`, { color: "#000000", fontSize: 20 })
-
+      console.log(this.avgAndScore)
       for (let i = 0; i < this.orgs.getChildren().length; i++) {
         let org = this.orgs.getChildren()[i]
 
@@ -357,7 +370,7 @@ class TitleScene extends Phaser.Scene {
     }
   }
 
-
+//=========================================================================================================FUNCTIONS======================================================================================
   //When energy runs below 50% their speed is reduced 30%. when it is below 20% it is reduced to
   // Helper functions
 
