@@ -93,19 +93,9 @@ class Org extends Phaser.GameObjects.Sprite {
       this.parent1 = 0
       this.parent2 = 0
     }
-    //this.attributes = genAttrVal
-    
-    //this.sex
-    
-    //this.name
-    
-    //this.score
-    //this.status?
-    //this.target?
-    //this.generation
 
-    //this.flatener
-
+    this.ageless = false;
+    this.invincible = false;
     this.velx = Phaser.Math.Between(-this.speed, this.speed)
     this.vely = Math.sqrt((this.speed**2) - (this.velx**2))*(-1)**(Math.floor(Phaser.Math.Between(0,1)))
     this.id = orgNum;

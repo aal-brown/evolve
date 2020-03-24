@@ -46,6 +46,7 @@ class TitleScene extends Phaser.Scene {
     this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'background-small')
     //this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'background1')
     this.background.setOrigin(0, 0);
+    this.background.setInteractive();
 
     const foodData = await this.getFoodData();
     this.orgNum = 0;
@@ -194,6 +195,28 @@ class TitleScene extends Phaser.Scene {
 
     }
 
+    //============================================================== Right sidebar ==============================================//  
+    const rightSidebar = this.add
+      .dom((this.game.config.width - 130), 80)
+      .createFromCache("right-sidebar");
+
+    rightSidebar.setOrigin(0, 0)
+    rightSidebar.addListener("click");
+
+    rightSidebar.on("click", function(event) {
+      console.log("rsb",rightSidebar)
+      // event.preventDefault();
+      // if (event.target.name === "agelessToggle") {
+      //   for(const org of this.scene.orgs.getChildren()) {
+      //     org.
+      //   }
+      // } else if (event.target.name === "agelessToggle") {
+
+      });
+
+    //In order to clear the right sidebar
+    //
+
     //===================================================================Pause======================================================
     this.input.keyboard.on('keydown-SPACE', this.togglePause, this)
     this.pausePhysics = false;
@@ -202,6 +225,7 @@ class TitleScene extends Phaser.Scene {
 
     this.input.on("gameobjectdown", this.writeAttributes);
 
+    //This drag function isn't speciific to organisms, it applies to any game organism
     this.input.on("drag", function (pointer, gameObject, dragX, dragY) {
       if (gameObject.type === "Sprite")
         gameObject.x = dragX;
@@ -246,18 +270,12 @@ class TitleScene extends Phaser.Scene {
 
 
 
-    //============================================================== Right sidebar ==============================================//  
-    const rightSidebar = this.add
-      .dom((this.game.config.width - 130), 80)
-      .createFromCache("right-sidebar");
-
-    rightSidebar.setOrigin(0, 0)
-
-    this.background.setInteractive();
+    
 
     //===========================================================Fullscreen Toggle=========================================================
     this.fsToggle = this.add.image((this.game.config.width - 55), 10, "fullscreen")
     this.fsToggle.setOrigin(0, 0)
+    this.fsToggle.setDepth(3)
     this.fsToggle.setScale(0.5)
 
     this.fsToggle.setInteractive().on("pointerdown", function () {
@@ -283,6 +301,7 @@ class TitleScene extends Phaser.Scene {
 
     //=============================================================Mute Sound============================================================
     this.soundToggle = this.add.image((this.game.config.width - 110), 10, "volume-on")
+    this.soundToggle.setDepth(3)
     this.soundToggle.setOrigin(0, 0)
     this.soundToggle.setScale(0.08)
 
@@ -315,7 +334,6 @@ class TitleScene extends Phaser.Scene {
 
     // && (gameObject instanceof Org || gameObject instanceof Food)
     this.input.on("gameobjectdown", function (pointer, gameObject) {
-      console.log(gameObject.type)
       if (document.querySelector("#removeBlocksToggle").checked && gameObject.type === "Sprite") {
         gameObject.destroy()
       }
@@ -336,6 +354,7 @@ class TitleScene extends Phaser.Scene {
       this.numOrgs = this.orgs.getChildren().length;
 
       this.avgAndScore = this.add.text(this.game.config.width / 2, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`, { color: "#000000", fontSize: 20 })
+      this.avgAndScore.setDepth(3)
       this.avgAndScore.setOrigin(this.avgAndScore.width / 2, this.avgAndScore.height / 2)
       this.avgAndScore = this.add.text(this.game.config.width / 2, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`, { color: "#000000", fontSize: 20 })
       
@@ -404,15 +423,16 @@ class TitleScene extends Phaser.Scene {
 
   lifeCycle(org) {
     org.reproductionCycle++;
-    // org.eatCycle++;
-    org.age++
-    if (org.age === org.lifespan || org.health === 0) {
-      org.tint = 0.001 * 0xffffff;
-      org.setVelocity(0, 0);
-      this.orgs.remove(org, false, false)
-      this.dyingOrg(org);
+    if(!org.ageless || !org.invincible ) {
+      org.age++
+      if (org.age === org.lifespan || org.health === 0) {
+        org.tint = 0.001 * 0xffffff;
+        org.setVelocity(0, 0);
+        this.orgs.remove(org, false, false)
+        this.dyingOrg(org);
+      }
     }
-  }
+  } 
 
   energyCycle(org) {
     let elFactor = 1;
@@ -428,7 +448,7 @@ class TitleScene extends Phaser.Scene {
       org.energy = org.energy - (1 * elFactor)
     }
 
-    if (org.energy < 30) {
+    if (org.energy < 30 && !org.invincible) {
       org.health -= 1
     }
     if (org.energy > 30 && org.health < org.max_health) {
@@ -504,7 +524,7 @@ class TitleScene extends Phaser.Scene {
 
   //document.querySelector("#rolum") 
   writeAttributes(pointer, gameObject) {
-
+    console.log("gameobj",gameObject)
     if (!(gameObject instanceof Org)) {
       document.querySelector(".rightSidebarItems").innerHTML = ""
       return
@@ -516,27 +536,28 @@ class TitleScene extends Phaser.Scene {
     let attrList = document.createElement("span")
     attrList.innerHTML = ` 
       <ul id="attrList">
-       
-      <li>Score: ${gameObject.score} </li>
-      <li>Status: ${gameObject.status} </li>
-      <li>Age: ${gameObject.age} </li> 
-      <li>ID: ${gameObject.id}</li>
-      <li>Health: ${gameObject.health} </li>
-      <li>Energy: ${Math.floor(gameObject.energy)} </li>
-      <li>Speed: ${gameObject.speed} </li> 
-      <li>Lifespan: ${gameObject.lifespan} </li> 
-      <li>Strength: ${gameObject.strength} </li>
-      <li>Aggression: ${gameObject.aggression} </li>
-      <li>Predator: ${gameObject.predator} </li>
-      <li>Perception: ${gameObject.perception} </li>
-      <li>Energy Efficiency: ${gameObject.energy_efficiency} </li>
-      <li>Max Health: ${gameObject.max_health} </li>
-      <li>Max Energy: ${gameObject.max_energy} </li>
-      <li>Litter Size: ${gameObject.litter_size} </li>
-      <li>Breeding Age: ${gameObject.breeding_age} </li>
-      <li>Type: ${gameObject.sex} </li>
-      <li>Generation: ${gameObject.generation} </li>
-      <li>Parents: ${gameObject.parent1} ${gameObject.parent2}</li>
+        <li>Score: ${gameObject.score} </li>
+        <li>Status: ${gameObject.status} </li>
+        <li>Age: ${gameObject.age} </li> 
+        <li>ID: ${gameObject.id}</li>
+        <li>Health: ${gameObject.health} </li>
+        <li>Energy: ${Math.floor(gameObject.energy)} </li>
+        <li>Speed: ${gameObject.speed} </li> 
+        <li>Lifespan: ${gameObject.lifespan} </li> 
+        <li>Strength: ${gameObject.strength} </li>
+        <li>Aggression: ${gameObject.aggression} </li>
+        <li>Predator: ${gameObject.predator} </li>
+        <li>Perception: ${gameObject.perception} </li>
+        <li>Energy Efficiency: ${gameObject.energy_efficiency} </li>
+        <li>Max Health: ${gameObject.max_health} </li>
+        <li>Max Energy: ${gameObject.max_energy} </li>
+        <li>Litter Size: ${gameObject.litter_size} </li>
+        <li>Breeding Age: ${gameObject.breeding_age} </li>
+        <li>Type: ${gameObject.sex} </li>
+        <li>Generation: ${gameObject.generation} </li>
+        <li>Parents: ${gameObject.parent1} ${gameObject.parent2}</li>
+        <button class="rightSidebarItems" name="agelessToggle">Toggle Ageless</button>
+        <button class="rightSidebarItems" name="invincibleToggle">Toggle Invincible</button>
       </ul>
     `
     Phaser.DOM.AddToDOM(attrList, rsElem)
