@@ -4,8 +4,11 @@
   align-items: center;
 }
 
-.game-buttons {
+.new-game-button {
   margin-top: 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
 }
 
 .MyGames {
