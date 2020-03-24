@@ -14,18 +14,22 @@ class TitleScene extends Phaser.Scene {
   async create() {
     //==========================================================Creating New Game / Loading Game================================================================
     this.iterations = 0;
-    this.newGameBool = true;
+    this.newGameBool = false;
+    let gameID = null;
+    let userID = null;
     const cookieArr = document.cookie.split(';');
-    let gameID = cookieArr[1];
-    
-    if (gameID) {
-      gameID = gameID.slice(9);
-      this.newGameBool = await !this.newGame(gameID);
+
+    for (let cookie of cookieArr) {
+      if (cookie.includes('user_id')) {
+        userID = cookie.slice(8);
+      } else if (cookie.includes('game_id')) {
+        gameID = cookie.slice(9);
+        this.newGameBool = await this.newGame(gameID);
+      }
     }
 
     //Implementing game music
     this.main_theme = this.sound.add("main_theme")
-
     let musicConfig = {
       mute: false,
       volume: 0.25,
@@ -64,10 +68,28 @@ class TitleScene extends Phaser.Scene {
     this.lsToggle.setScale(0.5)
     this.lsToggle.setOrigin(0, 0)
 
+    leftSidebar.setOrigin(0,0)
+    leftSidebar.addListener("click");
+  
+    leftSidebar.on("click", function(event) {
+      if (event.target.name === "addOrg") {
+        this.scene.addOrg();
+      } else if (event.target.name === "addFood") {
+        this.scene.addFood(foodData);
+      } else if (event.target.name === "foodToggle") {
+        document.querySelector("#removeBlocksToggle").checked = false
+        document.querySelector("#addBlocksToggle").checked = false
+      } else if (event.target.name === "addBlocksToggle") {
+        document.querySelector("#removeBlocksToggle").checked = false
+        document.querySelector("#addFoodToggle").checked = false
+      } else if (event.target.name === "removeBlocksToggle") {
+        document.querySelector("#addBlocksToggle").checked = false
+        document.querySelector("#addFoodToggle").checked = false
+      }
+    })
 
-
-
-    if (!this.newGameBool) {
+    if (this.newGameBool) {
+      console.log(this.newGameBool)
       let gameData = await this.getGameData(gameID);
       gameData = JSON.parse(gameData.save_text);
       const loadedOrgs = gameData.orgs;
@@ -195,28 +217,6 @@ class TitleScene extends Phaser.Scene {
     //============================================================== left sidebar ==============================================//
     //button = game.add.button()
 
-
-
-
-    leftSidebar.on("click", function (event) {
-      if (event.target.name === "addOrg") {
-        this.scene.addOrg();
-      } else if (event.target.name === "addFood") {
-        this.scene.addFood(foodData);
-      } else if (event.target.name === "foodToggle") {
-        document.querySelector("#removeBlocksToggle").checked = false
-        document.querySelector("#addBlocksToggle").checked = false
-      } else if (event.target.name === "addBlocksToggle") {
-        document.querySelector("#removeBlocksToggle").checked = false
-        document.querySelector("#addFoodToggle").checked = false
-      } else if (event.target.name === "removeBlocksToggle") {
-        document.querySelector("#addBlocksToggle").checked = false
-        document.querySelector("#addFoodToggle").checked = false
-      }
-    })
-
-    let userID = cookieArr[0];
-    userID = userID.slice(8);
     let saveButtons;
 
     if (userID) {
@@ -729,10 +729,13 @@ class TitleScene extends Phaser.Scene {
   onSave = async function (orgs, foods, blocks, iterations) {
     console.log(blocks)
     const cookieArr = document.cookie.split(';');
-    let gameID = cookieArr[1];
+    let gameID = null;
+    for (let cookie of cookieArr) {
+      if (cookie.includes('game_id')) {
+        gameID = cookie.slice(9);
+      }
+    }
     if (gameID) {
-      gameID = gameID.slice(9);
-
       let gameStateObject = {
         orgs: [],
         foods: [],
@@ -764,11 +767,11 @@ class TitleScene extends Phaser.Scene {
 
       if (newGameBool) {
         console.log("UPDATING SAVE");
-        const gameSaveUrl = `http://localhost:3000/game_saves/${gameID}`;
+        const gameSaveUrl = `https://agile-scrubland-73485.herokuapp.com/game_saves/${gameID}`;
 
         axios({
           method: 'PUT',
-          url: `http://localhost:3000/game_saves/${gameID}`,
+          url: `https://agile-scrubland-73485.herokuapp.com/game_saves/${gameID}`,
           data: { save_text: gameStateObject },
           mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' }
@@ -780,7 +783,7 @@ class TitleScene extends Phaser.Scene {
 
       } else {
         console.log("POST NEW SAVE");
-        const gameSaveUrl = `http://localhost:3000/game_saves`;
+        const gameSaveUrl = `https://agile-scrubland-73485.herokuapp.com/game_saves`;
 
         let gameData = {
           game_id: gameID,
@@ -789,7 +792,7 @@ class TitleScene extends Phaser.Scene {
 
         axios({
           method: 'POST',
-          url: `http://localhost:3000/game_saves`,
+          url: `https://agile-scrubland-73485.herokuapp.com/game_saves`,
           data: gameData,
           mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' }
@@ -811,7 +814,7 @@ class TitleScene extends Phaser.Scene {
       console.log(gameStats)
       axios({
         method: 'PUT',
-        url: `http://localhost:3000/games/${gameID}`,
+        url: `https://agile-scrubland-73485.herokuapp.com/games/${gameID}`,
         data: gameStats,
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' }
@@ -824,8 +827,9 @@ class TitleScene extends Phaser.Scene {
   }
 
   newGame = async function (gameID) {
-    return axios.get(`http://localhost:3000/game_saves/${gameID}`)
+    return axios.get(`https://agile-scrubland-73485.herokuapp.com/game_saves/${gameID}`)
       .then((res) => {
+        console.log("newGame then", res);
         return true;
       })
       .catch((err) => {
@@ -836,7 +840,7 @@ class TitleScene extends Phaser.Scene {
   }
 
   getGameData = async function (gameID) {
-    return axios.get(`http://localhost:3000/game_saves/${gameID}`)
+    return axios.get(`https://agile-scrubland-73485.herokuapp.com/game_saves/${gameID}`)
       .then((res) => {
         return res.data;
       })
