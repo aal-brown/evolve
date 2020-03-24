@@ -42,18 +42,15 @@ class TitleScene extends Phaser.Scene {
 
     this.main_theme.play(musicConfig)
 
-    // console.log(this.game.config.width, this.game.config.height)
     this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'background-small')
     //this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'background1')
     this.background.setOrigin(0, 0);
 
-    const foodData = await this.getFoodData();
+    const foodData = ["banana", "tomato", "watermelon", "kiwi", "strawberry"];
     this.orgNum = 0;
     this.foods = this.physics.add.group();
     this.orgs = this.physics.add.group();
     this.foods.setDepth(0)
-    this.blocks = this.physics.add.staticGroup()
-    
 
 
   //This was moved here to make the predator buttons work
@@ -64,7 +61,7 @@ class TitleScene extends Phaser.Scene {
     leftSidebar.setOrigin(0, 0)
     leftSidebar.addListener("click");
 
-    this.lsToggle = this.add.image(10, 5, "toggle-ls")
+    this.lsToggle = this.add.sprite(10, 5, "toggle-ls")
     this.lsToggle.setScale(0.5)
     this.lsToggle.setOrigin(0, 0)
 
@@ -94,7 +91,6 @@ class TitleScene extends Phaser.Scene {
       gameData = JSON.parse(gameData.save_text);
       const loadedOrgs = gameData.orgs;
       const loadedFoods = gameData.foods;
-      const loadedBlocks = gameData.blocks;
       this.iterations = gameData.iterations;
 
       for (const org of loadedOrgs) {
@@ -121,7 +117,7 @@ class TitleScene extends Phaser.Scene {
         newOrg.litter_size = org.litter_size;
         newOrg.breeding_age = org.breeding_age;
         newOrg.speed = org.speed;
-        newOrg.sex = org.sex;
+        newOrg.type = org.type;
         newOrg.generation = org.generation;
         newOrg.parent1 = org.parent1;
         newOrg.parent2 = org.parent2;
@@ -136,16 +132,10 @@ class TitleScene extends Phaser.Scene {
         }
       }
       for (const food of loadedFoods) {
-        let newFood = new Food(this, food.x, food.y, { name: food.nameStr, energy: food.energy })
-        newFood.energy -= 4000;
+        let newFood = new Food(this, food.x, food.y, food.nameStr)
+        newFood.energy = food.energy;
         newFood.setInteractive();
         newFood.setDepth(0)
-        this.input.setDraggable(newFood);
-      }
-      for (const block of loadedBlocks) {
-        let newBlock = this.blocks.create(block.x, block.y, 'block')
-        newBlock.setInteractive();
-        this.input.setDraggable(newBlock);
       }
     } else {
       for (let j = 0; j < 15; j++) {
@@ -203,7 +193,7 @@ class TitleScene extends Phaser.Scene {
     this.input.on("gameobjectdown", this.writeAttributes);
 
     this.input.on("drag", function (pointer, gameObject, dragX, dragY) {
-      if (gameObject.type === "Sprite")
+      if (gameObject.type !== "TileSprite")
         gameObject.x = dragX;
       gameObject.y = dragY;
     })
@@ -230,7 +220,7 @@ class TitleScene extends Phaser.Scene {
 
       saveButtons.on("click", function (event) {
         if (event.target.name === "save") {
-          this.scene.onSave(this.scene.orgs.getChildren(), this.scene.foods.getChildren(), this.scene.blocks.getChildren(), this.scene.iterations);
+          this.scene.onSave(this.scene.orgs.getChildren(), this.scene.foods.getChildren(), this.scene.iterations);
         }
       })
     }
@@ -256,7 +246,7 @@ class TitleScene extends Phaser.Scene {
     this.background.setInteractive();
 
     //===========================================================Fullscreen Toggle=========================================================
-    this.fsToggle = this.add.image((this.game.config.width - 55), 10, "fullscreen")
+    this.fsToggle = this.add.sprite((this.game.config.width - 55), 10, "fullscreen")
     this.fsToggle.setOrigin(0, 0)
     this.fsToggle.setScale(0.5)
 
@@ -281,49 +271,35 @@ class TitleScene extends Phaser.Scene {
       }
     })
 
-    //=============================================================Mute Sound============================================================
-    this.soundToggle = this.add.image((this.game.config.width - 110), 10, "volume-on")
-    this.soundToggle.setOrigin(0, 0)
-    this.soundToggle.setScale(0.08)
+    //=============================================================Testing stuff============================================================
 
-    this.soundToggle.setInteractive().on("pointerdown", function () {
-      if (this.scene.main_theme.isPlaying) {
-        this.soundToggle = this.setTexture("volume-mute");
-        this.scene.main_theme.stop()
-      } else {
-        this.soundToggle = this.setTexture("volume-on");
-        this.scene.main_theme.play()
-      }
-    });
 
 
 
     //================================================================Blocks==================================================================
 
-    //let rt = this.add.renderTexture(0, 0, this.game.config.width, this.game.config.height)
-    // Moved to top
-    // this.blocks = this.physics.add.staticGroup()
-    this.physics.add.collider(this.orgs, this.blocks)
+    let rt = this.add.renderTexture(0, 0, this.game.config.width, this.game.config.height)
+    this.platforms = this.physics.add.staticGroup()
+    this.physics.add.collider(this.orgs, this.platforms)
+
+
 
     this.input.on("pointerdown", function (pointer) {
       if (pointer.isDown && document.querySelector("#addBlocksToggle").checked) {
-        this.newBlock = this.blocks.create(pointer.x, pointer.y, 'block')
+        this.newBlock = this.platforms.create(pointer.x, pointer.y, 'block')
         this.newBlock.setInteractive();
         this.input.setDraggable(this.newBlock)
       }
     }, this)
 
-    // && (gameObject instanceof Org || gameObject instanceof Food)
     this.input.on("gameobjectdown", function (pointer, gameObject) {
-      console.log(gameObject.type)
-      if (document.querySelector("#removeBlocksToggle").checked && gameObject.type === "Sprite") {
+      if (document.querySelector("#removeBlocksToggle").checked && gameObject.type !== "TileSprite") {
         gameObject.destroy()
       }
     })
 
   }
 
-  //============================================================================================================UPDATE======================================================================================
   update() {
     this.iterations++
     if (this.orgs && !this.pausePhysics) {
@@ -336,10 +312,7 @@ class TitleScene extends Phaser.Scene {
       this.numOrgs = this.orgs.getChildren().length;
 
       this.avgAndScore = this.add.text(this.game.config.width / 2, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`, { color: "#000000", fontSize: 20 })
-      this.avgAndScore.setOrigin(this.avgAndScore.width / 2, this.avgAndScore.height / 2)
-      this.avgAndScore = this.add.text(this.game.config.width / 2, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`, { color: "#000000", fontSize: 20 })
-      
-      // console.log(this.avgAndScore)
+
       for (let i = 0; i < this.orgs.getChildren().length; i++) {
         let org = this.orgs.getChildren()[i]
 
@@ -375,7 +348,7 @@ class TitleScene extends Phaser.Scene {
     }
   }
 
-//=========================================================================================================FUNCTIONS======================================================================================
+
   //When energy runs below 50% their speed is reduced 30%. when it is below 20% it is reduced to
   // Helper functions
 
@@ -453,7 +426,7 @@ class TitleScene extends Phaser.Scene {
   }
 
   searchAlg(source, foodObjs, orgObjs) {
-    if (source.sex === 2 && (source.energy / source.max_energy) * 100 >= 50 && (source.max_health / source.health) * 100 >= 50 && source.age >= source.breeding_age && source.reproductionCycle >= 300) {
+    if (source.type === 2 && (source.energy / source.max_energy) * 100 >= 50 && (source.max_health / source.health) * 100 >= 50 && source.age >= source.breeding_age && source.reproductionCycle >= 300) {
       source.status = "Searching for mate"
       let arr = this.createOrgArray(source, orgObjs)
       if (arr.length) {
@@ -469,11 +442,11 @@ class TitleScene extends Phaser.Scene {
   createOrgArray(source, orgObjs) {
     let arr = [];
     for (const org of orgObjs) {
-      if (source.distanceBetweenPerceived(org) && org.sex === 1) {
+      if (source.distanceBetweenPerceived(org) && org.type === 1) {
         arr.push(org)
       }
     }
-    //Sorts by the highest scoring sex1's
+    //Sorts by the highest scoring type1's
     arr.sort((a, b) => b.score - a.score)
     return arr
   }
@@ -504,17 +477,16 @@ class TitleScene extends Phaser.Scene {
 
   //document.querySelector("#rolum") 
   writeAttributes(pointer, gameObject) {
-
-    if (!(gameObject instanceof Org)) {
+    console.log("POINTER:", pointer.downElement.toString());
+    if (!(gameObject instanceof Org) && pointer.downElement.toString() !== "[object HTMLLIElement]") {
       document.querySelector(".rightSidebarItems").innerHTML = ""
       return
-    }
+    } else if (pointer.downElement.toString() !== "[object HTMLLIElement]") {
+      document.querySelector(".rightSidebarItems").innerHTML = ""
 
-    document.querySelector(".rightSidebarItems").innerHTML = ""
-
-    let rsElem = document.querySelector(".rightSidebarItems")
-    let attrList = document.createElement("span")
-    attrList.innerHTML = ` 
+      let rsElem = document.querySelector(".rightSidebarItems")
+      let attrList = document.createElement("span")
+      attrList.innerHTML = ` 
       <ul id="attrList">
        
       <li>Score: ${gameObject.score} </li>
@@ -534,12 +506,13 @@ class TitleScene extends Phaser.Scene {
       <li>Max Energy: ${gameObject.max_energy} </li>
       <li>Litter Size: ${gameObject.litter_size} </li>
       <li>Breeding Age: ${gameObject.breeding_age} </li>
-      <li>Type: ${gameObject.sex} </li>
+      <li>Type: ${gameObject.type} </li>
       <li>Generation: ${gameObject.generation} </li>
       <li>Parents: ${gameObject.parent1} ${gameObject.parent2}</li>
       </ul>
-    `
-    Phaser.DOM.AddToDOM(attrList, rsElem)
+      `
+      Phaser.DOM.AddToDOM(attrList, rsElem)
+    }
   }
 
   addOrg() {
@@ -561,13 +534,13 @@ class TitleScene extends Phaser.Scene {
     newFood1.setDepth(0)
   }
 
-  getFoodData = async function () {
-    return axios.get("https://agile-scrubland-73485.herokuapp.com/foods")
-      .then((res) => {
-        return res.data;
-      })
-      .catch((err) => console.log(err.message));
-  }
+  // getFoodData = async function () {
+  //   return axios.get("https://agile-scrubland-73485.herokuapp.com/foods")
+  //     .then((res) => {
+  //       return res.data;
+  //     })
+  //     .catch((err) => console.log(err.message));
+  // }
   damageTexture(org, health, damageBool) {
     if (!damageBool && health < (org.max_health / 2)) {
       org.setTexture("damage")
@@ -630,10 +603,10 @@ class TitleScene extends Phaser.Scene {
       } else if (this.breedingCheck(org1, org2) && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300) {
         org1.status = "Breeding"
         org2.status = "Breeding"
-        let sex1 = this.orderSexes(org1, org2)[0]
-        sex1.energy -= 50
+        let type1 = this.orderTypes(org1, org2)[0]
+        type1.energy -= 50
 
-        for (let i = 0; i < sex1.litter_size; i++) {
+        for (let i = 0; i < type1.litter_size; i++) {
           const randomX = Phaser.Math.Between(-5, 5)
           const randomY = Phaser.Math.Between(-5, 5)
           let newOrg = new Org(this, org1.x + randomX, org1.y + randomY, org1, org2, this.orgNum)
@@ -661,10 +634,10 @@ class TitleScene extends Phaser.Scene {
       if (this.breedingCheck(org1, org2) && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300) {
         org1.status = "Breeding"
         org2.status = "Breeding"
-        let sex1 = this.orderSexes(org1, org2)[0]
-        sex1.energy -= 50
+        let type1 = this.orderTypes(org1, org2)[0]
+        type1.energy -= 50
 
-        for (let i = 0; i < sex1.litter_size; i++) {
+        for (let i = 0; i < type1.litter_size; i++) {
           const randomX = Phaser.Math.Between(-5, 5)
           const randomY = Phaser.Math.Between(-5, 5)
           let newOrg = new Org(this, org1.x + randomX, org1.y + randomY, org1, org2, this.orgNum)
@@ -691,15 +664,16 @@ class TitleScene extends Phaser.Scene {
     }
   }
 
-  orderSexes(org1, org2) {
-    return (org1.sex < org2.sex ? [org1, org2] : [org2, org1])
+  orderTypes(org1, org2) {
+    return (org1.type < org2.type ? [org1, org2] : [org2, org1])
   }
 
   breedingCheck(org1, org2) {
-    let [sex1,sex2] = this.orderSexes(org1, org2)
-    if (sex1.sex === sex2.sex) {
+    let [type1, type2] = this.orderTypes(org1, org2)
+    //console.log(type2.score - type1.score > -150 && type1.age >= type1.breeding_age && type2.age >= type2.breeding_age && type2.energy && ((type2.energy/type2.max_energy)*100 >= 50) && ((type2.health/type2.max_health)*100 >= 75) && ((type1.energy/type1.max_energy) * 100 >= 50) && (type1.health/type1.max_health)*100 >= 75)
+    if (type1.type === type2.type) {
       return false
-    } else if (sex2.score - sex1.score > -150 && sex1.age >= sex1.breeding_age && sex2.age >= sex2.breeding_age && sex2.energy && (sex2.energy / sex2.max_energy) * 100 >= 50 && (sex2.health / sex2.max_health) * 100 >= 75 && (sex1.energy / sex1.max_energy) * 100 >= 50 && (sex1.health / sex1.max_health) * 100 >= 75) {
+    } else if (type2.score - type1.score > -150 && type1.age >= type1.breeding_age && type2.age >= type2.breeding_age && type2.energy && (type2.energy / type2.max_energy) * 100 >= 50 && (type2.health / type2.max_health) * 100 >= 75 && (type1.energy / type1.max_energy) * 100 >= 50 && (type1.health / type1.max_health) * 100 >= 75) {
       return true
     } else {
       return false
@@ -744,7 +718,7 @@ class TitleScene extends Phaser.Scene {
     });
   }
 
-  onSave = async function (orgs, foods, blocks, iterations) {
+  onSave = async function (orgs, foods, iterations) {
     const cookieArr = document.cookie.split(';');
     let gameID = null;
     for (let cookie of cookieArr) {
@@ -756,27 +730,16 @@ class TitleScene extends Phaser.Scene {
       let gameStateObject = {
         orgs: [],
         foods: [],
-        blocks: [],
         iterations: iterations
       };
 
-      if (orgs.length) {
-        orgs.forEach((org) => {
-          gameStateObject.orgs.push(org.getAttributes());
-        })
-      }
+      orgs.forEach((org) => {
+        gameStateObject.orgs.push(org.getAttributes());
+      })
 
-      if (foods.length) {
-        foods.forEach((food) => {
-          gameStateObject.foods.push(food.getAttributes());
-        })
-      }
-
-      if (blocks.length) {
-        blocks.forEach((block) => {
-          gameStateObject.blocks.push({x: block.x, y: block.y});
-        })
-      }
+      foods.forEach((food) => {
+        gameStateObject.foods.push(food.getAttributes());
+      })
 
       gameStateObject = JSON.stringify(gameStateObject);
 

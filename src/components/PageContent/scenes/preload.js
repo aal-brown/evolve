@@ -28,23 +28,23 @@ export default class Preload extends Phaser.Scene {
       frameHeight: 32
     });
 
-    this.load.spritesheet("mushy peas", "/assets/fruit-lm-0.png", {
+    this.load.spritesheet("banana", "/assets/fruit-lm-0.png", {
       frameWidth: 32,
       frameHeight: 32
     });
-    this.load.spritesheet("chicken", "/assets/fruit-lm-1.png", {
+    this.load.spritesheet("tomato", "/assets/fruit-lm-1.png", {
       frameWidth: 32,
       frameHeight: 32
     });
-    this.load.spritesheet("chocolate", "/assets/fruit-lm-2.png", {
+    this.load.spritesheet("watermelon", "/assets/fruit-lm-2.png", {
       frameWidth: 32,
       frameHeight: 32
     });
-    this.load.spritesheet("pasta", "/assets/fruit-lm-3.png", {
+    this.load.spritesheet("kiwi", "/assets/fruit-lm-3.png", {
       frameWidth: 32,
       frameHeight: 32
     });
-    this.load.spritesheet("raspberries", "/assets/fruit-lm-4.png", {
+    this.load.spritesheet("strawberry", "/assets/fruit-lm-4.png", {
       frameWidth: 32,
       frameHeight: 32
     });
