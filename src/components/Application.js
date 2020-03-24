@@ -30,9 +30,12 @@ import "components/Application.scss";
 // ]
 
 export default function Application(props) {
-  const [view, setView] = useState(6)
+  const [view, setView] = useState(4)
   const [cookies, setCookie, removeCookie] = useCookies(['user_id', 'game_id']);
   const [topNav, setTopNav] = useState([]);
+  
+  
+  
   
 useEffect(() => {
   if(cookies.user_id){

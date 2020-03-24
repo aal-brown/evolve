@@ -1,21 +1,11 @@
 import React from "react";
-import { LoremIpsum } from "lorem-ipsum";
-
-const lorem = new LoremIpsum({
-  sentencesPerParagraph: {
-    max: 8,
-    min: 4
-  },
-  wordsPerSentence: {
-    max: 16,
-    min: 4
-  }
-});
+import "./Guide.scss";
 
 export default function About() {
   return (
-    <section className="pagetext">
-      <p>{lorem.generateParagraphs(2)}</p>
+    <section>
+     <h2 className="guide-welcome-text">Welcome to Evolve!</h2>
+     <h3 className="about-text">This game was built by Adlai Brown, Lucy Midgley and Noah Dumba for the Lighthouse Labs final project</h3>
     </section>
   );
 }
