@@ -746,7 +746,7 @@ class TitleScene extends Phaser.Scene {
 
       if (newGameBool) {
         console.log("UPDATING SAVE");
-        const gameSaveUrl = `http://localhost:3000/game_saves/${gameID}`;
+        const gameSaveUrl = `https://agile-scrubland-73485.herokuapp.com/game_saves/${gameID}`;
 
         axios({
           method: 'PUT',
@@ -762,7 +762,7 @@ class TitleScene extends Phaser.Scene {
 
       } else {
         console.log("POST NEW SAVE");
-        const gameSaveUrl = `http://localhost:3000/game_saves`;
+        const gameSaveUrl = `https://agile-scrubland-73485.herokuapp.com/game_saves`;
 
         let gameData = {
           game_id: gameID,
@@ -771,7 +771,7 @@ class TitleScene extends Phaser.Scene {
 
         axios({
           method: 'POST',
-          url: `http://localhost:3000/game_saves`,
+          url: `https://agile-scrubland-73485.herokuapp.com/game_saves`,
           data: gameData,
           mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' }
@@ -793,7 +793,7 @@ class TitleScene extends Phaser.Scene {
       console.log(gameStats)
       axios({
         method: 'PUT',
-        url: `http://localhost:3000/games/${gameID}`,
+        url: `https://agile-scrubland-73485.herokuapp.com/games/${gameID}`,
         data: gameStats,
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' }
@@ -806,7 +806,7 @@ class TitleScene extends Phaser.Scene {
   }
 
   newGame = async function (gameID) {
-    return axios.get(`http://localhost:3000/game_saves/${gameID}`)
+    return axios.get(`https://agile-scrubland-73485.herokuapp.com/game_saves/${gameID}`)
       .then((res) => {
         console.log("newGame then", res);
         return true;
@@ -819,7 +819,7 @@ class TitleScene extends Phaser.Scene {
   }
 
   getGameData = async function (gameID) {
-    return axios.get(`http://localhost:3000/game_saves/${gameID}`)
+    return axios.get(`https://agile-scrubland-73485.herokuapp.com/game_saves/${gameID}`)
       .then((res) => {
         return res.data;
       })
