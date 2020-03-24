@@ -140,11 +140,12 @@ class TitleScene extends Phaser.Scene {
         newFood.energy -= 4000;
         newFood.setInteractive();
         newFood.setDepth(0)
+        this.input.setDraggable(newFood);
       }
       for (const block of loadedBlocks) {
         let newBlock = this.blocks.create(block.x, block.y, 'block')
         newBlock.setInteractive();
-        newBlock.setDraggable();
+        this.input.setDraggable(newBlock);
       }
     } else {
       for (let j = 0; j < 15; j++) {
@@ -727,7 +728,6 @@ class TitleScene extends Phaser.Scene {
   }
 
   onSave = async function (orgs, foods, blocks, iterations) {
-    console.log(blocks)
     const cookieArr = document.cookie.split(';');
     let gameID = null;
     for (let cookie of cookieArr) {
@@ -757,7 +757,7 @@ class TitleScene extends Phaser.Scene {
 
       if (blocks.length) {
         blocks.forEach((block) => {
-          gameStateObject.blocks.push([block.x,block.y]);
+          gameStateObject.blocks.push({x: block.x, y: block.y});
         })
       }
 
