@@ -10,13 +10,13 @@ class Org extends Phaser.GameObjects.Sprite {
       let mean = avg(v1, v2)
       let distribution = gaussian(mean, 2);
       // Take a random sample using inverse transform sampling method.
-     return Math.floor(distribution.ppf(Math.random()));
+     return Math.abs(Math.floor(distribution.ppf(Math.random())));
     }
 
     function mathNorm(mean, variance){
       let distribution = gaussian(mean, variance);
       // Take a random sample using inverse transform sampling method.
-     return Math.floor(distribution.ppf(Math.random()));
+     return Math.abs(Math.floor(distribution.ppf(Math.random())));
     }
 
     function avg(n1, n2) {
@@ -63,7 +63,7 @@ class Org extends Phaser.GameObjects.Sprite {
       
     } else {
       this.lifespan = mathNorm(2500, 100000)
-      this.speed = mathNorm(100, 2000)
+      this.speed = mathNorm(100, 1000)
      
       this.strength = mathNorm(75, 200)
       this.energy_efficiency = mathNorm(75, 750)
@@ -110,9 +110,10 @@ class Org extends Phaser.GameObjects.Sprite {
     this.play("blobs_anim");
     scene.orgs.add(this);
     this.body.setCollideWorldBounds(true);
-    this.body.setBounce(1);
+    this.body.setBounce(0.25);
     this.body.velocity.x = this.velx;
     this.body.velocity.y = this.vely;
+    this.body.damping = 0;
     this.colour = Math.random() * 0xffffff;
     this.status = "Wandering"
     this.tint = this.colour;
