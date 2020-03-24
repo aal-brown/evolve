@@ -7,7 +7,7 @@ export default function Topnav(props) {
   const [user, setUser] = useState("");
 
   function getData() {
-    axios.get("http://localhost:3000/getuser", {
+    axios.get("https://agile-scrubland-73485.herokuapp.com/getuser", {
       headers: { "ID": props.cookies.user_id }
     })
     .then((res) => {

@@ -26,11 +26,11 @@ export default function MyGames(props) {
   let user_id = props.cookies.user_id
 
   function getData() {
-    axios.get("http://localhost:3000/getuser", {
+    axios.get("https://agile-scrubland-73485.herokuapp.com/getuser", {
       headers: { "ID": user_id }
     })
     .then((res) => {
-      axios.get("http://localhost:3000/games", {
+      axios.get("https://agile-scrubland-73485.herokuapp.com/games", {
         headers: { "ID": res.data.id }
       })
       .then((res) => setGames(res.data));
@@ -39,9 +39,13 @@ export default function MyGames(props) {
 
   function setGameCookie(name) {
     const user_id = props.cookies.user_id;
-    const url = "http://localhost:3000/games";
+    if (name === '') {
+      name = "Untitled Game";
+    }
 
-    axios.get("http://localhost:3000/getuser", {
+    const url = "https://agile-scrubland-73485.herokuapp.com/games";
+
+    axios.get("https://agile-scrubland-73485.herokuapp.com/getuser", {
       headers: { "ID": user_id }
     })
     .then((res) => {
@@ -69,16 +73,15 @@ export default function MyGames(props) {
     })
   }
 
-  function newGame() {
+  function newGame(gameName) {
     console.log("LOADING NEW GAME");
     if (user_id) {
-      setGameCookie("game name");
+      setGameCookie(gameName);
     } else {
       console.log("no user id")
       setGameView(1);
     }
-    
-    console.log("Is it waiting?")
+    setName('');
   }
 
   function confirmQuit() {
@@ -98,7 +101,8 @@ export default function MyGames(props) {
 
   function exit() {
     let id = props.cookies.game_id
-    axios.get(`http://localhost:3000/game_saves/${id}`)
+    if (id) {
+      axios.get(`https://agile-scrubland-73485.herokuapp.com/game_saves/${id}`)
       .then((res) => {
         console.log(res);
         getData();
@@ -107,7 +111,7 @@ export default function MyGames(props) {
       })
       .catch((err) => {
         if (err.message === "Request failed with status code 404") {
-          axios.delete(`http://localhost:3000/games/${id}`)
+          axios.delete(`https://agile-scrubland-73485.herokuapp.com/games/${id}`)
             .then((res) => {
               console.log(res);
               setGameView(0);
@@ -115,14 +119,17 @@ export default function MyGames(props) {
             })
         }
       })
+    } else {
+      setGameView(0);
+    }
   }
 
   function deleteGame(id) {
-    axios.delete(`http://localhost:3000/games/${id}`)
+    axios.delete(`https://agile-scrubland-73485.herokuapp.com/games/${id}`)
       .then((res) => {
         console.log(res);
         
-        axios.delete(`http://localhost:3000/game_saves/${id}`)
+        axios.delete(`https://agile-scrubland-73485.herokuapp.com/game_saves/${id}`)
           .then((res) => {
             console.log(res);
             
@@ -179,12 +186,23 @@ export default function MyGames(props) {
     });
   }, [games, getData])
 
+  const [name, setName] = useState('');
+
   return(
     <section>
     { gameView === 0 && (
       <div className="default-game-page">
-        <div className="game-buttons">
-          <Button className="button--confirm" onClick={newGame} >New Game</Button>
+        <div className="new-game-button">
+          <form className="new-game-form form-group" onSubmit={(event) => {event.preventDefault()}}>
+            <input className="form-control form-field"
+              onChange={(event) => {
+                setName(event.target.value)}}
+              value={name}
+              type="text"
+              placeholder="Title"
+            />
+          </form>
+          <Button className="button--confirm" onClick={() => { newGame(name) }} >New Game</Button>
         </div>
         <div className="MyGames">
           <h1>Saved Games:</h1>
