@@ -23,7 +23,6 @@ const lorem = new LoremIpsum({
 export default function MyGames(props) {
   const [gameView, setGameView] = useState(0)
   const [games, setGames] = useState([])
-  props.removeCookie('game_id')
   let user_id = props.cookies.user_id
 
   function getData() {
@@ -91,7 +90,23 @@ export default function MyGames(props) {
     }
   }
 
-  function exit() {
+  function loadGame(id) {
+    console.log("LOADING GAME:", id);
+    props.setCookie("game_id", id);
+    setGameView(1);
+  }
+
+  async function exit() {
+    let id = props.cookies.game_id
+    await axios.get(`http://localhost:3000/game_saves/${id}`)
+      .then(res => console.log(res))
+      .catch((err) => {
+        if (err.message === "Request failed with status code 404") {
+          axios.delete(`http://localhost:3000/games/${id}`)
+            .then(res => console.log(res))
+        }
+      })
+
     setGameView(0);
     props.removeCookie("game_id");
   }
@@ -116,7 +131,7 @@ export default function MyGames(props) {
     if(props.cookies.user_id){
       getData()
     }
-  }, [props.cookies.user_id]);
+  }, [props.cookies.user_id, getData]);
 
   let myGames = games.map((game) => {
     
@@ -131,11 +146,7 @@ export default function MyGames(props) {
         orgs={game.num_of_orgs}
         high_score={game.highest_score}
         // selected={game.name === props.game} hover will be used instead
-        load={() => {
-          console.log("LOADING GAME:", game.id);
-          props.setCookie("game_id", game.id);
-          setGameView(1);
-        }} //This is a function to start the game
+        load={() => { loadGame(game.id) }} //This is a function to start the game
         delete={() => { deleteGame(game.id) }} //This will prompt for whether the user wants to delete that game
         />
     );
@@ -155,16 +166,12 @@ export default function MyGames(props) {
           orgs={game.num_of_orgs}
           high_score={game.highest_score}
           // selected={game.name === props.game} hover will be used instead
-          load={() => {
-            console.log("LOADING GAME:", game.id);
-            props.setCookie("game_id", game.id);
-            setGameView(1);
-          }} //This is a function to start the game
+          load={() => { loadGame(game.id) }}  //This is a function to start the game
           delete={() => { deleteGame(game.id) }} //This will prompt for whether the user wants to delete that game
           />
       );
     });
-  }, [games])
+  }, [games, getData])
 
   return(
     <section>

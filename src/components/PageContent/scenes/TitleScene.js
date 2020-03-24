@@ -14,11 +14,16 @@ class TitleScene extends Phaser.Scene {
     //==========================================================Creating New Game / Loading Game================================================================
     this.iterations = 0;
     this.newGameBool = true;
+    let gameID = null;
+    let userID = null;
     const cookieArr = document.cookie.split(';');
-    let gameID = cookieArr[1];
-    if (gameID) {
-      gameID = gameID.slice(9);
-      this.newGameBool = await !this.newGame(gameID);
+    for (let cookie of cookieArr) {
+      if (cookie.includes('user_id')) {
+        userID = cookie.slice(8);
+      } else if (cookie.includes('game_id')) {
+        gameID = cookie.slice(9);
+        this.newGameBool = await this.newGame(gameID);
+      }
     }
 
     this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'sky')
@@ -28,8 +33,10 @@ class TitleScene extends Phaser.Scene {
     this.orgNum = 0;
     this.foods = this.physics.add.group();
     this.orgs = this.physics.add.group();
+
+    console.log("new game boolean:", this.newGameBool);
     
-    if (!this.newGameBool) {
+    if (this.newGameBool) {
       let gameData = await this.getGameData(gameID);
       gameData = JSON.parse(gameData.save_text);
       const loadedOrgs = gameData.orgs;
@@ -164,8 +171,7 @@ class TitleScene extends Phaser.Scene {
         document.querySelector("#addFoodToggle").checked = false
       }
     })
-    let userID = cookieArr[0];
-    userID = userID.slice(8);
+
     let saveButtons;
 
     if(userID){
@@ -702,6 +708,7 @@ class TitleScene extends Phaser.Scene {
   newGame = async function(gameID) {
     return axios.get(`http://localhost:3000/game_saves/${gameID}`)
       .then((res) => {
+        console.log("newGame then", res);
         return true;
       })
       .catch((err) => {
