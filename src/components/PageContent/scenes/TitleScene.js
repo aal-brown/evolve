@@ -38,7 +38,7 @@ class TitleScene extends Phaser.Scene {
 
     this.main_theme.play(musicConfig)
 
-    console.log(this.game.config.width, this.game.config.height)
+    // console.log(this.game.config.width, this.game.config.height)
     this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'background-small')
     //this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'background1')
     this.background.setOrigin(0, 0);
@@ -48,6 +48,8 @@ class TitleScene extends Phaser.Scene {
     this.foods = this.physics.add.group();
     this.orgs = this.physics.add.group();
     this.foods.setDepth(0)
+    this.blocks = this.physics.add.staticGroup()
+    
 
 
   //This was moved here to make the predator buttons work
@@ -70,6 +72,7 @@ class TitleScene extends Phaser.Scene {
       gameData = JSON.parse(gameData.save_text);
       const loadedOrgs = gameData.orgs;
       const loadedFoods = gameData.foods;
+      const loadedBlocks = gameData.blocks;
       this.iterations = gameData.iterations;
 
       for (const org of loadedOrgs) {
@@ -115,6 +118,11 @@ class TitleScene extends Phaser.Scene {
         newFood.energy -= 4000;
         newFood.setInteractive();
         newFood.setDepth(0)
+      }
+      for (const block of loadedBlocks) {
+        let newBlock = this.blocks.create(block.x, block.y, 'block')
+        newBlock.setInteractive();
+        newBlock.setDraggable();
       }
     } else {
       for (let j = 0; j < 15; j++) {
@@ -221,7 +229,7 @@ class TitleScene extends Phaser.Scene {
 
       saveButtons.on("click", function (event) {
         if (event.target.name === "save") {
-          this.scene.onSave(this.scene.orgs.getChildren(), this.scene.foods.getChildren(), this.scene.iterations);
+          this.scene.onSave(this.scene.orgs.getChildren(), this.scene.foods.getChildren(), this.scene.blocks.getChildren(), this.scene.iterations);
         }
       })
     }
@@ -279,15 +287,14 @@ class TitleScene extends Phaser.Scene {
 
     //================================================================Blocks==================================================================
 
-    let rt = this.add.renderTexture(0, 0, this.game.config.width, this.game.config.height)
-    this.platforms = this.physics.add.staticGroup()
-    this.physics.add.collider(this.orgs, this.platforms)
-
-
+    //let rt = this.add.renderTexture(0, 0, this.game.config.width, this.game.config.height)
+    // Moved to top
+    // this.blocks = this.physics.add.staticGroup()
+    this.physics.add.collider(this.orgs, this.blocks)
 
     this.input.on("pointerdown", function (pointer) {
       if (pointer.isDown && document.querySelector("#addBlocksToggle").checked) {
-        this.newBlock = this.platforms.create(pointer.x, pointer.y, 'block')
+        this.newBlock = this.blocks.create(pointer.x, pointer.y, 'block')
         this.newBlock.setInteractive();
         this.input.setDraggable(this.newBlock)
       }
@@ -719,7 +726,8 @@ class TitleScene extends Phaser.Scene {
     });
   }
 
-  onSave = async function (orgs, foods, iterations) {
+  onSave = async function (orgs, foods, blocks, iterations) {
+    console.log(blocks)
     const cookieArr = document.cookie.split(';');
     let gameID = cookieArr[1];
     if (gameID) {
@@ -728,16 +736,27 @@ class TitleScene extends Phaser.Scene {
       let gameStateObject = {
         orgs: [],
         foods: [],
+        blocks: [],
         iterations: iterations
       };
 
-      orgs.forEach((org) => {
-        gameStateObject.orgs.push(org.getAttributes());
-      })
+      if (orgs.length) {
+        orgs.forEach((org) => {
+          gameStateObject.orgs.push(org.getAttributes());
+        })
+      }
 
-      foods.forEach((food) => {
-        gameStateObject.foods.push(food.getAttributes());
-      })
+      if (foods.length) {
+        foods.forEach((food) => {
+          gameStateObject.foods.push(food.getAttributes());
+        })
+      }
+
+      if (blocks.length) {
+        blocks.forEach((block) => {
+          gameStateObject.blocks.push([block.x,block.y]);
+        })
+      }
 
       gameStateObject = JSON.stringify(gameStateObject);
 
