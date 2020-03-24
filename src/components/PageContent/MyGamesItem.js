@@ -1,46 +1,43 @@
 import React from "react";
-import classnames from "classnames";
 import Button from "../Button"
+import "./MyGamesItem.scss"
 // import "./TopnavItem.scss"
 
 export default function MyGamesItem(props) {
-  const myGamesItem = classnames("myGamesItem-list__item",{
-    "myGamesItem-list__item--selected": props.selected,
-  });
 
   // Remember to implement the scss
-
+let dateSaved = new Date(props.updated_at).toDateString();
+let dateCreated = new Date(props.created_at).toDateString();
   return (
-    <li className={myGamesItem}>
+    <div className="table table-item">
       <div onClick={props.load}>
-        <p>{props.img}</p>
       </div>
-      <table>
+      <table className="table table-dark">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Save Date</th>
-            <th>Organisms</th>
-            <th>Highest Score</th>
-            <th>Age</th>
-            <th>Date Created</th>
+            <th scope="col">Name</th>
+            <th scope="col">Save Date</th>
+            <th scope="col">Organisms</th>
+            <th scope="col">Highest Score</th>
+            <th scope="col">Age</th>
+            <th scope="col">Date Created</th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>{props.name}</td>
-            <td>{props.updated_at}</td>
+            <td>{dateSaved}</td>
             <td>{props.orgs}</td>
             <td>{props.high_score}</td>
             <td>{props.age}</td>
-            <td>{props.created_at}</td>
+            <td>{dateCreated}</td>
+            <td><Button onClick={props.load}>Load</Button></td>
+            <td><Button onClick={props.delete}>Delete</Button></td>
           </tr>
         </tbody>
       </table>
-      <div>
-        <Button onClick={props.load}>Load</Button>
-        <Button onClick={props.delete}>Delete</Button>
-      </div>
-    </li>
+    </div>
   );
 }
