@@ -75,7 +75,7 @@ export default function MyGames(props) {
 
 
 
-  function newGame() {
+  function newGame(gameName) {
     console.log("LOADING NEW GAME");
     if (user_id) {
       setGameCookie(gameName);
