@@ -1,3 +1,6 @@
+@import "styles/mixins.scss";
+@import "styles/variables.scss";
+
 .rightSidebarItems {
   font-size: 0.75em;
   font-family: 'Dosis', sans-serif;
@@ -14,4 +17,35 @@
 #attrList li {
   padding: 0 0 0 0.25em;
   list-style-type: none;
+}
+
+.rightSidebarButtons {
+  border-radius: 1rem;
+  border: 0;
+  font-size: 0.75rem;
+  height: 1.75rem;
+  line-height: 1rem;
+  width: 6rem;
+  margin-bottom: 0.5em;
+  margin-left: 0.1em;
+  border-width: 2px;
+  border-style: solid;
+  border-color: black;
+  color: $white;
+  background-color: black;
+  height: 2em;
+  text-align: center;
+}
+
+.rightSidebarButtons:hover {
+  @include button-active;
+
+  color: $white;
+  background-color: grey;
+  border: 2px solid transparent;
+}
+
+
+.rightSidebarButtons:focus {
+  outline: none;
 }
