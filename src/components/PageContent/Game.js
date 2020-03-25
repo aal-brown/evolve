@@ -140,6 +140,9 @@ class Game extends Component{
     console.log(data); //eslint-disable-line no-console
     console.groupEnd();
   };
+
+  
+  
   
   render() {
 
@@ -162,26 +165,26 @@ class Game extends Component{
       />
       <div id="test"></div>
       <div style={{position: 'absolute',
-  top: '15em',
+  top: '13.5em',
   left: '12em'}} onClick={this.handleClick}><Button>Tour</Button></div>
       <div id="feature0" style={{position: 'relative',
   top: '2.1em',
-  left: '4.5em'}}></div>
+  left: '7em'}}></div>
       <div id="feature1" style={{position: 'relative',
   top: '4.1em',
-  left: '4.5em'}}></div>
+  left: '7em'}}></div>
       <div id="feature2" style={{position: 'relative',
   top: '8.1em',
-  left: '4.5em'}}></div>
+  left: '7em'}}></div>
       <div id="feature3" style={{position: 'relative',
   top: '12.1em',
-  left: '4.5em'}}></div>
+  left: '7em'}}></div>
       <div id="feature9" style={{position: 'relative',
   top: '10.1em',
-  left: '4.5em'}}></div>
+  left: '7em'}}></div>
       <div id="feature4" style={{position: 'relative',
   top: '10.1em',
-  left: '4.5em'}}></div>
+  left: '7em'}}></div>
       <div id="feature5" style={{position: 'relative',
   top: '2.1em',
   left: '50%'}}></div>

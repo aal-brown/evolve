@@ -22,11 +22,16 @@
   display: flex;
   justify-content: space-between;
   font-family: 'Cabin Sketch', cursive;
+  padding: 0.1em;
 }
 
 .header-text {
   font-size: 1.5em;
+  padding: 0.1em;
 }
 .welcome-text {
   font-family: 'Cabin Sketch', cursive;
+  position: absolute;
+  top: 1em;
+  left: 1em;
 }
