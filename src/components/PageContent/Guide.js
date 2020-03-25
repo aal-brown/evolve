@@ -15,7 +15,7 @@ export default function Guide(props) {
       <ul className="guide-text">
         <li>To start a new game, go to Game in the nav-bar. Alternatively, once you're made an account you can load a saved game to its last saved state.</li>
         <li>Clicking Add Org lets you add more orgs into your colony</li>
-        <li>Clicking Add food posiitons food randomly on the org-ground </li>
+        <li>Clicking Add food positions food randomly on the org-world </li>
         <li>Got a favourite org you want to feed? Toggling feed lets you add food whereever you click.</li>
         <li>The add blocks toggle let you build walls on the org ground to save your orgs from predators or stop a greedy org from eating all the food!</li>
         <li>The delete toggle lets you delete any unwanted food, orgs and blocks by clicking on them</li>

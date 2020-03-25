@@ -37,17 +37,17 @@ export default function Login(props) {
   
   return (
     <Fragment>
-    <section className="login">
+    <section className="login" >
       <h1>Login</h1>
       <form className="login-form form-group" onSubmit={(event) => {event.preventDefault()}}>
-        Email: <input className="form-control form-field"
+        Email: <input className="form-control form-field form-text"
           onChange={(event) => {
             setEmail(event.target.value)}}
           value={email}
           type="email"
           placeholder="Enter Email"
         />
-        Password: <input className="form-control form-field"
+        Password: <input className="form-control form-field form-text"
           onChange={(event) => {
             setPassword(event.target.value)}}
           value={password}
