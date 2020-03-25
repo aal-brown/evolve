@@ -45,6 +45,7 @@ class TitleScene extends Phaser.Scene {
     this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'background-small')
     //this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'background1')
     this.background.setOrigin(0, 0);
+    this.background.setInteractive();
 
     const foodData = ["banana", "tomato", "watermelon", "kiwi", "strawberry"];
     this.orgNum = 0;
@@ -86,7 +87,6 @@ class TitleScene extends Phaser.Scene {
     })
 
     if (this.newGameBool) {
-      console.log(this.newGameBool)
       let gameData = await this.getGameData(gameID);
       gameData = JSON.parse(gameData.save_text);
       const loadedOrgs = gameData.orgs;
@@ -184,23 +184,26 @@ class TitleScene extends Phaser.Scene {
 
     }
 
+    
     //===================================================================Pause======================================================
     this.input.keyboard.on('keydown-SPACE', this.togglePause, this)
     this.pausePhysics = false;
 
-    //==================================================================Organisms====================================================
+    //==================================================================Organisms Interactions====================================================
 
     this.input.on("gameobjectdown", this.writeAttributes);
 
+    //This drag function isn't speciific to organisms, it applies to any game organism
     this.input.on("drag", function (pointer, gameObject, dragX, dragY) {
-      if (gameObject.type !== "TileSprite")
+      if (gameObject.type === "Sprite") {
         gameObject.x = dragX;
       gameObject.y = dragY;
+      }
     })
 
     this.physics.add.collider(this.orgs, this.orgs, this.attackOrSpawn, null, this);
 
-    //==============================================================Foods==========================================================
+    //==============================================================Foods Interactions==========================================================
 
 
     this.physics.add.overlap(this.orgs, this.foods, this.eat, null, this);
@@ -234,20 +237,42 @@ class TitleScene extends Phaser.Scene {
       }
     });
 
-
-
     //============================================================== Right sidebar ==============================================//  
-    const rightSidebar = this.add
-      .dom((this.game.config.width - 130), 80)
-      .createFromCache("right-sidebar");
+    let rightSidebar = this.add
+    .dom((this.game.config.width - 130), 80)
+    .createFromCache("right-sidebar");
 
     rightSidebar.setOrigin(0, 0)
+    rightSidebar.addListener("click");
 
-    this.background.setInteractive();
+    rightSidebar.on("click", function(event) {
+      let orgID = document.getElementById("orgID").value
+      event.preventDefault();
+      if (event.target.name === "agelessToggle") {
+        for(const org of this.scene.orgs.getChildren()) {
+          if (org.id === orgID) {
+            org.ageless = (org.ageless === true ? false : true)
+          }
+        }
+      } else if (event.target.name === "invincibleToggle") {
+        for(const org of this.scene.orgs.getChildren()) {
+          if (org.id === orgID) {
+            org.invincible = (org.invincible === true ? false : true)
+          }
+        }
+      }
+    });
+
+    //In order to clear the right sidebar
+    //
+
+
+    
 
     //===========================================================Fullscreen Toggle=========================================================
     this.fsToggle = this.add.sprite((this.game.config.width - 55), 10, "fullscreen")
     this.fsToggle.setOrigin(0, 0)
+    this.fsToggle.setDepth(3)
     this.fsToggle.setScale(0.5)
 
     this.fsToggle.setInteractive().on("pointerdown", function () {
@@ -271,7 +296,11 @@ class TitleScene extends Phaser.Scene {
       }
     })
 
-    //=============================================================Testing stuff============================================================
+    //=============================================================Mute Sound============================================================
+    this.soundToggle = this.add.image((this.game.config.width - 110), 10, "volume-on")
+    this.soundToggle.setDepth(3)
+    this.soundToggle.setOrigin(0, 0)
+    this.soundToggle.setScale(0.08)
 
 
 
@@ -293,7 +322,7 @@ class TitleScene extends Phaser.Scene {
     }, this)
 
     this.input.on("gameobjectdown", function (pointer, gameObject) {
-      if (document.querySelector("#removeBlocksToggle").checked && gameObject.type !== "TileSprite") {
+      if (document.querySelector("#removeBlocksToggle").checked && gameObject.type === "Sprite") {
         gameObject.destroy()
       }
     })
@@ -312,7 +341,11 @@ class TitleScene extends Phaser.Scene {
       this.numOrgs = this.orgs.getChildren().length;
 
       this.avgAndScore = this.add.text(this.game.config.width / 2, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`, { color: "#000000", fontSize: 20 })
-
+      this.avgAndScore.setDepth(3)
+      this.avgAndScore.setOrigin(this.avgAndScore.width / 2, this.avgAndScore.height / 2)
+      this.avgAndScore = this.add.text(this.game.config.width / 2, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`, { color: "#000000", fontSize: 20 })
+      
+      // console.log(this.avgAndScore)
       for (let i = 0; i < this.orgs.getChildren().length; i++) {
         let org = this.orgs.getChildren()[i]
 
@@ -320,6 +353,7 @@ class TitleScene extends Phaser.Scene {
           this.searchAlg(org, this.foods.getChildren(), this.orgs.getChildren());
         }
 
+        this.movementFunc(org)
         this.lifeCycle(org)
         this.energyCycle(org)
 
@@ -348,9 +382,7 @@ class TitleScene extends Phaser.Scene {
     }
   }
 
-
-  //When energy runs below 50% their speed is reduced 30%. when it is below 20% it is reduced to
-  // Helper functions
+//=========================================================================================================FUNCTIONS======================================================================================
 
   getAvgScore(orgObjs) {
     // let avgScore = 0;
@@ -377,15 +409,16 @@ class TitleScene extends Phaser.Scene {
 
   lifeCycle(org) {
     org.reproductionCycle++;
-    // org.eatCycle++;
-    org.age++
-    if (org.age === org.lifespan || org.health === 0) {
-      org.tint = 0.001 * 0xffffff;
-      org.setVelocity(0, 0);
-      this.orgs.remove(org, false, false)
-      this.dyingOrg(org);
+    if(!org.ageless && !org.invincible ) {
+      org.age++
+      if (org.age === org.lifespan || org.health === 0) {
+        org.tint = 0.001 * 0xffffff;
+        org.setVelocity(0, 0);
+        this.orgs.remove(org, false, false)
+        this.dyingOrg(org);
+      }
     }
-  }
+  } 
 
   energyCycle(org) {
     let elFactor = 1;
@@ -401,7 +434,7 @@ class TitleScene extends Phaser.Scene {
       org.energy = org.energy - (1 * elFactor)
     }
 
-    if (org.energy < 30) {
+    if (org.energy < 30 && !org.invincible) {
       org.health -= 1
     }
     if (org.energy > 30 && org.health < org.max_health) {
@@ -451,12 +484,17 @@ class TitleScene extends Phaser.Scene {
     return arr
   }
 
-  //if search alg reveals nothing in perception distance
-  movementFunc() {
-
+  //if search alg reveals nothing in perception distance and 
+  movementFunc(org) {
+    let orgSpeed = Math.sqrt(org.body.velocity.x**2 + org.body.velocity.y**2)
+    // console.l og(orgSpeed, org.speed)
+   
+    if ((org.status === "Searching for food" || org.status === "Searching for mate") &&  ((orgSpeed / org.speed) < 0.7)) {
+        org.resetSpeed();
+      }
   }
 
-  //If false, then it will only
+  //If false, then it will only move to whatever is in its perception distance, otherwise it will move to the closest
   checkClosestMoveTo(source, objects, bool) {
     if (objects.length) {
       let closest = this.physics.closest(source, objects)
@@ -477,38 +515,40 @@ class TitleScene extends Phaser.Scene {
 
   //document.querySelector("#rolum") 
   writeAttributes(pointer, gameObject) {
-    console.log("POINTER:", pointer.downElement.toString());
-    if (!(gameObject instanceof Org) && pointer.downElement.toString() !== "[object HTMLLIElement]") {
+    if (!(gameObject instanceof Org) && pointer.downElement.toString() === "[object HTMLCanvasElement]") {
       document.querySelector(".rightSidebarItems").innerHTML = ""
       return
-    } else if (pointer.downElement.toString() !== "[object HTMLLIElement]") {
+    } else if (pointer.downElement.toString() === "[object HTMLCanvasElement]") {
       document.querySelector(".rightSidebarItems").innerHTML = ""
 
       let rsElem = document.querySelector(".rightSidebarItems")
       let attrList = document.createElement("span")
       attrList.innerHTML = ` 
       <ul id="attrList">
-       
-      <li>Score: ${gameObject.score} </li>
-      <li>Status: ${gameObject.status} </li>
-      <li>Age: ${gameObject.age} </li> 
-      <li>ID: ${gameObject.id}</li>
-      <li>Health: ${gameObject.health} </li>
-      <li>Energy: ${Math.floor(gameObject.energy)} </li>
-      <li>Speed: ${gameObject.speed} </li> 
-      <li>Lifespan: ${gameObject.lifespan} </li> 
-      <li>Strength: ${gameObject.strength} </li>
-      <li>Aggression: ${gameObject.aggression} </li>
-      <li>Predator: ${gameObject.predator} </li>
-      <li>Perception: ${gameObject.perception} </li>
-      <li>Energy Efficiency: ${gameObject.energy_efficiency} </li>
-      <li>Max Health: ${gameObject.max_health} </li>
-      <li>Max Energy: ${gameObject.max_energy} </li>
-      <li>Litter Size: ${gameObject.litter_size} </li>
-      <li>Breeding Age: ${gameObject.breeding_age} </li>
-      <li>Type: ${gameObject.type} </li>
-      <li>Generation: ${gameObject.generation} </li>
-      <li>Parents: ${gameObject.parent1} ${gameObject.parent2}</li>
+        <li>Score: ${gameObject.score} </li>
+        <li>Status: ${gameObject.status} </li>
+        <li>Age: ${gameObject.age} </li> 
+        <li id="orgID" value="${gameObject.id}">ID: ${gameObject.id}</li>
+        <li>Health: ${gameObject.health} </li>
+        <li>Energy: ${Math.floor(gameObject.energy)} </li>
+        <li>Speed: ${gameObject.speed} </li> 
+        <li>Lifespan: ${gameObject.lifespan} </li> 
+        <li>Strength: ${gameObject.strength} </li>
+        <li>Aggression: ${gameObject.aggression} </li>
+        <li>Predator: ${gameObject.predator} </li>
+        <li>Perception: ${gameObject.perception} </li>
+        <li>Energy Efficiency: ${gameObject.energy_efficiency} </li>
+        <li>Max Health: ${gameObject.max_health} </li>
+        <li>Max Energy: ${gameObject.max_energy} </li>
+        <li>Litter Size: ${gameObject.litter_size} </li>
+        <li>Breeding Age: ${gameObject.breeding_age} </li>
+        <li>Type: ${gameObject.sex} </li>
+        <li>Generation: ${gameObject.generation} </li>
+        <li>Parents: ${gameObject.parent1} ${gameObject.parent2}</li>
+        <li>Ageless: ${gameObject.ageless} </li>
+        <li>Invincible: ${gameObject.invincible} </li>
+        <button class="rightSidebarButtons" name="agelessToggle">Toggle Ageless</button>
+        <button class="rightSidebarButtons" name="invincibleToggle">Toggle Invincible</button>
       </ul>
       `
       Phaser.DOM.AddToDOM(attrList, rsElem)
