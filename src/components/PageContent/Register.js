@@ -53,6 +53,7 @@ let userData = {
           value={name}
           type="text"
           placeholder="Enter Name"
+          alt="name"
         />
         Email: <input className="form-control form-field form-text"
           onChange={(event) => {
@@ -61,6 +62,7 @@ let userData = {
           value={email}
           type="email"
           placeholder="Enter Email"
+          alt="email"
         />
         Username: <input className="form-control form-field form-text"
           onChange={(event) => {
@@ -68,7 +70,7 @@ let userData = {
           value={username}
           type="text"
           placeholder="Enter Username"
-
+          alt="username"
         />
         Password: <input className="form-control form-field form-text"
           onChange={(event) => {
@@ -77,6 +79,7 @@ let userData = {
           value={password}
           type="password"
           placeholder="Enter Password"
+          alt="password"
 
         />
         Confirm Password: <input className="form-control form-field form-text"
@@ -86,6 +89,7 @@ let userData = {
           value={passwordConfirm}
           type="password"
           placeholder="Confirm Password"
+          alt="confirm-password"
 
         />
       </form>

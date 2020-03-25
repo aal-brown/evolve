@@ -4,11 +4,6 @@ import "./Guide.scss";
 
 export default function Guide(props) {
   let user_id = props.cookies.user_id
-  axios.get("http://localhost:3000/getuser", {
-    headers: { "ID": user_id }
-  })
-  .then((res) => console.log(res.data)
-  );
   return (
     <section>
        <h2  className="guide-welcome-text">Welcome to Evolve where you can build your very own colony of orgs! They will evolve before your very eyes!</h2>

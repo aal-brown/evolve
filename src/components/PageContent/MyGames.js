@@ -190,6 +190,7 @@ export default function MyGames(props) {
               value={name}
               type="text"
               placeholder="Game title"
+              alt="title"
             />
           </form>
           <Button className="button--confirm" onClick={() => { newGame(name) }} >Start Game</Button>
@@ -211,7 +212,7 @@ export default function MyGames(props) {
             <h2>Any unsaved changes will be lost!</h2>
           )}
           <div className="quit-confirm-buttons ">
-            <Button className="button--confirm" onClick={exit} >Quit</Button>
+            <Button alt="quit" className="button--confirm" onClick={exit} >Quit</Button>
             <Button className="button--danger" onClick={confirmQuit} >Cancel</Button>
           </div>
         </div>
