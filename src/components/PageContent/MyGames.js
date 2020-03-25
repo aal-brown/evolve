@@ -5,18 +5,6 @@ import "../Button.scss";
 import Game from "./Game";
 import axios from "axios";
 import "./MyGames.scss"
-/* import { LoremIpsum } from "lorem-ipsum";
-
-const lorem = new LoremIpsum({
-  sentencesPerParagraph: {
-    max: 8,
-    min: 4
-  },
-  wordsPerSentence: {
-    max: 16,
-    min: 4
-  }
-}); */
 
 // Games will be received from the database, sorted by user id.
 
@@ -201,7 +189,7 @@ export default function MyGames(props) {
                 setName(event.target.value)}}
               value={name}
               type="text"
-              placeholder="Title"
+              placeholder="Game title"
             />
           </form>
           <Button className="button--confirm" onClick={() => { newGame(name) }} >Start Game</Button>
