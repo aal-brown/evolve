@@ -9,10 +9,8 @@ export default function MyGamesItem(props) {
 let dateSaved = new Date(props.updated_at).toDateString();
 let dateCreated = new Date(props.created_at).toDateString();
   return (
-    <div className="table table-item">
-      <div onClick={props.load}>
-      </div>
-      <table className="table table-dark">
+    <div className="table table-dark table-item ">
+      <table>
         <thead>
           <tr>
             <th scope="col">Name</th>

@@ -23,6 +23,7 @@ export default function PageContent(props) {
         cookies={props.cookies}
         setCookie={props.setCookie}
         removeCookie={props.removeCookie}
+        setView={props.setView}
         />
       )}
       { props.view === 3 && (

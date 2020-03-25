@@ -5,18 +5,6 @@ import "../Button.scss";
 import Game from "./Game";
 import axios from "axios";
 import "./MyGames.scss"
-/* import { LoremIpsum } from "lorem-ipsum";
-
-const lorem = new LoremIpsum({
-  sentencesPerParagraph: {
-    max: 8,
-    min: 4
-  },
-  wordsPerSentence: {
-    max: 16,
-    min: 4
-  }
-}); */
 
 // Games will be received from the database, sorted by user id.
 
@@ -201,7 +189,7 @@ export default function MyGames(props) {
                 setName(event.target.value)}}
               value={name}
               type="text"
-              placeholder="Title"
+              placeholder="Game title"
             />
           </form>
           <Button className="button--confirm" onClick={() => { newGame(name) }} >Start Game</Button>
@@ -220,7 +208,7 @@ export default function MyGames(props) {
         <div className="quit-confirm" style={{visibility: "hidden"}}>
           <h1>Quit?</h1>
           { user_id && (
-            <h2>All unsaved changes will be lost!</h2>
+            <h2>Any unsaved changes will be lost!</h2>
           )}
           <div className="quit-confirm-buttons ">
             <Button className="button--confirm" onClick={exit} >Quit</Button>
