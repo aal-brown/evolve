@@ -778,6 +778,8 @@ class TitleScene extends Phaser.Scene {
       }
     }
     if (gameID) {
+      this.physics.pause();
+      let savingMessage = this.add.text(this.game.config.width / 3, this.game.config.height / 4, 'Saving...', { color: "#000000", fontSize: 100 })
       let gameStateObject = {
         orgs: [],
         foods: [],
@@ -852,6 +854,8 @@ class TitleScene extends Phaser.Scene {
       })
         .then(resp => {
           console.log("Updated successfully for games:", resp);
+          savingMessage.destroy();
+          this.physics.resume();
         })
         .catch(err => console.log("Error attempting to save:", err.message));
     }
