@@ -399,10 +399,10 @@ class TitleScene extends Phaser.Scene {
     if (orgObjs.length) {
       // avgScore = orgObjs.reduce((acc,item) => (acc+item.score),(orgObjs[0].score))/orgObjs.length
       orgObjs.forEach((val) => sum += val.score)
+      return sum / orgObjs.length
     }
-
-    //console.log(sum/orgObjs.length, avgScore)
-    return sum / orgObjs.length
+    
+    return 0
   }
 
   getHighestScore(orgObjs) {
