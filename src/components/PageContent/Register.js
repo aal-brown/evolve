@@ -50,7 +50,7 @@ let userData = {
   {error.response.data.email && <li>Email can't be blank or belong to an existing user </li>}
   {error.response.data.username && <li>Username can't be blank or belong to an existing user</li>}
   {error.response.data.password && <li>Passwords can't be blank or fewer than 5 characters</li>}
-  {error.response.data.password_confirmation.includes("doesn't match Password") && <li>Passwords must match</li>}
+  {error.response.data.password_confirmation.includes("doesn't match Password") && <li>Password confirmation must match password and can't be blank</li>}
       </p>}
     <section className="login">
       <h1 className="register-text">Register</h1>
