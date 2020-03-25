@@ -241,10 +241,10 @@ class TitleScene extends Phaser.Scene {
 
     //============================================================== Right sidebar ==============================================//  
     let rightSidebar = this.add
-    .dom((this.game.config.width - 160), 80)
+    .dom((this.game.config.width - 10), 80)
     .createFromCache("right-sidebar");
 
-    rightSidebar.setOrigin(0, 0)
+    rightSidebar.setOrigin(1, 0)
     rightSidebar.addListener("click");
 
     rightSidebar.on("click", function(event) {
