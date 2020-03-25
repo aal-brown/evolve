@@ -184,7 +184,7 @@ export default function MyGames(props) {
       <div className="default-game-page">
         <div className="new-game-button">
           <form className="new-game-form form-group" onSubmit={(event) => {event.preventDefault()}}>
-            <input className="form-control form-field"
+            <input className="form-control form-field placeholder-text"
               onChange={(event) => {
                 setName(event.target.value)}}
               value={name}

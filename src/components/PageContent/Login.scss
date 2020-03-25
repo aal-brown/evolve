@@ -3,6 +3,8 @@
   flex-direction: column;
   align-content: center;
   padding: 1em;
+  color: #fff;
+  font-family: 'Cabin Sketch', 'cursive'
 }
 
 .login-form {
@@ -12,4 +14,7 @@
 
 .form-field {
   width: 20em;
+}
+.button-login {
+  padding: 0 0 0 1em;
 }
