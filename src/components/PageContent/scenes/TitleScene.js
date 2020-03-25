@@ -607,8 +607,13 @@ class TitleScene extends Phaser.Scene {
         org.setTexture("predator")
         org.play("pred_anim")
       } else {
-        org.setTexture("blobs")
-        org.play("blobs_anim")
+        if(org.sex === 1) {
+          org.play("bb_anim");
+          org.setTexture("bb")
+        } else {
+          org.play("gb_anim");
+          org.setTexture("gb")
+        }
       }
       org.isShowingDamage = false
     }
@@ -619,8 +624,13 @@ class TitleScene extends Phaser.Scene {
         org.play("pred_anim")
         org.predBool = false
       } else if (!org.predBool && !document.querySelector("#predatorToggle").checked) {
-          org.setTexture("blobs")
-          org.play("blobs_anim")
+        if(org.sex === 1) {
+          org.play("bb_anim");
+          org.setTexture("bb")
+        } else {
+          org.play("gb_anim");
+          org.setTexture("gb")
+        }
           org.predBool = true
         }
   }

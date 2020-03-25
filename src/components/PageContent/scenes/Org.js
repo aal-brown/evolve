@@ -4,7 +4,7 @@ const gaussian = require('gaussian');
 class Org extends Phaser.GameObjects.Sprite {
 
   constructor(scene, x, y, parent1, parent2, orgNum) {
-    super(scene, x, y, "blobs")
+    super(scene, x, y, "gb")
     
     function mathNormInherited(v1, v2){
       let mean = avg(v1, v2)
@@ -110,8 +110,10 @@ class Org extends Phaser.GameObjects.Sprite {
 
     if(this.sex === 1) {
       this.play("bb_anim");
+      this.setTexture("bb")
     } else {
       this.play("gb_anim");
+      this.setTexture("gb")
     }
 
     scene.orgs.add(this);

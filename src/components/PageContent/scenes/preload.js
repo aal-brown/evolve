@@ -129,7 +129,7 @@ export default class Preload extends Phaser.Scene {
     });
     this.anims.create({
       key: "gb_anim",
-      frames: this.anims.generateFrameNumbers("bb"),
+      frames: this.anims.generateFrameNumbers("gb"),
       frameRate: 10,
       repeat: -1 //means infinite loop!
     });
