@@ -252,12 +252,14 @@ class TitleScene extends Phaser.Scene {
       let orgID = document.getElementById("orgID").value
       event.preventDefault();
       if (event.target.name === "agelessToggle") {
+        document.querySelector(".rightSidebarItems").innerHTML = ""
         for(const org of this.scene.orgs.getChildren()) {
           if (org.id === orgID) {
             org.ageless = (org.ageless === true ? false : true)
           }
         }
       } else if (event.target.name === "invincibleToggle") {
+        document.querySelector(".rightSidebarItems").innerHTML = ""
         for(const org of this.scene.orgs.getChildren()) {
           if (org.id === orgID) {
             org.invincible = (org.invincible === true ? false : true)
@@ -558,6 +560,7 @@ class TitleScene extends Phaser.Scene {
         <li>Ageless: ${gameObject.ageless} </li>
         <li>Invincible: ${gameObject.invincible} </li>
         <button class="rightSidebarButtons" name="agelessToggle">Toggle Ageless</button>
+        <li>   </li>
         <button class="rightSidebarButtons" name="invincibleToggle">Toggle Invincible</button>
       </ul>
       `
