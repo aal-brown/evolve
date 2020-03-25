@@ -78,6 +78,18 @@ export default class Preload extends Phaser.Scene {
       frameHeight: 100
     });
 
+    this.load.spritesheet("bb", "/assets/bb-sprite-sheet.png", {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+
+    this.load.spritesheet("gb", "/assets/gb-sprite-sheet.png", {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+    
+    
+
     this.load.image('fullscreen',"assets/fullscreen2.png")
     this.load.image('minimize',"assets/minimize2.png")
     this.load.image('toggle-ls',"assets/menu-icon.png")
@@ -106,6 +118,18 @@ export default class Preload extends Phaser.Scene {
     this.anims.create({
       key: "blobs_anim",
       frames: this.anims.generateFrameNumbers("blobs"),
+      frameRate: 10,
+      repeat: -1 //means infinite loop!
+    });
+    this.anims.create({
+      key: "bb_anim",
+      frames: this.anims.generateFrameNumbers("bb"),
+      frameRate: 10,
+      repeat: -1 //means infinite loop!
+    });
+    this.anims.create({
+      key: "gb_anim",
+      frames: this.anims.generateFrameNumbers("bb"),
       frameRate: 10,
       repeat: -1 //means infinite loop!
     });

@@ -36,7 +36,7 @@ let userData = {
     })
     .then(resp => {
       console.log(resp);
-      props.setCookie("user_id", resp.data)
+      props.setCookie("user_id", resp.data.id)
       props.setView(4);
     })
     .catch(err => console.error(err.message));
