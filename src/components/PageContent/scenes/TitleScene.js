@@ -62,8 +62,9 @@ class TitleScene extends Phaser.Scene {
     leftSidebar.setOrigin(0, 0)
     leftSidebar.addListener("click");
 
-    this.lsToggle = this.add.sprite(10, 5, "toggle-ls")
+    this.lsToggle = this.add.image(10, 5, "toggle-ls")
     this.lsToggle.setScale(0.5)
+    this.lsToggle.lsToggle(3)
     this.lsToggle.setOrigin(0, 0)
 
     leftSidebar.setOrigin(0,0)
@@ -272,7 +273,7 @@ class TitleScene extends Phaser.Scene {
     
 
     //===========================================================Fullscreen Toggle=========================================================
-    this.fsToggle = this.add.sprite((this.game.config.width - 55), 10, "fullscreen")
+    this.fsToggle = this.add.image((this.game.config.width - 55), 10, "fullscreen")
     this.fsToggle.setOrigin(0, 0)
     this.fsToggle.setDepth(3)
     this.fsToggle.setScale(0.5)
