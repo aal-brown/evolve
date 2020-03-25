@@ -4,7 +4,7 @@ const gaussian = require('gaussian');
 class Org extends Phaser.GameObjects.Sprite {
 
   constructor(scene, x, y, parent1, parent2, orgNum) {
-    super(scene, x, y, "blobs")
+    super(scene, x, y, "gb")
     
     function mathNormInherited(v1, v2){
       let mean = avg(v1, v2)
@@ -107,14 +107,22 @@ class Org extends Phaser.GameObjects.Sprite {
     this.energy = this.max_energy;
     scene.add.existing(this);
     scene.physics.world.enableBody(this);
-    this.play("blobs_anim");
+
+    if(this.sex === 1) {
+      this.play("bb_anim");
+      this.setTexture("bb")
+    } else {
+      this.play("gb_anim");
+      this.setTexture("gb")
+    }
+
     scene.orgs.add(this);
     this.body.setCollideWorldBounds(true);
     this.body.setBounce(0.1);
     this.body.velocity.x = this.velx;
     this.body.velocity.y = this.vely;
     this.body.damping = 0;
-    this.colour = Math.random() * 0xffffff;
+    this.colour = this.score * 0xffffff;
     this.status = "Wandering"
     this.tint = this.colour;
     this.isShowingDamage = false;
