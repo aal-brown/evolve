@@ -64,7 +64,7 @@ class TitleScene extends Phaser.Scene {
 
     this.lsToggle = this.add.image(10, 5, "toggle-ls")
     this.lsToggle.setScale(0.5)
-    this.lsToggle.lsToggle(3)
+    this.lsToggle.setDepth(3)
     this.lsToggle.setOrigin(0, 0)
 
     leftSidebar.setOrigin(0,0)
