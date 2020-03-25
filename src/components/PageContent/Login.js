@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import "components/PageContent/Login.scss";
 import axios from "axios";
 import Button from "../Button"
@@ -36,6 +36,7 @@ export default function Login(props) {
   }
   
   return (
+    <Fragment>
     <section className="login">
       <h1>Login</h1>
       <form className="login-form form-group" onSubmit={(event) => {event.preventDefault()}}>
@@ -55,7 +56,10 @@ export default function Login(props) {
           placeholder="Enter Password"
         />
       </form>
+      </section>
+      <div className="button-login">
       <Button className="button--confirm" onClick={login}>Login</Button>
-    </section>
+      </div>
+   </Fragment>
   );
 }

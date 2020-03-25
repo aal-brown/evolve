@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import "components/PageContent/Login.scss";
 import Button from "../Button";
 import axios from "axios";
+import "./Register.scss"
 
 export default function Register(props) {
   const [name, setName] = useState("");
@@ -41,8 +42,9 @@ let userData = {
     .catch(err => console.error(err.message));
   }
   return (
+    <Fragment>
     <section className="login">
-      <h1>Register</h1>
+      <h1 className="register-text">Register</h1>
       <form className="login-form form-group" onSubmit={(event) => {event.preventDefault()}}>
         Name: <input className="form-control form-field"
           onChange={(event) => {
@@ -87,7 +89,10 @@ let userData = {
 
         />
       </form>
-      <Button className="button--confirm" onClick={createUser}>Register</Button>
     </section>
+    <div className="button-login">
+      <Button className="button--confirm" onClick={createUser}>Register</Button>
+      </div>
+    </Fragment>
   );
 }

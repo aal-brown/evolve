@@ -197,11 +197,10 @@ class Game extends Component{
       <div id="feature8" style={{position: 'relative',
   top: '2.1em',
   left: '7em'}}></div>
-      <ReactJoyride steps={steps} run={run} disableScrolling={true} continuous={true} showSkipButton={true} callback={this.handleJoyrideCallback} styles={{
+      <ReactJoyride steps={steps} run={run} disableScrolling={true} continuous={true} showSkipButton={true} disableOverlay={true} callback={this.handleJoyrideCallback} styles={{
             options: {
               arrowColor: '#fff',
               backgroundColor: 'rgb(123, 201, 158)',
-              overlayColor: 'rgba(79, 26, 0, 0.4)',
               primaryColor: '#3CB371',
               textColor: '#fff',
               width: 500,
