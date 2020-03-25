@@ -46,6 +46,7 @@ export default function Login(props) {
           value={email}
           type="email"
           placeholder="Enter Email"
+          alt="email"
         />
         Password: <input className="form-control form-field form-text"
           onChange={(event) => {
@@ -54,6 +55,7 @@ export default function Login(props) {
           label="Password: "
           type="password"
           placeholder="Enter Password"
+          alt="password"
         />
       </form>
       </section>
