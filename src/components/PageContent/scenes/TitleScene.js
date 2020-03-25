@@ -302,8 +302,15 @@ class TitleScene extends Phaser.Scene {
     this.soundToggle.setOrigin(0, 0)
     this.soundToggle.setScale(0.08)
 
-
-
+    this.soundToggle.setInteractive().on("pointerdown", function () {
+      if (this.scene.main_theme.isPlaying) {
+        this.soundToggle = this.setTexture("volume-mute");
+        this.scene.main_theme.stop()
+      } else {
+        this.soundToggle = this.setTexture("volume-on");
+        this.scene.main_theme.play()
+      }
+    });
 
     //================================================================Blocks==================================================================
 
