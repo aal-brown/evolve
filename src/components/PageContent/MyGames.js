@@ -208,7 +208,7 @@ export default function MyGames(props) {
         <div className="quit-confirm" style={{visibility: "hidden"}}>
           <h1>Quit?</h1>
           { user_id && (
-            <h2>All unsaved changes will be lost!</h2>
+            <h2>Any unsaved changes will be lost!</h2>
           )}
           <div className="quit-confirm-buttons ">
             <Button className="button--confirm" onClick={exit} >Quit</Button>
