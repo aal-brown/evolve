@@ -49,26 +49,33 @@
 .switch {
   display:block;
   position: absolute;
+  top: 6em;
+  text-align: center;
+}
+.dragSwitch {
+  display:block;
+  position: absolute;
   top: 4em;
   text-align: center;
 }
 .addBlocksSwitch {
   display:block;
   position: absolute;
-  top: 6em;
+  top: 8em;
   text-align: center;
 }
 .removeBlocksSwitch {
   display:block;
   position: absolute;
-  top: 8em;
+  top: 10em;
   text-align: center;
 }
 .predatorSwitch {
   display:block;
   position: absolute;
-  top: 10em;
+  top: 12em;
   text-align: center;
+  background-color: green;
 }
 
 .switch input {
@@ -92,6 +99,8 @@
   color: $white;
   font-size: 1.5rem;
 }
+
+
 
 .slider:before {
   position: absolute;
@@ -126,5 +135,48 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+#predMode {
+  width: 11rem;
+  height: 2rem;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color:#3CB371;
+  -webkit-transition: .4s;
+  transition: .4s;
+  color: $white;
+  font-size: 1.5rem;
+}
+
+
+#predMode:before {
+  position: absolute;
+  content: "";
+  height: 2rem;
+  width: 2rem;
+  left: 0px;
+  bottom: 0;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + #predMode {
+  background-color: #006400;
+}
+
+input:focus + #predMode {
+  box-shadow: 0 0 1px #006400;;
+}
+
+input:checked + #predMode:before {
+  -webkit-transform: translateX(9rem);
+  -ms-transform: translateX(9rem);
+  transform: translateX(9rem);
 }
 

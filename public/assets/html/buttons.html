@@ -2,19 +2,23 @@
   <button class="sideBarButton" name="addOrg">Add Org</button>
   <button class="sideBarButton" name="addFood">Add Food</button>
   <label class="switch" name="foodToggle">
-    <input type="checkbox" id="foodToggle">
+    <input type="radio" id="foodToggle" name="switch">
     <span class="slider round">Feed</span>
   </label>
-  <label class="addBlocksSwitch" name="addBlocksToggle">
-    <input type="checkbox" id="addBlocksToggle">
+  <label class="switch dragSwitch" name="dragToggle">
+    <input type="radio" id="dragToggle" name="switch" checked>
+    <span class="slider round">Draggable</span>
+  </label>
+  <label class="switch addBlocksSwitch" name="addBlocksToggle">
+    <input type="radio" id="addBlocksToggle" name="switch">
     <span class="slider round">Blocks</span>
   </label>
-  <label class="removeBlocksSwitch" name="removeBlocksToggle">
-    <input type="checkbox" id="removeBlocksToggle">
+  <label class="switch removeBlocksSwitch" name="removeBlocksToggle">
+    <input type="radio" id="removeBlocksToggle" name="switch">
     <span class="slider round">Delete</span>
   </label>
-  <label class="predatorSwitch" name="predatorToggle">
-    <input type="checkbox" id="predatorToggle">
-    <span class="slider round">Predator Mode</span>
+  <label class="switch predatorSwitch" name="predatorToggle">
+    <input type="checkbox" id="predatorToggle" name="switch">
+    <span id="predMode" class="slider round">Predators </span>
   </label>
 </section>

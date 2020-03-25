@@ -46,7 +46,7 @@ let userData = {
     <section className="login">
       <h1 className="register-text">Register</h1>
       <form className="login-form form-group" onSubmit={(event) => {event.preventDefault()}}>
-        Name: <input className="form-control form-field"
+        Name: <input className="form-control form-field form-text"
           onChange={(event) => {
             setName(event.target.value)
           }}
@@ -54,7 +54,7 @@ let userData = {
           type="text"
           placeholder="Enter Name"
         />
-        Email: <input className="form-control form-field"
+        Email: <input className="form-control form-field form-text"
           onChange={(event) => {
             setEmail(event.target.value)
           }}
@@ -62,7 +62,7 @@ let userData = {
           type="email"
           placeholder="Enter Email"
         />
-        Username: <input className="form-control form-field"
+        Username: <input className="form-control form-field form-text"
           onChange={(event) => {
             setUsername(event.target.value)}}
           value={username}
@@ -70,7 +70,7 @@ let userData = {
           placeholder="Enter Username"
 
         />
-        Password: <input className="form-control form-field"
+        Password: <input className="form-control form-field form-text"
           onChange={(event) => {
             setPassword(event.target.value)
           }}
@@ -79,7 +79,7 @@ let userData = {
           placeholder="Enter Password"
 
         />
-        Confirm Password: <input className="form-control form-field"
+        Confirm Password: <input className="form-control form-field form-text"
           onChange={(event) => {
             setPasswordConfirm(event.target.value)
           }}
