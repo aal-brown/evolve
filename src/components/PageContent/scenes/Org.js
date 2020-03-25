@@ -216,6 +216,8 @@ class Org extends Phaser.GameObjects.Sprite {
       speed: this.speed,
       sex: this.sex,
       generation: this.generation,
+      invincible: this.invincible,
+      ageless: this.ageless,
       parent1: this.parent1,
       parent2: this.parent2,
       xcoord: this.body.x,

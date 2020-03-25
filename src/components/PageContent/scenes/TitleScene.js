@@ -123,6 +123,8 @@ class TitleScene extends Phaser.Scene {
         newOrg.parent2 = org.parent2;
         newOrg.xcoord = org.xcoord;
         newOrg.ycoord = org.ycoord;
+        newOrg.invincible = org.invincible;
+        newOrg.ageless = org.ageless;
 
         newOrg.setInteractive();
         newOrg.setDepth(2)
@@ -239,7 +241,7 @@ class TitleScene extends Phaser.Scene {
 
     //============================================================== Right sidebar ==============================================//  
     let rightSidebar = this.add
-    .dom((this.game.config.width - 130), 80)
+    .dom((this.game.config.width - 160), 80)
     .createFromCache("right-sidebar");
 
     rightSidebar.setOrigin(0, 0)
@@ -621,37 +623,36 @@ class TitleScene extends Phaser.Scene {
   attackOrSpawn(org1, org2) {
     if(document.querySelector("#predatorToggle").checked){
       if (org1.predator && !org2.predator && org2.health < (org2.max_health / 2) && org2.damageCycle > 300) {
-        console.log("got damaged")
-        org2.health -= 5;
-        org2.damageCycle = 0;
-        org1.health += 5;
-        let collision = new Explosion(this, org1.x, org1.y)
-        return
-  
+          console.log("got damaged")
+          org2.health -= 5;
+          org2.damageCycle = 0;
+          org1.health += 5;
+          let collision = new Explosion(this, org1.x, org1.y)
+          return
       } else if (org1.predator && !org2.predator && org2.health > (org2.max_health / 2) && org2.speedBoost > 50 && org2.damageCycle > 300) {
-        console.log("ran away!")
-        org2.setVelocity(org2.velx + 50, org2.vely + 50)
-        org2.speedBoost = 0;
-        org2.damageCycle = 0;
-        return
+          console.log("ran away!")
+          org2.setVelocity(org2.velx + 50, org2.vely + 50)
+          org2.speedBoost = 0;
+          org2.damageCycle = 0;
+          return
       } else if (org2.predator && !org1.predator && org1.health < (org1.max_health / 2) && org1.damageCycle > 300) {
-        org1.health -= 5;
-        org2.health += 5;
-        console.log("got damaged")
-        org1.damageCycle = 0;
-        let collision = new Explosion(this, org1.x, org1.y)
-        return
+          org1.health -= 5;
+          org2.health += 5;
+          console.log("got damaged")
+          org1.damageCycle = 0;
+          let collision = new Explosion(this, org1.x, org1.y)
+          return
       } else if (org2.predator && !org1.predator && org1.health < (org1.max_health / 2) && org2.speedBoost > 50 && org1.damageCycle > 300) {
-        org1.setVelocity(org1.velx + 50, org1.vely + 50)
-        org1.speedBoost = 0;
-        console.log("ran away")
-        org1.damageCycle = 0;
-        return
+          org1.setVelocity(org1.velx + 50, org1.vely + 50)
+          org1.speedBoost = 0;
+          console.log("ran away")
+          org1.damageCycle = 0;
+          return
       } else if (this.breedingCheck(org1, org2) && org1.reproductionCycle >= 300 && org2.reproductionCycle >= 300) {
-        org1.status = "Breeding"
-        org2.status = "Breeding"
-        let type1 = this.orderTypes(org1, org2)[0]
-        type1.energy -= 50
+          org1.status = "Breeding"
+          org2.status = "Breeding"
+          let type1 = this.orderTypes(org1, org2)[0]
+          type1.energy -= 50
 
         for (let i = 0; i < type1.litter_size; i++) {
           const randomX = Phaser.Math.Between(-5, 5)
