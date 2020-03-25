@@ -127,13 +127,20 @@ export default function MyGames(props) {
         axios.delete(`https://agile-scrubland-73485.herokuapp.com/game_saves/${id}`)
           .then((res) => {
             console.log(res);
-            setGameView(0)
             getData();
-            
+            setGameView(0)
           })
-          .catch(err => console.log(err.message))
+          .catch((err) => { 
+            console.log(err.message);
+            getData();
+            setGameView(0)
+          })
       })
-      .catch(err => console.log(err.message));
+      .catch((err) => { 
+        console.log(err.message);
+        getData();
+        setGameView(0)
+      });
   }
 
   useEffect(() => {
