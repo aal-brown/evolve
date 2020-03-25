@@ -420,14 +420,14 @@ class TitleScene extends Phaser.Scene {
     org.reproductionCycle++;
     if(!org.ageless && !org.invincible ) {
       org.age++
-      if (org.age === org.lifespan || org.health === 0) {
-        org.tint = 0.001 * 0xffffff;
-        org.setVelocity(0, 0);
-        this.orgs.remove(org, false, false)
-        this.dyingOrg(org);
+    }
+    if (org.age === org.lifespan || org.health === 0) {
+      org.tint = 0.001 * 0xffffff;
+      org.setVelocity(0, 0);
+      this.orgs.remove(org, false, false)
+      this.dyingOrg(org);
       }
     }
-  } 
 
   energyCycle(org) {
     let elFactor = 1;
