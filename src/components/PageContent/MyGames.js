@@ -11,6 +11,7 @@ import "./MyGames.scss"
 export default function MyGames(props) {
   const [gameView, setGameView] = useState(0)
   const [games, setGames] = useState([])
+  const [gameID, setGameID] = useState(0);
   let user_id = props.cookies.user_id
 
   function getData() {
@@ -60,7 +61,6 @@ export default function MyGames(props) {
       .catch(err => console.error(err.message));
     })
   }
-
 
 
   function newGame(gameName) {
@@ -114,6 +114,11 @@ export default function MyGames(props) {
     }
   }
 
+  function confirmDelete(game_id) {
+    setGameID(game_id)
+    setGameView(2)
+  }
+
   function deleteGame(id) {
     axios.delete(`https://agile-scrubland-73485.herokuapp.com/games/${id}`)
       .then((res) => {
@@ -122,8 +127,9 @@ export default function MyGames(props) {
         axios.delete(`https://agile-scrubland-73485.herokuapp.com/game_saves/${id}`)
           .then((res) => {
             console.log(res);
-            
+            setGameView(0)
             getData();
+            
           })
           .catch(err => console.log(err.message))
       })
@@ -150,7 +156,7 @@ export default function MyGames(props) {
         high_score={game.highest_score}
         // selected={game.name === props.game} hover will be used instead
         load={() => { loadGame(game.id) }} //This is a function to start the game
-        delete={() => { deleteGame(game.id) }} //This will prompt for whether the user wants to delete that game
+        delete={() => { confirmDelete(game.id) }} //This will prompt for whether the user wants to delete that game
         />
     );
   });
@@ -170,7 +176,7 @@ export default function MyGames(props) {
           high_score={game.highest_score}
           // selected={game.name === props.game} hover will be used instead
           load={() => { loadGame(game.id) }}  //This is a function to start the game
-          delete={() => { deleteGame(game.id) }} //This will prompt for whether the user wants to delete that game
+          delete={() => { confirmDelete(game.id) }} //This will prompt for whether the user wants to delete that game
           />
       );
     });
@@ -221,6 +227,17 @@ export default function MyGames(props) {
         </div>
         <Game
         />
+      </div>
+    )}
+    { gameView === 2 && (
+      <div className="gameCanvas">
+        <div className="delete-confirm">
+          <h1>Really Delete?</h1>
+          <div className="quit-confirm-buttons ">
+            <Button className="button--confirm" onClick={() => setGameView(0)}>Cancel</Button>
+            <Button className="button--danger" onClick={() => deleteGame(gameID)}>Delete</Button>
+          </div>
+        </div>
       </div>
     )}
     </section>

@@ -42,6 +42,22 @@
   color: #fff
 }
 
+.delete-confirm {
+  position: absolute;
+  top: 35%;
+  left: 31.5%;
+  background-color: rgb(123, 201, 158);
+  border: 4px solid;
+  border-color: #3CB371;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1%;
+  padding: 1em;
+  border-radius: 1em;
+  color: #fff
+}
+
 .placeholder-text {
   font-family: 'Dosis', 'sans-serif';
 }
