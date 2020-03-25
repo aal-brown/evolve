@@ -351,9 +351,8 @@ class TitleScene extends Phaser.Scene {
 
       this.avgAndScore = this.add.text(this.game.config.width / 2, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`, { color: "#000000", fontSize: 20 })
       this.avgAndScore.setDepth(3)
-      this.avgAndScore.setOrigin(this.avgAndScore.width / 2, this.avgAndScore.height / 2)
-      this.avgAndScore = this.add.text(this.game.config.width / 2, 20, `Avg Score: ${this.avgScore}  No. Orgs: ${this.numOrgs}  Highest Score: ${this.highestScore}`, { color: "#000000", fontSize: 20 })
-      
+      this.avgAndScore.setOrigin(0.5, 0.5)
+       
       // console.log(this.avgAndScore)
       for (let i = 0; i < this.orgs.getChildren().length; i++) {
         let org = this.orgs.getChildren()[i]
@@ -458,6 +457,7 @@ class TitleScene extends Phaser.Scene {
       this.pausePhysics = true
       this.pauseText = this.add.text(this.game.config.width / 2, this.game.config.height / 2, "PAUSE", { color: "#000000", fontSize: 50 })
       this.main_theme.pause();
+      this.pauseText.setOrigin(0.5, 0.5)
 
     } else {
       this.pausePhysics = false
