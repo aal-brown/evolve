@@ -22,14 +22,14 @@ export default class Preload extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
     });
-    this.load.spritesheet("damage", "assets/damage.png", {
+    this.load.spritesheet("damage", "/assets/damaged-new-r1.png", {
       frameWidth: 32,
       frameHeight: 32
     });
-    this.load.spritesheet("predator", "assets/predator.png", {
-      frameWidth: 32,
-      frameHeight: 32
-    });
+    // this.load.spritesheet("predator", "/assets/predator.png", {
+    //   frameWidth: 32,
+    //   frameHeight: 32
+    // });
 
     this.load.spritesheet("banana", "/assets/fruit-lm-0.png", {
       frameWidth: 32,
@@ -89,7 +89,10 @@ export default class Preload extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
     });
-    
+    this.load.spritesheet("gp", "/assets/gp-sprite-sheet.png", {
+      frameWidth: 32,
+      frameHeight: 32
+    });
     
 
     this.load.image('fullscreen',"assets/fullscreen2.png")
@@ -136,14 +139,20 @@ export default class Preload extends Phaser.Scene {
       repeat: -1 //means infinite loop!
     });
     this.anims.create({
-      key: "damage_anim",
-      frames: this.anims.generateFrameNumbers("damage"),
+      key: "gp_anim",
+      frames: this.anims.generateFrameNumbers("gp"),
       frameRate: 10,
       repeat: -1 //means infinite loop!
     });
     this.anims.create({
+      key: "damage_anim",
+      frames: this.anims.generateFrameNumbers("damage"),
+      frameRate: 4,
+      repeat: -1 //means infinite loop!
+    });
+    this.anims.create({
       key: "pred_anim",
-      frames: this.anims.generateFrameNumbers("predator"),
+      frames: this.anims.generateFrameNumbers("gp"),
       frameRate: 10,
       repeat: -1 //means infinite loop!
     });
