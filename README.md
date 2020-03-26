@@ -7,19 +7,19 @@ Testing: Cypress, Rspec
 
 ## Final Product
 
-![gif]()
+![gif](https://github.com/aal-brown/evolve/blob/master/public/assets/Orgs.gif?raw=true)
 
-!["Initial View"]()
-!["Register"]()
-!["Login"]()
-!["new-game"]()
-!["Tour1"]()
-!["Tour2"]()
-!["Game1"]()
-!["Game2"]()
-!["Game3"]()
-!["Game4"]()
-!["Game5"]()
+!["Initial View"](https://github.com/aal-brown/evolve/blob/master/public/assets/initial.png?raw=true)
+!["Register"](https://github.com/aal-brown/evolve/blob/master/public/assets/register.png?raw=true)
+!["Login"](https://github.com/aal-brown/evolve/blob/master/public/assets/login.png?raw=true)
+!["new-game"](https://github.com/aal-brown/evolve/blob/master/public/assets/new-game.png?raw=true)
+!["Tour1"](https://github.com/aal-brown/evolve/blob/master/public/assets/tour1.png?raw=true)
+!["Tour2"](https://github.com/aal-brown/evolve/blob/master/public/assets/tour2.png?raw=true)
+!["Game1"](https://github.com/aal-brown/evolve/blob/master/public/assets/game1.png?raw=true)
+!["Game2"](https://github.com/aal-brown/evolve/blob/master/public/assets/game2.png?raw=true)
+!["Game3"](https://github.com/aal-brown/evolve/blob/master/public/assets/game3.png?raw=true)
+!["Game4"](https://github.com/aal-brown/evolve/blob/master/public/assets/game4.png?raw=true)
+!["Game5"](https://github.com/aal-brown/evolve/blob/master/public/assets/game5.png?raw=true)
 
 
 ## Deployed version Interview Scheduler using netlify and heroku:
