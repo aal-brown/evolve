@@ -13,7 +13,7 @@ export default class Preload extends Phaser.Scene {
     //this.load.image('background1', '/assets/evolve-map-1.png');
     // this.load.image('background-small', '/assets/evolve-map-small.png');
     //this.load.image('background-small', '/assets/evolve-map-small-bright.png');
-    this.load.image('moon', '/assets/moon.png');
+    this.load.image('moon', '/assets/moon2.png');
     
 
     this.load.audio("main_theme","assets/music/main-theme-back34.mp3")
