@@ -40,10 +40,10 @@ export default function Application(props) {
 useEffect(() => {
   if(cookies.user_id){
     setTopNav([
-      { name: "My Profile", id: 1 },
-      { name: "Game", id: 2 },
       { name: "About", id: 3 },
       { name: "Guide", id: 4 },
+      { name: "Game", id: 2 },
+      { name: "My Profile", id: 1 },
       { name: "Logout", id: 8 }
     ])
   } else {
