@@ -175,6 +175,11 @@ export default function MyGames(props) {
         load={() => { loadGame(game.id) }} //This is a function to start the game
         delete={() => { 
           setGameID(game.id);
+          window.scroll({
+            top: 0, 
+            left: 0, 
+            behavior: 'smooth'
+          });
           deleteConfirmationPopup();
         }} //This will prompt for whether the user wants to delete that game
         />
@@ -198,6 +203,11 @@ export default function MyGames(props) {
           load={() => { loadGame(game.id) }}  //This is a function to start the game
           delete={() => { 
             setGameID(game.id);
+            window.scroll({
+              top: 0, 
+              left: 0, 
+              behavior: 'smooth'
+            });
             deleteConfirmationPopup();
           }} //This will prompt for whether the user wants to delete that game
           />
@@ -227,8 +237,8 @@ export default function MyGames(props) {
         <div className="delete-confirm" style={{visibility: "hidden"}}>
           <h1>Really Delete?</h1>
           <div className="quit-confirm-buttons ">
-            <Button className="button--confirm" onClick={() => deleteConfirmationPopup()}>Cancel</Button>
-            <Button className="button--danger" onClick={() => deleteGame(gameID)}>Delete</Button>
+            <Button className="button--confirm" onClick={() => deleteConfirmationPopup() }>Cancel</Button>
+            <Button className="button--danger" onClick={() => deleteGame(gameID) }>Delete</Button>
           </div>
         </div>
         <div className="MyGames">
