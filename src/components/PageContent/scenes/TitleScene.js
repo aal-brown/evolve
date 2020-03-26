@@ -42,8 +42,9 @@ class TitleScene extends Phaser.Scene {
 
     this.main_theme.play(musicConfig)
 
-    this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'background-small')
-    //this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'background1')
+    //this.background = this.add.image(0, 0, 'background-small')
+    //this.background = this.add.tileSprite(0, 0, 5000, 3333, 'background-small')
+    this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'moon')
     this.background.setOrigin(0, 0);
     this.background.setInteractive();
 
