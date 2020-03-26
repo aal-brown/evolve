@@ -222,7 +222,7 @@ export default function MyGames(props) {
               alt="title"
             />
           </form>
-          <Button className="button--confirm" onClick={() => { newGame(name) }} >Start Game</Button>
+          <Button className="button--confirm" onClick={() => { newGame(name) }}>New Game</Button>
         </div>
         <div className="delete-confirm" style={{visibility: "hidden"}}>
           <h1>Really Delete?</h1>

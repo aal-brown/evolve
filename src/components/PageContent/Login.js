@@ -6,6 +6,7 @@ import Button from "../Button"
 export default function Login(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const url = "https://agile-scrubland-73485.herokuapp.com/sessions";
 
@@ -29,14 +30,16 @@ export default function Login(props) {
     })
     .then(resp => {
       console.log(resp);
+      setError("")
       props.setCookie("user_id",resp.data)
       props.setView(4);
     })
-    .catch(err => console.error(err.message));
+    .catch(err => setError(err));
   }
   
   return (
     <Fragment>
+      { error && <p className="alert alert-success">Your login credentials could not be verified, please try again. </p>}
     <section className="login" >
       <h1>Login</h1>
       <form className="login-form form-group" onSubmit={(event) => {event.preventDefault()}}>

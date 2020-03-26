@@ -10,6 +10,7 @@ export default function Register(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [error, setError] = useState("");
 
 const url = "https://agile-scrubland-73485.herokuapp.com/users";
 
@@ -36,13 +37,21 @@ let userData = {
     })
     .then(resp => {
       console.log(resp);
-      props.setCookie("user_id", resp.data)
+      props.setCookie("user_id", resp.data.id)
       props.setView(4);
     })
-    .catch(err => console.error(err.message));
+    .catch(err => setError(err));
+  
   }
   return (
     <Fragment>
+      { error && <p className="alert alert-success"> The following error(s) prevented an account from being created:
+  {error.response.data.name && <li>Name can't be blank</li>}
+  {error.response.data.email && <li>Email can't be blank or belong to an existing user </li>}
+  {error.response.data.username && <li>Username can't be blank or belong to an existing user</li>}
+  {error.response.data.password && <li>Passwords can't be blank or fewer than 5 characters</li>}
+  {error.response.data.password_confirmation.includes("doesn't match Password") && <li>Password confirmation must match password and can't be blank</li>}
+      </p>}
     <section className="login">
       <h1 className="register-text">Register</h1>
       <form className="login-form form-group" onSubmit={(event) => {event.preventDefault()}}>
