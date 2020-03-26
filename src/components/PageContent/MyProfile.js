@@ -19,16 +19,31 @@ export default function MyProfile(props) {
         headers: { "ID": res.data.id }
       })
       .then((res) => {
-        
-        setGame(res.data)
+        console.log(res.data);
+        let highestScore = 0;
+        let playtimeSum = 0;
+        let totalOrgs = 0;
+        res.data.forEach((val) => {
+          if (highestScore < val.highest_score) {
+            highestScore = val.highest_score
+          }
+          playtimeSum += val.playtime;
+          totalOrgs += val.num_of_orgs
+        })
+
+        let gameStatsObj = {
+          games: res.data.length,
+          highestScore: highestScore,
+          playtime: playtimeSum,
+          totalorgs: totalOrgs
+        }
+
+        return setGame(gameStatsObj)
       }
       );
     })
   }
 
-  function gameStats(games) {
-
-  }
 
   useEffect(() => {
     if(props.cookies.user_id){
@@ -41,7 +56,11 @@ export default function MyProfile(props) {
       <section className="profileContainer">
         <header></header>
         <h1><b>Name:</b> {user.name}</h1>
-        <h2><b>Email:</b> {user.name}</h2>
+        <h4><b>Email:</b> {user.email}</h4>
+        <h4><b>Number of Games:</b> {games.games}</h4>
+        <h4><b>Highest Score:</b> {games.highestScore}</h4>
+        <h4><b>Playtime:</b> {games.playtime}</h4>
+        <h4><b>Total Orgs:</b> {games.totalorgs}</h4>
       </section>
     </section>
   );
