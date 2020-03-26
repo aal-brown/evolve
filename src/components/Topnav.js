@@ -3,7 +3,7 @@ import TopnavItem from "./TopnavItem";
 import axios from "axios"
 import "components/Topnav.scss";
 // import blob from "./blob-green.png"
-import blobSmall from "./blob-green-small.png"
+import blobSmall from "./blob-green-small2-r1.png"
 
 export default function Topnav(props) {
   const [user, setUser] = useState("");
