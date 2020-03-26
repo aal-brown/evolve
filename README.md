@@ -22,7 +22,7 @@ Testing: Cypress, Rspec
 !["Game5"](https://github.com/aal-brown/evolve/blob/master/public/assets/game5.png?raw=true)
 
 
-## Deployed version Interview Scheduler using netlify and heroku:
+## Deployed version using netlify and heroku:
 [Evolve](https://festive-ritchie-f7db49.netlify.com/)
 
 ## Dependencies
