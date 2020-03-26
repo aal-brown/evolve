@@ -139,17 +139,20 @@ export default function MyGames(props) {
             console.log(res);
             getData();
             setGameView(0)
+            deleteConfirmationPopup();
           })
           .catch((err) => { 
             console.log(err.message);
             getData();
             setGameView(0)
+            deleteConfirmationPopup();
           })
       })
       .catch((err) => { 
         console.log(err.message);
         getData();
         setGameView(0)
+        deleteConfirmationPopup();
       });
   }
 
