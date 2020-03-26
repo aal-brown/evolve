@@ -20,6 +20,7 @@ body {
   min-height: 100vh;
   flex-direction: column;
   background-color: $background;
+  align-items: center;
 }
 
 @media only screen and (max-width: 960px) {

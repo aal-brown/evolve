@@ -1,7 +1,14 @@
+.login-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1em;
+}
+
 .login {
   display: flex;
   flex-direction: column;
-  align-content: center;
+  align-items: center;
   padding: 1em;
   color: #fff;
   font-family: 'Cabin Sketch', 'cursive'
@@ -10,6 +17,7 @@
 .login-form {
   display:flex;
   flex-direction: column;
+  align-content: center;
 }
 
 .form-field {

@@ -40,6 +40,7 @@ export default function Login(props) {
   return (
     <Fragment>
       { error && <p className="alert alert-success">Your login credentials could not be verified, please try again. </p>}
+      <div className="login-centered" >
     <section className="login" >
       <h1>Login</h1>
       <form className="login-form form-group" onSubmit={(event) => {event.preventDefault()}}>
@@ -64,6 +65,7 @@ export default function Login(props) {
       </section>
       <div className="button-login">
       <Button className="button--confirm" onClick={login}>Login</Button>
+      </div>
       </div>
    </Fragment>
   );

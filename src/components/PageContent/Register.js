@@ -52,6 +52,7 @@ let userData = {
   {error.response.data.password && <li>Passwords can't be blank or fewer than 5 characters</li>}
   {error.response.data.password_confirmation.includes("doesn't match Password") && <li>Password confirmation must match password and can't be blank</li>}
       </p>}
+      <div className="login-centered" >
     <section className="login">
       <h1 className="register-text">Register</h1>
       <form className="login-form form-group" onSubmit={(event) => {event.preventDefault()}}>
@@ -105,6 +106,7 @@ let userData = {
     </section>
     <div className="button-login">
       <Button className="button--confirm" onClick={createUser}>Register</Button>
+      </div>
       </div>
     </Fragment>
   );
