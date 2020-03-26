@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import TopnavItem from "./TopnavItem";
 import axios from "axios"
 import "components/Topnav.scss";
+// import blob from "./blob-green.png"
+import blobSmall from "./blob-green-small.png"
 
 export default function Topnav(props) {
   const [user, setUser] = useState("");
@@ -38,7 +40,7 @@ export default function Topnav(props) {
   });
   return ( 
     <header className="topnav">
-    <h2 className="header-text">Evolve</h2>
+    <h2 className="header-text">Ev<img className="blob" src={blobSmall}/>lve</h2>
     {user && <h4 className="welcome-text">Welcome: {user}</h4>}
     <div className="nav-views">{items}</div>
   </header>);
