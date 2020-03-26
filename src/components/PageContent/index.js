@@ -16,6 +16,9 @@ export default function PageContent(props) {
     <section>
       { props.view === 1 && (
         <MyProfile
+        cookies={props.cookies}
+        setCookie={props.setCookie}
+        removeCookie={props.removeCookie}
         />
       )}
       { props.view === 2 && (
