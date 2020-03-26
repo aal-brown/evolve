@@ -13,6 +13,8 @@ Testing: Cypress, Rspec
 !["Register"]()
 !["Login"]()
 !["new-game"]()
+!["Tour1"]()
+!["Tour2"]()
 !["Game1"]()
 !["Game2"]()
 !["Game3"]()
