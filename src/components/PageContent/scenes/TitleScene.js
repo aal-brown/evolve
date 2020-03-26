@@ -605,8 +605,8 @@ class TitleScene extends Phaser.Scene {
   regTexture(org, health, damageBool) {
     if (damageBool && health > (org.max_health / 2)) {
       if (org.predator && document.querySelector("#predatorToggle").checked) {
-        org.setTexture("predator")
-        org.play("pred_anim")
+        org.setTexture("gp")
+        org.play("gp_anim")
       } else {
         if(org.sex === 1) {
           org.play("bb_anim");
@@ -621,8 +621,8 @@ class TitleScene extends Phaser.Scene {
   }
   predTexture(org) {
       if (org.predBool && document.querySelector("#predatorToggle").checked) {
-        org.setTexture("predator")
-        org.play("pred_anim")
+        org.setTexture("gp")
+        org.play("gp_anim")
         org.predBool = false
       } else if (!org.predBool && !document.querySelector("#predatorToggle").checked) {
         if(org.sex === 1) {

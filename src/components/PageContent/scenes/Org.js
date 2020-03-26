@@ -109,8 +109,8 @@ class Org extends Phaser.GameObjects.Sprite {
     scene.physics.world.enableBody(this);
 
     if(this.sex === 1) {
-      this.play("bb_anim");
-      this.setTexture("bb")
+        this.play("bb_anim");
+        this.setTexture("bb")
     } else {
       this.play("gb_anim");
       this.setTexture("gb")
