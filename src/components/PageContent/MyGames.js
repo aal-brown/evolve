@@ -121,6 +121,7 @@ export default function MyGames(props) {
 
   function deleteConfirmationPopup() {
     let x = document.getElementsByClassName('delete-confirm')[0];
+    console.log(x);
     if (x.style.visibility === "hidden") {
       x.style.visibility = "visible";
     } else if (x.style.visibility === "visible") {
@@ -172,7 +173,10 @@ export default function MyGames(props) {
         high_score={game.highest_score}
         // selected={game.name === props.game} hover will be used instead
         load={() => { loadGame(game.id) }} //This is a function to start the game
-        delete={() => { confirmDelete(game.id) }} //This will prompt for whether the user wants to delete that game
+        delete={() => { 
+          setGameID(game.id);
+          deleteConfirmationPopup();
+        }} //This will prompt for whether the user wants to delete that game
         />
     );
   });
@@ -255,17 +259,7 @@ export default function MyGames(props) {
         />
       </div>
     )}
-    { gameView === 2 && (
-      <div className="gameCanvas">
-        <div className="delete-confirm">
-          <h1>Really Delete?</h1>
-          <div className="quit-confirm-buttons ">
-            <Button className="button--confirm" onClick={() => setGameView(0)}>Cancel</Button>
-            <Button className="button--danger" onClick={() => deleteGame(gameID)}>Delete</Button>
-          </div>
-        </div>
-      </div>
-    )}
+
     </section>
   );
   
