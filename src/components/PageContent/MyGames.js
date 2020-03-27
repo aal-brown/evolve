@@ -22,9 +22,32 @@ export default function MyGames(props) {
       axios.get("https://agile-scrubland-73485.herokuapp.com/games", {
         headers: { "ID": res.data.id }
       })
-      .then((res) => setGames(res.data));
+      .then((res) => {
+        setGames(deleteEmpty(res.data))
+        deleteEntries(res.data)
+      });
     })
   }
+  
+  function deleteEmpty(arr){
+    console.log(arr);
+    let newArr = [];
+    for(let i = 0; i < arr.length; i++){
+      if(arr[i].highest_score && arr[i].num_of_orgs){
+        newArr.push(arr[i])
+      }
+    }
+    console.log("newArr", newArr)
+    return newArr
+  }
+
+  function deleteEntries(arr){
+    for(let i = 0; i < arr.length; i++){
+      if(!arr[i].highest_score && !arr[i].num_of_orgs){
+       axios.delete(`https://agile-scrubland-73485.herokuapp.com/games/${arr[i].id}`).then((res) => console.log(res)).catch((err)=> console.log(err))
+    }
+  }
+}
 
   function setGameCookie(name) {
     const user_id = props.cookies.user_id;
@@ -191,6 +214,7 @@ export default function MyGames(props) {
 
   useEffect(() => {
     myGames = games.map((game) => {
+      console.log("inside use effect")
     
       return (
         <MyGamesItem
