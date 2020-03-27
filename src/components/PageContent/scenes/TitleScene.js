@@ -356,11 +356,13 @@ class TitleScene extends Phaser.Scene {
       if (pointer.isDown && document.querySelector("#addBlocksToggle").checked) {  
         document.querySelector(".block-selectors").style.visibility = "visible";
         if( document.querySelector("#platRangle").checked){
-          this.newBlock = this.blocks.create(pointer.x, pointer.y, 'platRangle')
+          this.newBlock = this.blocks.create(pointer.x, pointer.y, 'platHoriz')
           this.newBlock.setInteractive();
+          this.newBlock.rotation += 40;
           this.input.setDraggable(this.newBlock)
         } else if( document.querySelector("#platLangle").checked){
-          this.newBlock = this.blocks.create(pointer.x, pointer.y, 'platLangle')
+          this.newBlock = this.blocks.create(pointer.x, pointer.y, 'platHoriz')
+          this.newBlock.rotation -= 40;
           this.newBlock.setInteractive();
           this.input.setDraggable(this.newBlock)
         } else if( document.querySelector("#platHoriz").checked){
@@ -872,6 +874,7 @@ class TitleScene extends Phaser.Scene {
 
       if (blocks.length) {
         blocks.forEach((block) => {
+          console.log(block)
           gameStateObject.blocks.push({x: block.x, y: block.y});
         })
       }
