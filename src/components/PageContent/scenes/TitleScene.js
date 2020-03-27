@@ -777,7 +777,7 @@ class TitleScene extends Phaser.Scene {
     let [sex1, sex2] = this.orderSexes(org1, org2)
     if (sex1.sex === sex2.sex) {
       return false
-    } else if (sex2.score - sex1.score > -150 && sex1.age >= sex1.breeding_age && sex2.age >= sex2.breeding_age && sex2.energy && (sex2.energy / sex2.max_energy) * 100 >= 50 && (sex2.health / sex2.max_health) * 100 >= 75 && (sex1.energy / sex1.max_energy) * 100 >= 50 && (sex1.health / sex1.max_health) * 100 >= 75) {
+    } else if (sex2.score - sex1.score > -450 && sex1.age >= sex1.breeding_age && sex2.age >= sex2.breeding_age && sex2.energy && (sex2.energy / sex2.max_energy) * 100 >= 50 && (sex2.health / sex2.max_health) * 100 >= 75 && (sex1.energy / sex1.max_energy) * 100 >= 50 && (sex1.health / sex1.max_health) * 100 >= 75) {
       return true
     } else {
       return false
