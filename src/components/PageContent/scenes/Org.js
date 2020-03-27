@@ -23,13 +23,13 @@ class Org extends Phaser.GameObjects.Sprite {
       return ((n1 + n2)* 0.5)
     }
     if (parent1 && parent2) {
-      this.speed = mathNormInherited(parent1.speed, parent2.speed, 1000)
-      this.lifespan = mathNormInherited(parent1.lifespan, parent2.lifespan, 100000)
+      this.speed = mathNormInherited(parent1.speed, parent2.speed, 500)
+      this.lifespan = mathNormInherited(parent1.lifespan, parent2.lifespan, 10000)
       this.strength = mathNormInherited(parent1.strength, parent2.strength, 200)
-      this.energy_efficiency = mathNormInherited(parent1.energy_efficiency, parent2.energy_efficiency, 750)
+      this.energy_efficiency = mathNormInherited(parent1.energy_efficiency, parent2.energy_efficiency, 400)
       this.max_energy = mathNormInherited(parent1.max_energy, parent2.max_energy, 8000)
       this.aggression = mathNormInherited(parent1.aggression, parent2.aggression, 200)
-      this.max_health = mathNormInherited(parent1.health, parent2.health, 10000)
+      this.max_health = mathNormInherited(parent1.health, parent2.health, 2000)
       this.health = this.max_health
       
       
@@ -49,7 +49,7 @@ class Org extends Phaser.GameObjects.Sprite {
         const val2 = Phaser.Math.Between(1, 2)
         this.sex = (val2 === 1 ? 1 : 2)
       }
-      this.perception = mathNormInherited(parent1.perception, parent2.perception, 4000)
+      this.perception = mathNormInherited(parent1.perception, parent2.perception, 1000)
       const inheritedLitterVal = mathNormInherited(parent1.litter_size, parent2.litter_size, 2)
       this.litter_size = (inheritedLitterVal <= 0 ? 1 : inheritedLitterVal)
       if (this.litter_size > 7) {
@@ -62,24 +62,24 @@ class Org extends Phaser.GameObjects.Sprite {
       this.parent2 = parent2.id
       
     } else {
-      this.lifespan = mathNorm(2500, 100000)
-      this.speed = mathNorm(100, 1000)
+      this.lifespan = mathNorm(1500, 10000)
+      this.speed = mathNorm(50, 500)
      
-      this.strength = mathNorm(75, 200)
-      this.energy_efficiency = mathNorm(75, 750)
-      this.max_energy = mathNorm(800, 8000)
+      this.strength = mathNorm(50, 200)
+      this.energy_efficiency = mathNorm(75, 400)
+      this.max_energy = mathNorm(500, 1000)
       this.aggression = mathNorm(75, 200)
-      this.max_health = mathNorm(500, 20000)
+      this.max_health = mathNorm(300, 2000)
       this.health = this.max_health
       const val1 = Phaser.Math.Between(0, 10)
       this.predator = (val1 === 0 ? true : false)
-      this.perception = mathNorm(350, 4000)
+      this.perception = mathNorm(150, 1000)
       const litterRand = mathNorm(3, 2)
       this.litter_size = (litterRand <= 0 ? 1 : litterRand)
       if (this.litter_size > 7) {
         this.litter_size = 7
       }
-      this.breeding_age = mathNorm(500, 5000)
+      this.breeding_age = mathNorm(500, 100)
       
       const val2 = Phaser.Math.Between(1, 15)
       if (val2 <= 5 ) {
