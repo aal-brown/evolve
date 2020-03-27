@@ -85,7 +85,24 @@ class TitleScene extends Phaser.Scene {
       } else if (event.target.name === "removeBlocksToggle") {
         document.querySelector("#addBlocksToggle").checked = false
         document.querySelector("#addFoodToggle").checked = false
-      }
+
+      // } else if (event.target.id === "draw") {
+      //     document.querySelector("#erase").checked = false
+      //   if (document.querySelector("#draw").checked) {
+      //     document.querySelector("#draw").checked = false
+      //   } else {
+      //     document.querySelector("#draw").checked = true
+      //   }
+
+      // } else if (event.target.id === "erase") {
+      //   document.querySelector("#draw").checked = false
+      //   if (document.querySelector("#erase").checked) {
+      //     document.querySelector("#erase").checked = false
+      //   } else {
+      //     document.querySelector("#erase").checked = true
+      //   }
+    } 
+  
     })
 
     if (this.newGameBool) {
@@ -318,9 +335,25 @@ class TitleScene extends Phaser.Scene {
       }
     });
 
+    //================================================================Draw====================================================================
+    let rt = this.add.renderTexture(0, 0, this.game.config.width, this.game.config.height)
+
+    this.input.on("pointermove", function (pointer) {
+      if (document.querySelector("#draw").checked) {
+        if (pointer.isDown){
+          rt.draw('circle', pointer.x - 16, pointer.y - 16)
+        }
+      } else if (document.querySelector("#erase").checked)
+      if (pointer.isDown){
+        rt.erase('block', pointer.x - 16, pointer.y - 16)
+      }
+      }, this.scene);
+
+
+
     //================================================================Blocks==================================================================
 
-    let rt = this.add.renderTexture(0, 0, this.game.config.width, this.game.config.height)
+    
     this.platforms = this.physics.add.staticGroup()
     this.physics.add.collider(this.orgs, this.platforms)
 

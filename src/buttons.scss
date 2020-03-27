@@ -180,3 +180,79 @@ input:checked + #predMode:before {
   transform: translateX(9rem);
 }
 
+.draw-erase {
+  margin: 0.1em;
+  position: absolute;
+  display: flex;
+  top: 14em;
+  align-items: center;
+  justify-content: space-evenly;
+  background-color: white;
+  width:100%;
+  padding: 0.25em;
+  height: 3em;
+  border: 1px solid black;
+  border-radius: 1em;
+
+  input[type=checkbox] + label.de {
+    display: block;
+    margin: 0.2em;
+    cursor: pointer;
+    padding: 0.2em;
+  }
+  
+  input[type=checkbox] {
+    display: none;
+  }
+  
+  input[type=checkbox] + label.de:before {
+    content: "\2714";
+    border: 0.1em solid #000;
+    border-radius: 0.2em;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    padding-left: 0.2em;
+    padding-bottom: 0.3em;
+    margin-right: 0.2em;
+    vertical-align: bottom;
+    color: transparent;
+    transition: .2s;
+  }
+  
+  input[type=checkbox] + label.de:active:before {
+    transform: scale(0);
+  }
+  
+  input[type=checkbox]:checked + label.de:before {
+    background-color: MediumSeaGreen;
+    border-color: MediumSeaGreen;
+    color: #fff;
+  }
+}
+
+.d-e-icons {
+  display: inline-block;
+  height:2.5em;
+}
+
+#draw {
+  height: 100%;
+}
+
+#erase {
+  height: 100%;
+
+}
+
+
+
+// #draw-icon input:checked + {
+//   border: 1px solid black;
+// } 
+
+// input:checked + #erase {
+//   border: 1px solid black;
+// } 
+
+

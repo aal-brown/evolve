@@ -6,9 +6,9 @@ class Org extends Phaser.GameObjects.Sprite {
   constructor(scene, x, y, parent1, parent2, orgNum) {
     super(scene, x, y, "gb")
     
-    function mathNormInherited(v1, v2){
+    function mathNormInherited(v1, v2, stdev){
       let mean = avg(v1, v2)
-      let distribution = gaussian(mean, 2);
+      let distribution = gaussian(mean, stdev);
       // Take a random sample using inverse transform sampling method.
      return Math.abs(Math.floor(distribution.ppf(Math.random())));
     }
@@ -23,13 +23,13 @@ class Org extends Phaser.GameObjects.Sprite {
       return ((n1 + n2)* 0.5)
     }
     if (parent1 && parent2) {
-      this.speed = mathNormInherited(parent1.speed, parent2.speed)
-      this.lifespan = mathNormInherited(parent1.lifespan, parent2.lifespan)
-      this.strength = mathNormInherited(parent1.strength, parent2.strength)
-      this.energy_efficiency = mathNormInherited(parent1.energy_efficiency, parent2.energy_efficiency)
-      this.max_energy = mathNormInherited(parent1.max_energy, parent2.max_energy)
-      this.aggression = mathNormInherited(parent1.aggression, parent2.aggression)
-      this.max_health = mathNormInherited(parent1.health, parent2.health)
+      this.speed = mathNormInherited(parent1.speed, parent2.speed, 1000)
+      this.lifespan = mathNormInherited(parent1.lifespan, parent2.lifespan, 100000)
+      this.strength = mathNormInherited(parent1.strength, parent2.strength, 200)
+      this.energy_efficiency = mathNormInherited(parent1.energy_efficiency, parent2.energy_efficiency, 750)
+      this.max_energy = mathNormInherited(parent1.max_energy, parent2.max_energy, 8000)
+      this.aggression = mathNormInherited(parent1.aggression, parent2.aggression, 200)
+      this.max_health = mathNormInherited(parent1.health, parent2.health, 10000)
       this.health = this.max_health
       
       
@@ -49,13 +49,13 @@ class Org extends Phaser.GameObjects.Sprite {
         const val2 = Phaser.Math.Between(1, 2)
         this.sex = (val2 === 1 ? 1 : 2)
       }
-      this.perception = mathNormInherited(parent1.perception, parent2.perception)
-      const inheritedLitterVal = mathNormInherited(parent1.litter_size, parent2.litter_size)
+      this.perception = mathNormInherited(parent1.perception, parent2.perception, 4000)
+      const inheritedLitterVal = mathNormInherited(parent1.litter_size, parent2.litter_size, 2)
       this.litter_size = (inheritedLitterVal <= 0 ? 1 : inheritedLitterVal)
       if (this.litter_size > 7) {
         this.litter_size = 7
       }
-      this.breeding_age = mathNormInherited(parent1.breeding_age, parent2.breeding_age)
+      this.breeding_age = mathNormInherited(parent1.breeding_age, parent2.breeding_age, 100)
       
       this.generation = parent1.generation + 1
       this.parent1 = parent1.id
