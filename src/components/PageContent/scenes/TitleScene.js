@@ -53,6 +53,7 @@ class TitleScene extends Phaser.Scene {
     this.foods = this.physics.add.group();
     this.orgs = this.physics.add.group();
     this.foods.setDepth(0)
+    this.blocks = this.physics.add.staticGroup()
 
 
   //This was moved here to make the predator buttons work
@@ -110,6 +111,7 @@ class TitleScene extends Phaser.Scene {
       gameData = JSON.parse(gameData.save_text);
       const loadedOrgs = gameData.orgs;
       const loadedFoods = gameData.foods;
+      const loadedBlocks = gameData.blocks;
       this.iterations = gameData.iterations;
 
       for (const org of loadedOrgs) {
@@ -147,6 +149,7 @@ class TitleScene extends Phaser.Scene {
 
         newOrg.setInteractive();
         newOrg.setDepth(2)
+        this.input.setDraggable(newOrg)
         if (newOrg.predator && document.querySelector("#predatorToggle").checked) {
           newOrg.setTexture("predator")
           newOrg.play("pred_anim")
@@ -157,6 +160,12 @@ class TitleScene extends Phaser.Scene {
         newFood.energy = food.energy;
         newFood.setInteractive();
         newFood.setDepth(0)
+        this.input.setDraggable(newFood);
+      }
+      for (const block of loadedBlocks) {
+        let newBlock = this.blocks.create(block.x, block.y, "block")
+        newBlock.setInteractive();
+        this.input.setDraggable(newBlock);
       }
     } else {
       for (let j = 0; j < 15; j++) {
@@ -244,7 +253,7 @@ class TitleScene extends Phaser.Scene {
 
       saveButtons.on("click", function (event) {
         if (event.target.name === "save") {
-          this.scene.onSave(this.scene.orgs.getChildren(), this.scene.foods.getChildren(), this.scene.iterations);
+          this.scene.onSave(this.scene.orgs.getChildren(), this.scene.foods.getChildren(), this.scene.blocks.getChildren(), this.scene.iterations);
         }
       })
     }
@@ -353,15 +362,15 @@ class TitleScene extends Phaser.Scene {
 
     //================================================================Blocks==================================================================
 
-    
-    this.platforms = this.physics.add.staticGroup()
-    this.physics.add.collider(this.orgs, this.platforms)
+    // moved to top
+    // this.blocks = this.physics.add.staticGroup()
+    this.physics.add.collider(this.orgs, this.blocks)
 
 
 
     this.input.on("pointerdown", function (pointer) {
       if (pointer.isDown && document.querySelector("#addBlocksToggle").checked) {
-        this.newBlock = this.platforms.create(pointer.x, pointer.y, 'block')
+        this.newBlock = this.blocks.create(pointer.x, pointer.y, 'block')
         this.newBlock.setInteractive();
         this.input.setDraggable(this.newBlock)
       }
@@ -813,7 +822,7 @@ class TitleScene extends Phaser.Scene {
     });
   }
 
-  onSave = async function (orgs, foods, iterations) {
+  onSave = async function (orgs, foods, blocks, iterations) {
     const cookieArr = document.cookie.split(';');
     let gameID = null;
     for (let cookie of cookieArr) {
@@ -827,16 +836,27 @@ class TitleScene extends Phaser.Scene {
       let gameStateObject = {
         orgs: [],
         foods: [],
+        blocks: [],
         iterations: iterations
       };
 
-      orgs.forEach((org) => {
-        gameStateObject.orgs.push(org.getAttributes());
-      })
+      if (orgs.length) {
+        orgs.forEach((org) => {
+          gameStateObject.orgs.push(org.getAttributes());
+        })
+      }
 
-      foods.forEach((food) => {
-        gameStateObject.foods.push(food.getAttributes());
-      })
+      if (foods.length) {
+        foods.forEach((food) => {
+          gameStateObject.foods.push(food.getAttributes());
+        })
+      }
+
+      if (blocks.length) {
+        blocks.forEach((block) => {
+          gameStateObject.blocks.push({x: block.x, y: block.y});
+        })
+      }
 
       gameStateObject = JSON.stringify(gameStateObject);
 
