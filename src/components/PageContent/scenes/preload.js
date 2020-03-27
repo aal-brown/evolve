@@ -10,10 +10,10 @@ export default class Preload extends Phaser.Scene {
     this.load.image('ground', '/assets/platform.png');
     this.load.image('star', '/assets/star.png');
     this.load.image('platforms', '/assets/platform.png');
-    //this.load.image('background1', '/assets/evolve-map-1.png');
-    // this.load.image('background-small', '/assets/evolve-map-small.png');
-    //this.load.image('background-small', '/assets/evolve-map-small-bright.png');
-    // this.load.image('moon', '/assets/moon2.png');
+    this.load.image('rock', '/assets/rock.png');
+    this.load.image('rock2', '/assets/rock2.png');
+    this.load.image('bush1', '/assets/bush1.png');
+    this.load.image('bush2', '/assets/bush2.png');
     this.load.image('moon', '/assets/moon2-r1.png');
     
 
@@ -27,10 +27,6 @@ export default class Preload extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
     });
-    // this.load.spritesheet("predator", "/assets/predator.png", {
-    //   frameWidth: 32,
-    //   frameHeight: 32
-    // });
 
     this.load.spritesheet("banana", "/assets/fruit-lm-0.png", {
       frameWidth: 32,
@@ -52,30 +48,6 @@ export default class Preload extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
     });
-    // this.load.spritesheet("mushy peas", "/assets/foods/sprites-0.png", {
-    //   frameWidth: 32,
-    //   frameHeight: 32
-    // });
-    // this.load.spritesheet("mushy peas", "/assets/food1.png", {
-    //   frameWidth: 32,
-    //   frameHeight: 32
-    // });
-    // this.load.spritesheet("chicken", "/assets/food2.png", {
-    //   frameWidth: 32,
-    //   frameHeight: 32
-    // });
-    // this.load.spritesheet("chocolate", "/assets/food3.png", {
-    //   frameWidth: 32,
-    //   frameHeight: 32
-    // });
-    // this.load.spritesheet("pasta", "/assets/food4.png", {
-    //   frameWidth: 32,
-    //   frameHeight: 32
-    // });
-    // this.load.spritesheet("raspberries", "/assets/food5.png", {
-    //   frameWidth: 32,
-    //   frameHeight: 32
-    // });
     this.load.spritesheet("explosion", "/assets/explosion2.png", {
       frameWidth: 100,
       frameHeight: 100
@@ -105,6 +77,10 @@ export default class Preload extends Phaser.Scene {
     this.load.html("right-sidebar", "/assets/html/right-sidebar.html");
 
     this.load.image('block', 'assets/block.png')
+    this.load.image('platLangle', 'assets/platform-langle.png')
+    this.load.image('platRangle', 'assets/platform-rangle.png')
+    this.load.image('platVert', 'assets/platform-vert.png')
+    this.load.image('platHoriz', 'assets/platform-horiz.png')
     this.load.image('circle', 'assets/black-circle.png')
 
     this.load.image("volume-on", "assets/volume-on.png")

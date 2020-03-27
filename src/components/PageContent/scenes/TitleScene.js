@@ -77,32 +77,15 @@ class TitleScene extends Phaser.Scene {
         this.scene.addOrg();
       } else if (event.target.name === "addFood") {
         this.scene.addFood(foodData);
-      } else if (event.target.name === "foodToggle") {
-        document.querySelector("#removeBlocksToggle").checked = false
-        document.querySelector("#addBlocksToggle").checked = false
-      } else if (event.target.name === "addBlocksToggle") {
-        document.querySelector("#removeBlocksToggle").checked = false
-        document.querySelector("#addFoodToggle").checked = false
-      } else if (event.target.name === "removeBlocksToggle") {
-        document.querySelector("#addBlocksToggle").checked = false
-        document.querySelector("#addFoodToggle").checked = false
-
-      // } else if (event.target.id === "draw") {
-      //     document.querySelector("#erase").checked = false
-      //   if (document.querySelector("#draw").checked) {
-      //     document.querySelector("#draw").checked = false
-      //   } else {
-      //     document.querySelector("#draw").checked = true
-      //   }
-
-      // } else if (event.target.id === "erase") {
-      //   document.querySelector("#draw").checked = false
-      //   if (document.querySelector("#erase").checked) {
-      //     document.querySelector("#erase").checked = false
-      //   } else {
-      //     document.querySelector("#erase").checked = true
-      //   }
-    } 
+      } else if (event.target.id === "dragToggle") {
+        document.querySelector(".block-selectors").style.visibility = "hidden";
+      } else if (event.target.id === "foodToggle") {
+        document.querySelector(".block-selectors").style.visibility = "hidden";
+      } else if (event.target.id === "addBlocksToggle") {
+        document.querySelector(".block-selectors").style.visibility = "visible";
+      } else if (event.target.id === "removeBlocksToggle") {
+        document.querySelector(".block-selectors").style.visibility = "hidden";
+      } 
   
     })
 
@@ -321,6 +304,7 @@ class TitleScene extends Phaser.Scene {
 
     this.input.on("pointerdown", function (pointer) {
       if (document.querySelector("#foodToggle").checked) {
+        document.querySelector(".block-selectors").style.visibility = "hidden";
         let nFood = new Food(this.scene, pointer.x, pointer.y, foodData[Phaser.Math.Between(0, 4)])
         nFood.setInteractive();
         this.scene.input.setDraggable(nFood)
@@ -369,10 +353,45 @@ class TitleScene extends Phaser.Scene {
 
 
     this.input.on("pointerdown", function (pointer) {
-      if (pointer.isDown && document.querySelector("#addBlocksToggle").checked) {
-        this.newBlock = this.blocks.create(pointer.x, pointer.y, 'block')
-        this.newBlock.setInteractive();
-        this.input.setDraggable(this.newBlock)
+      if (pointer.isDown && document.querySelector("#addBlocksToggle").checked) {  
+        document.querySelector(".block-selectors").style.visibility = "visible";
+        if( document.querySelector("#platRangle").checked){
+          this.newBlock = this.blocks.create(pointer.x, pointer.y, 'platRangle')
+          this.newBlock.setInteractive();
+          this.input.setDraggable(this.newBlock)
+        } else if( document.querySelector("#platLangle").checked){
+          this.newBlock = this.blocks.create(pointer.x, pointer.y, 'platLangle')
+          this.newBlock.setInteractive();
+          this.input.setDraggable(this.newBlock)
+        } else if( document.querySelector("#platHoriz").checked){
+          this.newBlock = this.blocks.create(pointer.x, pointer.y, 'platHoriz')
+          this.newBlock.setInteractive();
+          this.input.setDraggable(this.newBlock)
+        } else if( document.querySelector("#platVert").checked){
+          this.newBlock = this.blocks.create(pointer.x, pointer.y, 'platVert')
+          this.newBlock.setInteractive();
+          this.input.setDraggable(this.newBlock)
+        } else if( document.querySelector("#block").checked){
+          this.newBlock = this.blocks.create(pointer.x, pointer.y, 'block')
+          this.newBlock.setInteractive();
+          this.input.setDraggable(this.newBlock)
+        } else if( document.querySelector("#rock").checked){
+          this.newBlock = this.blocks.create(pointer.x, pointer.y, 'rock')
+          this.newBlock.setInteractive();
+          this.input.setDraggable(this.newBlock)
+        } else if( document.querySelector("#rock2").checked){
+          this.newBlock = this.blocks.create(pointer.x, pointer.y, 'rock2')
+          this.newBlock.setInteractive();
+          this.input.setDraggable(this.newBlock)
+        } else if( document.querySelector("#bush1").checked){
+          this.newBlock = this.blocks.create(pointer.x, pointer.y, 'bush1')
+          this.newBlock.setInteractive();
+          this.input.setDraggable(this.newBlock)
+        } else if( document.querySelector("#bush2").checked){
+          this.newBlock = this.blocks.create(pointer.x, pointer.y, 'bush2')
+          this.newBlock.setInteractive();
+          this.input.setDraggable(this.newBlock)
+        }
       }
     }, this)
 
@@ -381,7 +400,6 @@ class TitleScene extends Phaser.Scene {
         gameObject.destroy()
       }
     })
-
   }
 
   update() {
