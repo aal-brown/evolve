@@ -184,7 +184,7 @@ input:checked + #predMode:before {
   margin: 0.1em;
   position: absolute;
   display: flex;
-  top: 14em;
+  top: 15.9em;
   align-items: center;
   justify-content: space-evenly;
   background-color: lightgray;
@@ -205,15 +205,19 @@ input:checked + #predMode:before {
   }
 
   input[type=checkbox] + label.de:before {
-    content: "\2714";
+    content: "\2716";
     border: 0.1em solid #000;
     border-radius: 0.2em;
+    display: inline-flex;
+    align-items: center;
     width: 1em;
     height: 1em;
     margin-right: 0.2em;
     vertical-align: bottom;
+    padding-left: 0.02em;
     color: transparent;
     transition: .2s;
+    
   }
   
   input[type=checkbox] + label.de:active:before {
@@ -247,7 +251,7 @@ input:checked + #predMode:before {
   margin: 0.1em;
   position: absolute;
   display: flex;
-  top: 17.2em;
+  top: 19em;
   align-items: center;
   flex-wrap: wrap;
   justify-content: space-evenly;
@@ -269,15 +273,19 @@ input:checked + #predMode:before {
   }
   
   input[type=radio] + label.blocks:before {
-    content: "\2714";
-    border: 0.1em solid #000000;
+    content: "\2716";
+    border: 0.1em solid #000;
     border-radius: 0.2em;
-    width: 0.75em;
-    height: 0.75em;
+    display: inline-flex;
+    align-items: center;
+    width: 1em;
+    height: 1em;
     margin-right: 0.2em;
     vertical-align: bottom;
+    padding-left: 0.02em;
     color: transparent;
     transition: .2s;
+    
   }
   
   input[type=radio] + label.blocks:active:before {
