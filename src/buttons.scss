@@ -187,11 +187,10 @@ input:checked + #predMode:before {
   top: 14em;
   align-items: center;
   justify-content: space-evenly;
-  background-color: white;
+  background-color: lightgray;
   width:100%;
   padding: 0.25em;
   height: 3em;
-  border: 1px solid black;
   border-radius: 1em;
 
   input[type=checkbox] + label.de {
@@ -209,11 +208,8 @@ input:checked + #predMode:before {
     content: "\2714";
     border: 0.1em solid #000;
     border-radius: 0.2em;
-    display: inline-block;
     width: 1em;
     height: 1em;
-    padding-left: 0.2em;
-    padding-bottom: 0.3em;
     margin-right: 0.2em;
     vertical-align: bottom;
     color: transparent;

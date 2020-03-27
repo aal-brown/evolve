@@ -236,7 +236,7 @@ class TitleScene extends Phaser.Scene {
 
     if (userID) {
       saveButtons = this.add
-        .dom(100, 243)
+        .dom(100, 295)
         .createFromCache("save-and-seed");
 
       saveButtons.setOrigin(0, 0)
