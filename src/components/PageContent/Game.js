@@ -72,7 +72,7 @@ class Game extends Component{
           placement: 'top-start'
         }, 
         {
-          content: <h4>You can add barriers and build walls around your favourite orgs 'on click' wherever you want inside your colony using the blocks toggle. </h4>,
+          content: <h4>Here you can add barriers, rocks and foliage and build walls around your favourite orgs 'on click' wherever you want inside your colony using the blocks toggle. </h4>,
           locale: { skip: <strong aria-label="skip">Skip tour</strong> },
           target: '#feature2',
           placement: 'top-start'
@@ -87,6 +87,13 @@ class Game extends Component{
           content: <h4>You can turn on predator mode allowing the predatory orgs to attack their weaker brethren! </h4>,
           locale: { skip: <strong aria-label="skip">Skip Tour</strong> },
           target: '#feature3',
+          placement: 'top-start'
+        }, 
+        
+        {
+          content: <h4>Here you can draw on the Org-world and keep a note about your favourite Ors, or just add some decoration! </h4>,
+          locale: { skip: <strong aria-label="skip">Skip Tour</strong> },
+          target: '#feature10',
           placement: 'top-start'
         }, 
         
@@ -174,37 +181,40 @@ class Game extends Component{
   top: '13.5em',
   left: '12em'}} onClick={this.handleClick}><Button>Tour</Button></div>
       <div id="feature0" style={{position: 'relative',
-  top: '2.2em',
+  top: '2.4em',
   left: '7em'}}></div>
       <div id="feature0n" style={{position: 'relative',
-  top: '6.2em',
+  top: '6.4em',
   left: '7em'}}></div>
       <div id="feature1" style={{position: 'relative',
-  top: '4.2em',
+  top: '4.4em',
   left: '7em'}}></div>
       <div id="feature2" style={{position: 'relative',
-  top: '10.2em',
+  top: '10.4em',
   left: '7em'}}></div>
       <div id="feature3" style={{position: 'relative',
-  top: '14.2em',
+  top: '14.4em',
+  left: '7em'}}></div>
+      <div id="feature10" style={{position: 'relative',
+  top: '18.7em',
   left: '7em'}}></div>
       <div id="feature9" style={{position: 'relative',
-  top: '12.2em',
+  top: '12.4em',
   left: '7em'}}></div>
       <div id="feature4" style={{position: 'relative',
-  top: '10.2em',
+  top: '10.4em',
   left: '7em'}}></div>
       <div id="feature5" style={{position: 'relative',
-  top: '2.2em',
+  top: '2.4em',
   left: '50%'}}></div>
       <div id="feature6" style={{position: 'relative',
-  top: '2.2em',
+  top: '2.4em',
   left: '50%'}}></div>
       <div id="feature7" style={{position: 'relative',
   top: '0em',
   left: '95%'}}></div>
       <div id="feature8" style={{position: 'relative',
-  top: '2.2em',
+  top: '2.4em',
   left: '7em'}}></div>
       <ReactJoyride steps={steps} run={run} disableScrolling={true} continuous={true} showSkipButton={true} disableOverlay={true} callback={this.handleJoyrideCallback} styles={{
             options: {

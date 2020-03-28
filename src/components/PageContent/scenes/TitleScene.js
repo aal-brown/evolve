@@ -146,7 +146,8 @@ class TitleScene extends Phaser.Scene {
         this.input.setDraggable(newFood);
       }
       for (const block of loadedBlocks) {
-        let newBlock = this.blocks.create(block.x, block.y, "block")
+        let newBlock = this.blocks.create(block.x, block.y, block.texture)
+        newBlock.rotation = block.rotation;
         newBlock.setInteractive();
         this.input.setDraggable(newBlock);
       }
@@ -874,8 +875,14 @@ class TitleScene extends Phaser.Scene {
 
       if (blocks.length) {
         blocks.forEach((block) => {
-          console.log(block)
-          gameStateObject.blocks.push({x: block.x, y: block.y});
+          let blockRotation = 0;
+          if(block._rotation < 0){
+            blockRotation = -40
+          }
+          if(block._rotation > 0){
+            blockRotation = 40
+          }
+          gameStateObject.blocks.push({x: block.x, y: block.y, texture: block.texture.key, rotation: blockRotation });
         })
       }
 
