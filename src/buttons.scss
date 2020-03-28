@@ -16,6 +16,14 @@
   background-color: black;
   z-index: 10;
 }
+#addFood{
+  position: relative;
+  top:-0.9em;
+}
+#addOrg{
+  position: relative;
+  top:-0.4em;
+}
 
 .sideBarButton:hover {
   @include button-active;

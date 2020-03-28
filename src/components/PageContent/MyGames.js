@@ -33,7 +33,7 @@ export default function MyGames(props) {
     console.log(arr);
     let newArr = [];
     for(let i = 0; i < arr.length; i++){
-      if(arr[i].highest_score && arr[i].num_of_orgs){
+      if(arr[i].playtime){
         newArr.push(arr[i])
       }
     }
@@ -42,8 +42,9 @@ export default function MyGames(props) {
   }
 
   function deleteEntries(arr){
+    console.log(arr)
     for(let i = 0; i < arr.length; i++){
-      if(!arr[i].highest_score && !arr[i].num_of_orgs){
+      if(!arr[i].playtime){
        axios.delete(`https://agile-scrubland-73485.herokuapp.com/games/${arr[i].id}`).then((res) => console.log(res)).catch((err)=> console.log(err))
     }
   }

@@ -146,6 +146,9 @@ class TitleScene extends Phaser.Scene {
         this.input.setDraggable(newFood);
       }
       for (const block of loadedBlocks) {
+        if(!block.texture){
+          block.texture = "block"
+        }
         let newBlock = this.blocks.create(block.x, block.y, block.texture)
         newBlock.rotation = block.rotation;
         newBlock.setInteractive();

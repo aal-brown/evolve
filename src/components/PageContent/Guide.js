@@ -1,9 +1,9 @@
 import React from "react";
 import axios from "axios";
 import "./Guide.scss";
+import Leftsidebar from "./LeftSideBar";
 
 export default function Guide(props) {
-  let user_id = props.cookies.user_id
   return (
     <section>
        <h2  className="guide-welcome-text">Welcome to Evolve where you can build your very own colony of Orgs! They will evolve before your very eyes!</h2>

@@ -6,6 +6,7 @@ import Guide from "./Guide";
 import Game from "./Game";
 import Login from "./Login";
 import Register from "./Register";
+import LeaderBoard from "./LeaderBoard";
 import "./PageContent.scss"; 
 
 
@@ -54,6 +55,10 @@ export default function PageContent(props) {
         <Login
         setView = {props.setView}
         setCookie={props.setCookie}
+        />
+      )}
+      { props.view === 9 && (
+        <LeaderBoard
         />
       )}
     </section>

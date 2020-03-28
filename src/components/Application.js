@@ -44,7 +44,8 @@ useEffect(() => {
       { name: "Guide", id: 4 },
       { name: "Game", id: 2 },
       { name: "My Profile", id: 1 },
-      { name: "Logout", id: 8 }
+      { name: "Logout", id: 8 },
+      { name: "Leader Board", id: 9 }
     ])
   } else {
     setTopNav([
@@ -52,7 +53,8 @@ useEffect(() => {
       { name: "Guide", id: 4 },
       { name: "Game", id: 2 }, 
       { name: "Login", id: 6 },
-      { name: "Register", id: 7 }
+      { name: "Register", id: 7 },
+      { name: "Leader Board", id: 9 }
     ])
   }
 }, [cookies.user_id])
