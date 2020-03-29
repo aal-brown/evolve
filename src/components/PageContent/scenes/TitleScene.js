@@ -359,17 +359,20 @@ class TitleScene extends Phaser.Scene {
     this.input.on("pointerdown", function (pointer) {
       if (pointer.isDown && document.querySelector("#addBlocksToggle").checked) {  
         document.querySelector(".block-selectors").style.visibility = "visible";
-        if( document.querySelector("#platRangle").checked){
-          this.newBlock = this.blocks.create(pointer.x, pointer.y, 'platHoriz')
-          this.newBlock.setInteractive();
-          this.newBlock.rotation += 40;
-          this.input.setDraggable(this.newBlock)
-        } else if( document.querySelector("#platLangle").checked){
-          this.newBlock = this.blocks.create(pointer.x, pointer.y, 'platHoriz')
-          this.newBlock.rotation -= 40;
-          this.newBlock.setInteractive();
-          this.input.setDraggable(this.newBlock)
-        } else if( document.querySelector("#platHoriz").checked){
+
+        // if( document.querySelector("#platRangle").checked){
+        //   this.newBlock = this.blocks.create(pointer.x, pointer.y, 'platHoriz')
+        //   this.newBlock.setInteractive();
+        //   this.newBlock.rotation += 40;
+        //   this.input.setDraggable(this.newBlock)
+        // }
+        // else if( document.querySelector("#platLangle").checked){
+        //   this.newBlock = this.blocks.create(pointer.x, pointer.y, 'platHoriz')
+        //   this.newBlock.rotation -= 40;
+        //   this.newBlock.setInteractive();
+        //   this.input.setDraggable(this.newBlock)
+
+        if( document.querySelector("#platHoriz").checked){
           this.newBlock = this.blocks.create(pointer.x, pointer.y, 'platHoriz')
           this.newBlock.setInteractive();
           this.input.setDraggable(this.newBlock)

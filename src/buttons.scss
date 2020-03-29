@@ -259,14 +259,16 @@ input:checked + #predMode:before {
   margin: 0.1em;
   position: absolute;
   display: flex;
+  flex-direction: column;
   top: 19em;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
   justify-content: space-evenly;
+  
   background-color: lightgray;
-  width:15em;
-  padding: 0.25em;
-  height: 15em;
+  width:100%;
+  padding-left: 1em;
+  height: 12em;
   border-radius: 1em;
 
   input[type=radio] + label.blocks {
