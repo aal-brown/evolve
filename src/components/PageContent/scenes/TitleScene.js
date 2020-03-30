@@ -289,20 +289,20 @@ class TitleScene extends Phaser.Scene {
     
 
     //===========================================================Fullscreen Toggle=========================================================
-    this.fsToggle = this.add.image((this.game.config.width - 55), 10, "fullscreen")
-    this.fsToggle.setOrigin(0, 0)
-    this.fsToggle.setDepth(3)
-    this.fsToggle.setScale(0.5)
+    // this.fsToggle = this.add.image((this.game.config.width - 55), 10, "fullscreen")
+    // this.fsToggle.setOrigin(0, 0)
+    // this.fsToggle.setDepth(3)
+    // this.fsToggle.setScale(0.5)
 
-    this.fsToggle.setInteractive().on("pointerdown", function () {
-      if (this.scene.scale.isFullscreen) {
-        this.scene.scale.stopFullscreen();
-        this.fsToggle = this.setTexture("fullscreen");
-      } else {
-        this.fsToggle = this.setTexture("minimize")
-        this.scene.scale.startFullscreen();
-      }
-    });
+    // this.fsToggle.setInteractive().on("pointerdown", function () {
+    //   if (this.scene.scale.isFullscreen) {
+    //     this.scene.scale.stopFullscreen();
+    //     this.fsToggle = this.setTexture("fullscreen");
+    //   } else {
+    //     this.fsToggle = this.setTexture("minimize")
+    //     this.scene.scale.startFullscreen();
+    //   }
+    // });
 
     //===============================================================Slider Feed===========================================================
 
@@ -317,7 +317,7 @@ class TitleScene extends Phaser.Scene {
     })
 
     //=============================================================Mute Sound============================================================
-    this.soundToggle = this.add.image((this.game.config.width - 110), 10, "volume-on")
+    this.soundToggle = this.add.image((this.game.config.width - 55), 10, "volume-on")
     this.soundToggle.setDepth(3)
     this.soundToggle.setOrigin(0, 0)
     this.soundToggle.setScale(0.08)
@@ -852,13 +852,19 @@ class TitleScene extends Phaser.Scene {
   onSave = async function (orgs, foods, blocks, iterations) {
     const cookieArr = document.cookie.split(';');
     let gameID = null;
+    let alreadyPaused = true;
     for (let cookie of cookieArr) {
       if (cookie.includes('game_id')) {
         gameID = cookie.slice(9);
       }
     }
     if (gameID) {
-      this.physics.pause();
+      if (!this.pausePhysics) {
+        this.physics.pause();
+        this.pausePhysics = true;
+        alreadyPaused = false;
+      }
+      
       let savingMessage = this.add.text(this.game.config.width / 3, this.game.config.height / 4, 'Saving...', { color: "#000000", fontSize: 100 })
       let gameStateObject = {
         orgs: [],
@@ -953,7 +959,11 @@ class TitleScene extends Phaser.Scene {
         .then(resp => {
           console.log("Updated successfully for games:", resp);
           savingMessage.destroy();
-          this.physics.resume();
+          if (!alreadyPaused) {
+            this.physics.resume();
+            this.pausePhysics = false;
+          }
+          
         })
         .catch(err => console.log("Error attempting to save:", err.message));
     }

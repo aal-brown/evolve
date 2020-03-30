@@ -21,8 +21,8 @@ class Game extends Component{
   state = {
     initialize: true,
     game: {
-      width: window.innerWidth,
-      height: window.innerHeight,
+      width: window.innerWidth - 10,
+      height: window.innerHeight - 10,
       backgroundColor: 0xFFD966,
       parent: 'game-container',
       type: Phaser.AUTO,
