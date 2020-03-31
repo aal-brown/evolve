@@ -343,11 +343,11 @@ class TitleScene extends Phaser.Scene {
     this.input.on("pointermove", function (pointer) {
       if (document.querySelector("#draw").checked) {
         if (pointer.isDown){
-          rt.draw('circle', pointer.x, pointer.y)
+          rt.draw('circle', pointer.x - 8, pointer.y - 8)
         }
       } else if (document.querySelector("#erase").checked)
       if (pointer.isDown){
-        rt.erase('block', pointer.x, pointer.y)
+        rt.erase('block', pointer.x - 8, pointer.y - 8)
       }
       }, this.scene);
 
