@@ -116,7 +116,7 @@ class Game extends Component{
           placement: 'center'
         }, 
         {
-          content: <h4>Over here you can mute/play the music, and change your view to fullscreen.</h4>,
+          content: <h4>Over here you can mute/play the music.</h4>,
           locale: { skip: <strong aria-label="skip">Skip tour</strong> },
           target: '#feature7',
           placement: 'top-end'

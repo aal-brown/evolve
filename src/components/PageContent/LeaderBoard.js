@@ -13,7 +13,7 @@ export default function LeaderBoard(props) {
     gamesArr.sort((a,b) => {return b.highest_score - a.highest_score})
     let top10;
     if(gamesArr.length >= 10){
-      top10 = (gamesArr.filter((item, index) => index < 10 ))
+      top10 = (gamesArr.filter((item, index) => index < 10 && item.highest_score ))
     } else {
       top10 = gamesArr;
     }
