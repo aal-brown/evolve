@@ -25,7 +25,7 @@ class Game extends Component{
       height: window.innerHeight - 10,
       backgroundColor: 0xFFD966,
       parent: 'game-container',
-      type: Phaser.CANVAS,
+      type: Phaser.AUTO,
       physics: {
         default: 'arcade',
         arcade: {

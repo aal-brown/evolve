@@ -27,6 +27,8 @@ class TitleScene extends Phaser.Scene {
         if (cookie.includes('game_id')) {
           let gameIDArr = cookie.split('=');
           gameID = gameIDArr[1];
+          console.log(gameID);
+          this.newGameBool = await this.newGame(gameID);
         }
       }
     }
