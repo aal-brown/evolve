@@ -21,10 +21,13 @@ class TitleScene extends Phaser.Scene {
 
     for (let cookie of cookieArr) {
       if (cookie.includes('user_id')) {
-        userID = cookie.slice(8);
+        let userIDArr = cookie.split('=');
+        userID = userIDArr[1];
       } else if (cookie.includes('game_id')) {
-        gameID = cookie.slice(9);
-        this.newGameBool = await this.newGame(gameID);
+        if (cookie.includes('game_id')) {
+          let gameIDArr = cookie.split('=');
+          gameID = gameIDArr[1];
+        }
       }
     }
 
