@@ -26,7 +26,7 @@ export default function LeaderBoard(props) {
     .then((res) => {
       console.log(res)
         for(let i = 0; i<top10.length; i++){
-            leaderTable.push([res[i].data.name, top10[i].highest_score, top10[i].name, i])
+            leaderTable.push([res[i].data.username, top10[i].highest_score, top10[i].name, i])
         }
         setLeaders(leaderTable)
     })

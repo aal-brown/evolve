@@ -855,7 +855,9 @@ class TitleScene extends Phaser.Scene {
     let alreadyPaused = true;
     for (let cookie of cookieArr) {
       if (cookie.includes('game_id')) {
-        gameID = cookie.slice(9);
+
+        let gameIDArr = cookie.split('=');
+        gameID = gameIDArr[1];
       }
     }
     if (gameID) {
